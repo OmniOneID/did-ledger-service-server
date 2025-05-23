@@ -1,0 +1,26 @@
+spring:
+  application:
+    name: Repository
+  profiles:
+    default: local
+    group:
+      local:
+        - auth
+        - database
+        - wallet
+        - jasypt
+        - logging
+        - spring-docs
+      sample:
+        - auth
+        - database
+        - wallet
+        - jasypt
+        - logging
+        - spring-docs
+  jackson:
+    default-property-inclusion: non_null
+
+server:
+  servlet:
+    context-path: /repository
