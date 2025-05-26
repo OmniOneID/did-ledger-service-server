@@ -2,9 +2,9 @@ spring:
   application:
     name: Repository
   profiles:
-    default: local
+    default: dev
     group:
-      local:
+      dev:
         - auth
         - database
         - wallet
