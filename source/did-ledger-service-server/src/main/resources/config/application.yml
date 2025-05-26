@@ -22,5 +22,6 @@ spring:
     default-property-inclusion: non_null
 
 server:
+  port: 8098
   servlet:
-    context-path: /repository
+    context-path: /lss
