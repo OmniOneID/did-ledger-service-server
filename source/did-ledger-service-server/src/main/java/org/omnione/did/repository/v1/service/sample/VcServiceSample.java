@@ -18,8 +18,6 @@ import java.nio.charset.StandardCharsets;
 @Profile("sample")
 @Service
 public class VcServiceSample implements VcService {
-    private final TestFileLoaderService fileLoaderService;
-
     @Override
     public void inputVcMeta(VcMeta request) {
 
@@ -29,7 +27,26 @@ public class VcServiceSample implements VcService {
     @Override
     public TssGetVcMetaResDto getVcMetaByVcId(String vcId) {
         try {
-            String vcMeta = fileLoaderService.getFileContent("vcmeta-mdl.json");
+            String vcMeta = """
+                    {
+  "id": "99999999-9999-9999-9999-999999999999",
+  "issuer": {
+    "did": "did:raon:issuer",
+    "name": "issuer"
+  },
+  "subject": "Subject did",
+  "credentialSchema": {
+    "id": "http://192.168.3.130:8090/tas/api/v1/download/schema?name=mdl",
+    "type": "OsdSchemaCredential"
+  },
+  "status": "VC 상태",
+  "issuanceDate": "2024-01-01T00:00:00Z",
+  "validFrom": "2024-01-01T00:00:00Z",
+  "validUntil": "2099-01-01T00:00:00Z",
+  "formatVersion": "1.0",
+  "language": "ko"
+}
+                    """;
 
             String encodedVcMeta = MultiBaseUtils.encode(vcMeta.getBytes(StandardCharsets.UTF_8), MultiBaseType.base64url);
             return TssGetVcMetaResDto.builder()
