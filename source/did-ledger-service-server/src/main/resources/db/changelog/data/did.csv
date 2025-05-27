@@ -1,0 +1,9 @@
+id,did,version,status,role
+1,did:omn:tas,1.0,ACTIVATE,Tas
+2,did:omn:issuer,1.0,ACTIVATE,Issuer
+3,did:omn:verifier,1.0,ACTIVATE,Verifier
+4,did:omn:cas,1.0,ACTIVATE,AppProvider
+5,did:omn:wallet,1.0,ACTIVATE,WalletProvider
+6,did:omn:user1,1.0,ACTIVATE,
+7,did:omn:user2,1.0,ACTIVATE,
+8,did:omn:user3,1.0,ACTIVATE,

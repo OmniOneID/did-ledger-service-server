@@ -1,0 +1,69 @@
+package org.omnione.did.repository.v1.service.sample;
+
+import org.omnione.did.crypto.enums.MultiBaseType;
+import org.omnione.did.crypto.exception.CryptoException;
+import org.omnione.did.crypto.util.MultiBaseUtils;
+import org.omnione.did.repository.v1.dto.did.InputDidDocReqDto;
+import org.omnione.did.repository.v1.dto.did.TssGetDidDocResDto;
+import org.omnione.did.repository.v1.service.DidService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Profile;
+import org.springframework.stereotype.Service;
+
+import java.nio.charset.StandardCharsets;
+
+@RequiredArgsConstructor
+@Profile("sample")
+@Service
+public class DidServiceSample implements DidService {
+    @Override
+    public void generateDid(InputDidDocReqDto request) {
+
+    }
+
+    @Override
+    public TssGetDidDocResDto getDid(String did) {
+
+        String didDoc = """
+                                    {
+                      "@context": ["https://www.w3.org/ns/did/v1"],
+                      "id": "did:raon:user1",
+                      "controller": "did:raon:user1",
+                      "created": "2024-01-01T09:00:00Z",
+                      "updated": "2024-01-01T09:00:00Z",
+                      "versionId": "1",
+                      "deactivated": false,
+                      "verificationMethod": [
+                        {
+                          "id": "pin",
+                          "type": "Secp256r1VerificationKey2018",
+                          "controller": "did:raon:user1",
+                          "publicKeyMultibase": "z3EFKFf4xRAjfryP52YK71HN8o5VhbJKuvG5qNyuwFo3XT68fw5jrADosNf52pGs36RpWjpfEgLSTjsRjtpzVjW3j21yNE83ZND3A5TERCtyhC6iqfPPaTdijZ9giFnZ7SioGP8YixnhBXxMgC2GFsrNvt2afWqnsYuyURWbsBShAzRY4eHpU9kkhX5gKFxNSEyJAjPmuyc4TXCXd6fRtrUeC55PiEjFRqRRSGHxes1XvcU",
+                          "authType": 1
+                        },
+                        {
+                          "id": "bio",
+                          "type": "Secp256r1VerificationKey2018",
+                          "controller": "did:raon:user1",
+                          "publicKeyMultibase": "z3EFKFf4xRAjfryP52YK71HN8o5VhbJKuvG5qNyuwFo3XT68fw5jrADosNf52pGs36RpWjpfEgLSTjsRjtpzVjescnnZPfyGxsuVTJUh5RoJw4ofFYWciKfnkWxUqjridYxgBWnCWrL6spyBeTswbnSXwFWy5owvvy9R4rNHb5g2nrfrRz6Qh1ezLYygGU9LRXiJ31YU5XDsgBAxKHg26MBV9L4uVAsF9mwiFTqwp2R3fRv",
+                          "authType": 1
+                        }
+                      ],
+                      "assertionMethod": ["pin", "bio"],
+                      "authentication": ["pin", "bio"]
+                    }
+                """;
+
+
+        try {
+            did = did.replace("did:omn:", "");
+            String encodedDidDOc = MultiBaseUtils.encode(didDoc.getBytes(StandardCharsets.UTF_8), MultiBaseType.base64url);
+
+            return TssGetDidDocResDto.builder()
+                    .didDoc(encodedDidDOc)
+                    .build();
+        } catch (CryptoException e) {
+            throw new RuntimeException(e);
+        }
+    }
+}
