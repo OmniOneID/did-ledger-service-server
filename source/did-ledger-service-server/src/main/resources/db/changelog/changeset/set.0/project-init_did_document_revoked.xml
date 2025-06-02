@@ -4,8 +4,8 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
 
-        <changeSet id="project-init_did_document" author="gwnam">
-            <createTable tableName="did_document">
+        <changeSet id="project-init_did_document_revoked" author="gwnam">
+            <createTable tableName="did_document_revoked">
                 <column name="id" type="bigint" autoIncrement="true">
                     <constraints primaryKey="true" nullable="false" />
                 </column>

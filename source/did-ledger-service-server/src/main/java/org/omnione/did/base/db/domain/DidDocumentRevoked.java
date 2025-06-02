@@ -1,10 +1,7 @@
 package org.omnione.did.base.db.domain;
 
-import org.omnione.did.base.constants.DidDocStatus;
 import jakarta.persistence.*;
 import lombok.*;
-
-import javax.print.attribute.standard.MediaSize;
 
 @Builder
 @AllArgsConstructor
@@ -13,8 +10,8 @@ import javax.print.attribute.standard.MediaSize;
 @Setter
 @ToString
 @Entity
-@Table(name = "did_document")
-public class DidDocument extends BaseEntity {
+@Table(name = "did_document_revoked")
+public class DidDocumentRevoked extends BaseEntity {
     @Id
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)

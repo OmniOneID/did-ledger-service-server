@@ -4,6 +4,7 @@ import org.omnione.did.base.constants.DidDocStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.Instant;
 import java.util.List;
 
 @Builder
@@ -32,4 +33,7 @@ public class Did extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false, length = 20, columnDefinition = "VARCHAR(20)")
     private DidDocStatus status;
+
+    @Column(name = "terminated_time")
+    private Instant terminatedTime;
 }
