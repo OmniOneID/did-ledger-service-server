@@ -12,4 +12,8 @@ public class UrlConstant {
 //        public static final String VC_META = "/vc-meta";
 //        public static final String VC_ID_PATH_VAL = "/{vcId}";
     }
+
+    public static class CredentialSchema {
+        public static final String V1 = "/api/v1/credential-schema";
+    }
 }
