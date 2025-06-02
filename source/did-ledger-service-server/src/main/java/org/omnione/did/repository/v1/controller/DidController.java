@@ -3,6 +3,7 @@ package org.omnione.did.repository.v1.controller;
 import org.omnione.did.base.constants.UrlConstant;
 import org.omnione.did.repository.v1.dto.did.InputDidDocReqDto;
 import org.omnione.did.repository.v1.dto.did.TssGetDidDocResDto;
+import org.omnione.did.repository.v1.dto.did.UpdateDidDocReqDto;
 import org.omnione.did.repository.v1.dto.vc.InputVcMetaResDto;
 import org.omnione.did.repository.v1.service.DidService;
 import lombok.RequiredArgsConstructor;
@@ -27,5 +28,12 @@ public class DidController {
         log.debug("get DID");
 
         return didService.getDid(didDoc);
+    }
+
+
+    // TODO 기능 개발
+    @PatchMapping
+    public void updateDidStatus(@RequestBody UpdateDidDocReqDto request) {
+        didService.updateStatus(request);
     }
 }

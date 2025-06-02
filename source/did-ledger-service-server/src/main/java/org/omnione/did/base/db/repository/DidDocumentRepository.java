@@ -12,9 +12,9 @@ import java.util.Optional;
 
 @Repository
 public interface DidDocumentRepository extends JpaRepository<DidDocument, Long> {
-    Optional<DidDocument> findByDidAndVersion(String did, Short version);
+    Optional<DidDocument> findByDidIdAndVersion(Long didId, Short version);
     @Modifying
-    @Query("UPDATE DidDocument d SET d.status = :status WHERE d.didId = :didId")
-    int updateStatusByDidEntity(Long didId, DidDocStatus status);
+    @Query("UPDATE DidDocument d SET d.deactivated = :deactivated WHERE d.didId = :didId")
+    void updateStatusByDidEntity(Long didId, Boolean deactivated);
     Optional<DidDocument> findFirstByOrderByIdDesc();
 }

@@ -17,7 +17,7 @@ public interface DidQueryService {
     Did save(Did did);
     DidDocument save(DidDocument didDocument);
     Optional<Did> didFindByDid(String did);
-    Optional<DidDocument> didDocFindByDid(String did, Short version);
-    void updateStatusByDidEntity(Long didId, DidDocStatus status);
+    Optional<DidDocument> didDocFindByDid(Long did, Short version);
+    void updateDeactivateByDidEntity(Long didId, Boolean deactivated);
     Optional<DidDocument> findFirstByOrderByIdDesc();
 }

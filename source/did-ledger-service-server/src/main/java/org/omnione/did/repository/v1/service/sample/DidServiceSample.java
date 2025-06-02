@@ -5,6 +5,7 @@ import org.omnione.did.crypto.exception.CryptoException;
 import org.omnione.did.crypto.util.MultiBaseUtils;
 import org.omnione.did.repository.v1.dto.did.InputDidDocReqDto;
 import org.omnione.did.repository.v1.dto.did.TssGetDidDocResDto;
+import org.omnione.did.repository.v1.dto.did.UpdateDidDocReqDto;
 import org.omnione.did.repository.v1.service.DidService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Profile;
@@ -65,5 +66,10 @@ public class DidServiceSample implements DidService {
         } catch (CryptoException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public void updateStatus(UpdateDidDocReqDto request) {
+
     }
 }
