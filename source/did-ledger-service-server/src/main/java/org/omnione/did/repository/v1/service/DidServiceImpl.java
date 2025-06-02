@@ -102,9 +102,7 @@ public class DidServiceImpl implements DidService {
                 .didId(savedDid.getId())
                 .didId(savedDid.getId())
                 .version(Short.parseShort(didDoc.getVersionId()))
-                .did(savedDid.getDid())
                 .document(didDoc.toJson())
-                .status(DidDocStatus.ACTIVATE)
                 .build());
     }
 
@@ -119,9 +117,7 @@ public class DidServiceImpl implements DidService {
                 .didId(didEntity.getId())
                 .didId(didEntity.getId())
                 .version(Short.parseShort(didDocument.getVersionId()))
-                .did(didEntity.getDid())
                 .document(didDocument.toJson())
-                .status(DidDocStatus.ACTIVATE)
                 .build());
     }
 

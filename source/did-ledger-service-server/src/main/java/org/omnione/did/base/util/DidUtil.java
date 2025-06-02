@@ -55,13 +55,5 @@ public class DidUtil {
         return Short.parseShort(url.substring(versionStart + versionParam.length(), versionEnd));
     }
 
-    public static void main(String args[]) {
-        System.out.println(extractDid("did:omn:test#pin"));
-        System.out.println(extractDid("did:omn:test?version=1"));
-        System.out.println(extractDid("did:omn:test?version=1#pin"));
-        System.out.println(extractVersion("did:omn:test#pin"));
-        System.out.println(extractVersion("did:omn:test?version=1"));
-        System.out.println(extractVersion("did:omn:test?version=1#pin"));
-    }
 
 }
