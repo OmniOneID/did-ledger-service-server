@@ -2,21 +2,25 @@ package org.omnione.did.repository.v1.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.omnione.did.base.constants.DidDocStatus;
-import org.omnione.did.base.datamodel.InvokedDidDoc;
+import org.omnione.did.base.datamodel.RoleType;
 import org.omnione.did.base.db.domain.Did;
 import org.omnione.did.base.db.domain.DidDocument;
 import org.omnione.did.base.exception.ErrorCode;
 import org.omnione.did.base.exception.OpenDidException;
-import org.omnione.did.base.util.BaseCoreDidUtil;
-import org.omnione.did.base.util.BaseMultibaseUtil;
-import org.omnione.did.base.util.DidUtil;
+import org.omnione.did.base.util.*;
+import org.omnione.did.common.util.JsonUtil;
 import org.omnione.did.core.manager.DidManager;
+import org.omnione.did.crypto.enums.EccCurveType;
 import org.omnione.did.crypto.enums.MultiBaseType;
 import org.omnione.did.crypto.exception.CryptoException;
 import org.omnione.did.crypto.util.MultiBaseUtils;
+import org.omnione.did.data.model.did.InvokedDidDoc;
+import org.omnione.did.data.model.did.Proof;
+import org.omnione.did.data.model.did.VerificationMethod;
 import org.omnione.did.repository.v1.dto.did.InputDidDocReqDto;
 import org.omnione.did.repository.v1.dto.did.TssGetDidDocResDto;
 import lombok.RequiredArgsConstructor;
+import org.omnione.did.repository.v1.dto.did.UpdateDidDocReqDto;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -66,12 +70,13 @@ public class DidServiceImpl implements DidService {
             throw new RuntimeException(e);
         }
     }
+
     private org.omnione.did.data.model.did.DidDocument parseDidDoc(InputDidDocReqDto request) {
         byte[] decodedDidDocBytes = BaseMultibaseUtil.decode(request.getDidDoc().getDidDoc());
         String didDocJson = new String(decodedDidDocBytes, StandardCharsets.UTF_8);
 
         DidManager didManager = BaseCoreDidUtil.parseDidDoc(didDocJson);
-        return didManager.getDidDocument();
+        return didManager.getDocument();
     }
 
     private void updateDidDoc(Did previousDid, org.omnione.did.data.model.did.DidDocument didDoc) {
@@ -95,14 +100,15 @@ public class DidServiceImpl implements DidService {
                 .build());
 
         log.debug("\t--> Deactivate previous did document");
-        didQueryService.updateStatusByDidEntity(savedDid.getId(), DidDocStatus.DEACTIVATE);
+        didQueryService.updateDeactivateByDidEntity(savedDid.getId(), true);
 
         log.debug("\t--> Insert did document");
         didQueryService.save(DidDocument.builder()
                 .didId(savedDid.getId())
-                .didId(savedDid.getId())
                 .version(Short.parseShort(didDoc.getVersionId()))
                 .document(didDoc.toJson())
+                .controller("did:omn:tas") // TODO: TAS
+                .deactivated(false)
                 .build());
     }
 
@@ -115,9 +121,10 @@ public class DidServiceImpl implements DidService {
                 .build());
         didQueryService.save(DidDocument.builder()
                 .didId(didEntity.getId())
-                .didId(didEntity.getId())
                 .version(Short.parseShort(didDocument.getVersionId()))
                 .document(didDocument.toJson())
+                .controller("did:omn:tas") // TODO: TAS
+                .deactivated(false)
                 .build());
     }
 
@@ -127,13 +134,14 @@ public class DidServiceImpl implements DidService {
         String did = DidUtil.extractDid(didKeyUrl);
         Short version = DidUtil.extractVersion(didKeyUrl);
 
+        Did didDoc = didQueryService.didFindByDid(did)
+                .orElseThrow(() -> new OpenDidException(ErrorCode.TODO));
+
         if (version == null) {
-            Did didDoc = didQueryService.didFindByDid(did)
-                    .orElseThrow(() -> new OpenDidException(ErrorCode.TODO));
             version = didDoc.getVersion();
         }
 
-        DidDocument didDocument = didQueryService.didDocFindByDid(did, version)
+        DidDocument didDocument = didQueryService.didDocFindByDid(didDoc.getId(), version)
                 .orElseThrow(() -> new OpenDidException(ErrorCode.TODO));
 
 
@@ -150,8 +158,57 @@ public class DidServiceImpl implements DidService {
 
     }
 
-    private void verifyDidDoc(InvokedDidDoc didDoc) {
-        // todo: DID Doc 서명 검증
-        // todo:  TAS Role 체크
+    @Override
+    public void updateStatus(UpdateDidDocReqDto request) {
+        // TODO
+        Did did = didQueryService.didFindByDid(request.getDid()).orElseThrow(() -> new OpenDidException(ErrorCode.TODO));
+        DidDocStatus status = DidDocStatus.valueOf(request.getStatus());
+        did.setStatus(status);
+
+        if (DidDocStatus.REVOKED.equals(DidDocStatus.valueOf(request.getStatus()))) {
+            // TODO: Revoked 테이블 이관
+        }
+
     }
+
+    private void verifyDidDoc(InvokedDidDoc invokedDidDoc) {
+        String controller = DidUtil.extractDid(invokedDidDoc.getController().getDid());
+
+        Did did = didQueryService.didFindByDid(controller).orElseThrow(() -> new OpenDidException(ErrorCode.TODO));
+        if (!RoleType.Tas.name().equals(did.getRole())) {
+            throw new OpenDidException(ErrorCode.TODO);
+        }
+        DidDocument didDocument = didQueryService.didDocFindByDid(did.getId(), did.getVersion()).orElseThrow(() -> new OpenDidException(ErrorCode.TODO));
+        DidManager didManager = new DidManager();
+        didManager.parse(didDocument.getDocument());
+
+        InvokedDidDoc signatureMessageObject = removeProof(invokedDidDoc);
+        String jsonString = JsonUtil.serializeAndSort(signatureMessageObject);
+
+        byte[] bytes = BaseDigestUtil.generateHash(jsonString);
+        VerificationMethod verificationMethod = didManager.getVerificationMethodByKeyId("invoke");
+        String encodedPublicKey = verificationMethod.getPublicKeyMultibase();
+
+        BaseCryptoUtil.verifySignature(encodedPublicKey, invokedDidDoc.getProof().getProofValue(), bytes,
+                EccCurveType.fromString(invokedDidDoc.getProof().getType()));
+    }
+
+    /**
+     * Removes the proof from a DID document.
+     *
+     * @param invokedDidDoc The DID document to remove the proof from
+     * @return DidDocument The DID document without proof
+     */
+    private InvokedDidDoc removeProof(InvokedDidDoc invokedDidDoc) {
+        Proof tmpProof = new Proof();
+        tmpProof.setType(invokedDidDoc.getProof().getType());
+        tmpProof.setCreated(invokedDidDoc.getProof().getCreated());
+        tmpProof.setVerificationMethod(invokedDidDoc.getProof().getVerificationMethod());
+        tmpProof.setProofPurpose(invokedDidDoc.getProof().getProofPurpose());
+        tmpProof.setProofValue(null);
+
+        return new InvokedDidDoc(invokedDidDoc.getDidDoc(), tmpProof,
+                invokedDidDoc.getController(), invokedDidDoc.getNonce());
+    }
+
 }

@@ -9,7 +9,7 @@ import org.omnione.did.data.model.did.InvokedDidDoc;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class InputDidDocReqDto {
-    private String roleType;
-    private InvokedDidDoc didDoc;
+public class UpdateDidDocReqDto {
+    private String status;
+    private String did;
 }
