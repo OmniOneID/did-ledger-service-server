@@ -21,10 +21,7 @@ import org.omnione.did.base.constants.UrlConstant;
 import org.omnione.did.repository.v1.dto.common.EmptyResDto;
 import org.omnione.did.repository.v1.dto.zkp.InputZkpCredentialSchemaReqDto;
 import org.omnione.did.repository.v1.service.ZkpCredentialSchemaService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -37,5 +34,10 @@ public class ZkpCredentialSchemaController {
     @PostMapping
     public EmptyResDto generateZkpCredentialSchema(@RequestBody InputZkpCredentialSchemaReqDto request) {
         return zkpCredentialSchemaService.generateZkpCredentialSchema(request);
+    }
+
+    @GetMapping
+    public String getZkpCredentialSchema(@RequestParam(value="schemaId") String schemaId) {
+        return zkpCredentialSchemaService.getZkpCredentialSchema(schemaId);
     }
 }

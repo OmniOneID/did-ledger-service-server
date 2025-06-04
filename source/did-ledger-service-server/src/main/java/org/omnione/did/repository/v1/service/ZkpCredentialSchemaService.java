@@ -20,4 +20,6 @@ import org.omnione.did.repository.v1.dto.zkp.InputZkpCredentialSchemaReqDto;
 
 public interface ZkpCredentialSchemaService {
     EmptyResDto generateZkpCredentialSchema(InputZkpCredentialSchemaReqDto request);
+
+    String getZkpCredentialSchema(String schemaId);
 }

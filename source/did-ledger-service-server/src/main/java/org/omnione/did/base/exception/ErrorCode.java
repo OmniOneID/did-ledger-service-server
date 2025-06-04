@@ -28,6 +28,7 @@ public enum ErrorCode {
     // 5. ZKP-related errors (12500 ~ 12999)
     INVALID_CREDENTIAL_SCHEMA_ID("SSRVLSS12500", "Invalid Credential Schema ID.", 400),
     CREDENTIAL_SCHEMA_ALREADY_REGISTERED("SSRVLSS12501", "Failed to register Credential Schema: Credential Schemma already exists.", 400),
+    CREDENTIAL_SCHEMA_NOT_FOUND("SSRVLSS12502", "Credential Schema not found.", 500),
 
 
     // 99. Miscellaneous errors (90000 ~ 99999)

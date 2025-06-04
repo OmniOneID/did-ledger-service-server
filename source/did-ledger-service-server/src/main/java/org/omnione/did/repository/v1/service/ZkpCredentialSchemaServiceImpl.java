@@ -43,9 +43,9 @@ import java.util.List;
 @Transactional
 @Profile("!sample")
 public class ZkpCredentialSchemaServiceImpl implements ZkpCredentialSchemaService {
-
     private final DidQueryServiceImpl didQueryService;
     private final ZkpCredentialSchemaQueryService zkpCredentialSchemaQueryService;
+    private final GsonWrapper gsonWrapper;
 
     @Override
     public EmptyResDto generateZkpCredentialSchema(InputZkpCredentialSchemaReqDto request) {
@@ -68,6 +68,14 @@ public class ZkpCredentialSchemaServiceImpl implements ZkpCredentialSchemaServic
 
         log.debug("*** Finished generateZkpCredentialSchema ***");
         return new EmptyResDto();
+    }
+
+    @Override
+    public String getZkpCredentialSchema(String schemaId) {
+        ZkpCredentialSchema foundZkpCredentialSchema = zkpCredentialSchemaQueryService.findBySchemaId(schemaId)
+                .orElseThrow(() -> new OpenDidException(ErrorCode.CREDENTIAL_SCHEMA_NOT_FOUND));
+
+        return gsonWrapper.toJson(foundZkpCredentialSchema.getSchema());
     }
 
     /**
