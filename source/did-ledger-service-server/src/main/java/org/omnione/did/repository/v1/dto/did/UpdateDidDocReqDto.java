@@ -1,6 +1,7 @@
 package org.omnione.did.repository.v1.dto.did;
 
 import lombok.*;
+import org.omnione.did.base.constants.DidDocStatus;
 import org.omnione.did.data.model.did.InvokedDidDoc;
 
 @Getter
@@ -10,6 +11,6 @@ import org.omnione.did.data.model.did.InvokedDidDoc;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UpdateDidDocReqDto {
-    private String status;
+    private DidDocStatus status;
     private String did;
 }
