@@ -13,13 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.omnione.did.repository.v1.service;
+package org.omnione.did.repository.v1.dto.zkp;
 
-import org.omnione.did.repository.v1.dto.common.EmptyResDto;
-import org.omnione.did.repository.v1.dto.zkp.InputZkpCredentialSchemaReqDto;
+import lombok.*;
 
-public interface ZkpCredentialSchemaService {
-    void generateZkpCredentialSchema(InputZkpCredentialSchemaReqDto request);
-
-    String getZkpCredentialSchema(String schemaId);
+@Getter
+@Setter
+@ToString
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class InputZkpCredentialDefinitionReqDto {
+    private String credentialDefinition;
 }

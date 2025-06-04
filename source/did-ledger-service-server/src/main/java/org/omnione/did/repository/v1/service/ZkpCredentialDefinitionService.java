@@ -16,10 +16,8 @@
 package org.omnione.did.repository.v1.service;
 
 import org.omnione.did.repository.v1.dto.common.EmptyResDto;
-import org.omnione.did.repository.v1.dto.zkp.InputZkpCredentialSchemaReqDto;
+import org.omnione.did.repository.v1.dto.zkp.InputZkpCredentialDefinitionReqDto;
 
-public interface ZkpCredentialSchemaService {
-    void generateZkpCredentialSchema(InputZkpCredentialSchemaReqDto request);
-
-    String getZkpCredentialSchema(String schemaId);
+public interface ZkpCredentialDefinitionService {
+    void generateZkpCredentialDefinition(InputZkpCredentialDefinitionReqDto request);
 }

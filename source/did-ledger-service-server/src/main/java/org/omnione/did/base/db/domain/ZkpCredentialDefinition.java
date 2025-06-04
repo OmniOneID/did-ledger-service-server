@@ -2,6 +2,7 @@ package org.omnione.did.base.db.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.omnione.did.zkp.datamodel.enums.CredentialType;
 
 @Builder
 @AllArgsConstructor
@@ -27,7 +28,8 @@ public class ZkpCredentialDefinition extends BaseEntity {
     private String version;
 
     @Column(name = "type", nullable = false)
-    private String type;
+    @Enumerated(EnumType.STRING)
+    private CredentialType type;
 
     @Column(name = "value", nullable = false)
     private String value;

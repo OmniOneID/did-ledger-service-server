@@ -18,28 +18,21 @@ package org.omnione.did.repository.v1.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.omnione.did.base.constants.UrlConstant;
-import org.omnione.did.repository.v1.dto.common.EmptyResDto;
-import org.omnione.did.repository.v1.dto.zkp.InputZkpCredentialSchemaReqDto;
-import org.omnione.did.repository.v1.service.ZkpCredentialSchemaService;
+import org.omnione.did.repository.v1.dto.zkp.InputZkpCredentialDefinitionReqDto;
+import org.omnione.did.repository.v1.service.ZkpCredentialDefinitionService;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(value = UrlConstant.CredentialSchema.V1)
-public class ZkpCredentialSchemaController {
+@RequestMapping(value = UrlConstant.CredentialDefinition.V1)
+public class ZkpCredentialDefinitionController {
 
-    private final ZkpCredentialSchemaService zkpCredentialSchemaService;
+    private final ZkpCredentialDefinitionService zkpCredentialDefinitionService;
 
     @PostMapping
     @ResponseBody
-    public void generateZkpCredentialSchema(@RequestBody InputZkpCredentialSchemaReqDto request) {
-        zkpCredentialSchemaService.generateZkpCredentialSchema(request);
-    }
-
-    @GetMapping
-    @ResponseBody
-    public String getZkpCredentialSchema(@RequestParam(value="schemaId") String schemaId) {
-        return zkpCredentialSchemaService.getZkpCredentialSchema(schemaId);
+    public void generateZkpCredentialDefinition(@RequestBody InputZkpCredentialDefinitionReqDto request) {
+         zkpCredentialDefinitionService.generateZkpCredentialDefinition(request);
     }
 }

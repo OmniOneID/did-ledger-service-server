@@ -48,7 +48,7 @@ public class ZkpCredentialSchemaServiceImpl implements ZkpCredentialSchemaServic
     private final GsonWrapper gsonWrapper;
 
     @Override
-    public EmptyResDto generateZkpCredentialSchema(InputZkpCredentialSchemaReqDto request) {
+    public void generateZkpCredentialSchema(InputZkpCredentialSchemaReqDto request) {
         log.debug("=== Starting generateZkpCredentialSchema ===");
 
         // 1. decode and parse the credential schema
@@ -67,15 +67,22 @@ public class ZkpCredentialSchemaServiceImpl implements ZkpCredentialSchemaServic
         saveCredentialSchema(credentialSchema);
 
         log.debug("*** Finished generateZkpCredentialSchema ***");
-        return new EmptyResDto();
     }
 
     @Override
     public String getZkpCredentialSchema(String schemaId) {
+        log.debug("=== Starting getZkpCredentialSchema ===");
+
+        // 1. find the credential schema by schema ID
+        log.debug("\t--> Finding Credential Schema by schemaId: {}", schemaId);
         ZkpCredentialSchema foundZkpCredentialSchema = zkpCredentialSchemaQueryService.findBySchemaId(schemaId)
                 .orElseThrow(() -> new OpenDidException(ErrorCode.CREDENTIAL_SCHEMA_NOT_FOUND));
 
-        return gsonWrapper.toJson(foundZkpCredentialSchema.getSchema());
+        String schemaJson = gsonWrapper.toJson(foundZkpCredentialSchema.getSchema());
+        log.debug("\t--> Found Credential Schema: {}", schemaJson);
+
+        log.debug("*** Finished getZkpCredentialSchema ***");
+        return schemaJson;
     }
 
     /**
@@ -150,7 +157,6 @@ public class ZkpCredentialSchemaServiceImpl implements ZkpCredentialSchemaServic
         List<String> attrNames = credentialSchema.getAttrNames();
         List<AttributeType> attrTypes = credentialSchema.getAttrTypes();
 
-        GsonWrapper gsonWrapper = new GsonWrapper();
         String credentialSchemaJson = gsonWrapper.toJson(credentialSchema);
         String attrNamesJson = gsonWrapper.toJson(attrNames);
         String attrTypesJson = gsonWrapper.toJson(attrTypes);
@@ -164,14 +170,15 @@ public class ZkpCredentialSchemaServiceImpl implements ZkpCredentialSchemaServic
                 .attrNames(attrNamesJson)
                 .attrTypes(attrTypesJson)
                 .build());
+
+        log.debug("\t--> Credential Schema saved successfully: {}", credentialSchema);
     }
 
     private CredentialSchema decodeAndParseCredentialSchema(String encodedVcSchema) {
         log.debug("\t--> Decoding Credential Schema");
         byte[] decodedData = BaseMultibaseUtil.decode(encodedVcSchema);
-        CredentialSchema credentialSchema = GsonWrapper.getGson().fromJson(new String(decodedData), CredentialSchema.class);
-        log.debug("\t--> Decoded Credential Schema: {}", credentialSchema);
-        return credentialSchema;
+
+        return GsonWrapper.getGson().fromJson(new String(decodedData), CredentialSchema.class);
     }
 
     /**

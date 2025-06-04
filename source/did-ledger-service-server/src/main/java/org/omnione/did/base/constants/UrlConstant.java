@@ -16,4 +16,8 @@ public class UrlConstant {
     public static class CredentialSchema {
         public static final String V1 = "/api/v1/credential-schema";
     }
+
+    public static class CredentialDefinition {
+        public static final String V1 = "/api/v1/credential-definition";
+    }
 }
