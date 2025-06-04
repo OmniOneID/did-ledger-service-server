@@ -5,28 +5,45 @@ import lombok.Getter;
 @Getter
 public enum ErrorCode {
 
-    // 01xxx: DID or DID Document Error
-    DID_NOT_FOUND("01000", "Failed to find DID: DID not found", 400),
-    DID_DOC_NOT_FOUND("00100", "Failed to find DID Document: DID Document not found", 400),
-    ROLE_DID_NOT_FOUND("01000", "Failed to find DID: DID not found by Role", 400),
-    TA_DID_DOC_NOT_FOUND("01000", "Failed to find DID Document: TA DID Document not found", 400),
+    // 1. General errors (10000 ~ 10999)
+    CLIENT_ERROR("SSRVLSS10000", "Client Error", 400),
+    SERVER_ERROR("SSRVLSS10001", "Server Error", 500),
 
-    DID_DOC_VERSION_MISMATCH("01001", "DID Document version mismatch", 400),
 
-    // 02xxx: Crypto Error
-    VERIFY_SIGN_FAIL("02000", "Verify Signature Fail.", 400),
+    // 2. Error during API processing (11000 ~ 11499)
+    VERIFY_SIGN_FAIL("SSRVLSS11000", "Verify Signature Fail", 400),
+    REQUEST_BODY_UNREADABLE("SSRVLSS11001", "", 500),
 
-    // 03xxx: Policy Error,
-    TERMINATED_STATUS_CAN_NOT_CHANGE("03000", "Terminated DIDs can't change their status.", 400),
-    REVOKED_STATUS_CAN_NOT_CHANGE("03001", "Revoked DIDs can't change their status to (De)Activate.", 400),
-    REVOKED_VC_CANNOT_UPDATE("03002", "A revoked VC cannot be updated.", 400),
-    DID_ROLE_MISMATCH_TA("03003", "The DID's Role is not TA.", 400),
 
-    REQUEST_BODY_UNREADABLE("90003", "Request Data unreadable", 400),
+    // 3. DID-related errors (11500 ~ 11999)
+    DID_DOC_VERSION_MISMATCH("SSRVLSS11500", "DidDoc version mismatch", 400),
+    DID_NOT_FOUND("SSRVLSS11501", "DID not found", 400),
+    ROLE_TYPE_MISMATCH("SSRVLSS11502", "Role type mismatch", 400),
+    DID_NOT_ACTIVATED("SSRVLSS11503", "DID not activated", 400),
+    DID_DOC_NOT_FOUND("SSRVLSS11504", "Failed to find DID Document: DID Document not found", 400),
+    ROLE_DID_NOT_FOUND("SSRVLSS11505", "Failed to find DID: DID not found by Role", 400),
+    TA_DID_DOC_NOT_FOUND("SSRVLSS11506", "Failed to find DID Document: TA DID Document not found", 400),
 
-    CLIENT_ERROR("90001", "Client Error", 400),
-    SERVER_ERROR("90002", "Server Error", 500),
-    TODO("99999", "TODO.", 500),
+
+
+    // 4. VC-related errors (12000 ~ 12499)
+    REVOKED_VC_CANNOT_UPDATE("SSRVLSS12000", "A revoked VC cannot be updated.", 400),
+
+
+    // 5. ZKP-related errors (12500 ~ 12999)
+    INVALID_CREDENTIAL_SCHEMA_ID("SSRVLSS12500", "Invalid Credential Schema ID.", 400),
+    CREDENTIAL_SCHEMA_ALREADY_REGISTERED("SSRVLSS12501", "Failed to register Credential Schema: Credential Schemma already exists.", 400),
+
+    // 6. Policy errors (13000 ~ 13499)
+    TERMINATED_STATUS_CAN_NOT_CHANGE("SSRVLSS13000", "Terminated DIDs can't change their status.", 400),
+    REVOKED_STATUS_CAN_NOT_CHANGE("SSRVLSS13001", "Revoked DIDs can't change their status to (De)Activate.", 400),
+    DID_ROLE_MISMATCH_TA("SSRVLSS13002", "The DID's Role is not TA.", 400),
+
+
+    // 99. Miscellaneous errors (90000 ~ 99999)
+    TODO("SSRVLSS99999", "TODO.", 500),
+
+
     ;
 
 
@@ -42,7 +59,7 @@ public enum ErrorCode {
      * @param httpStatus HTTP Status Code
      */
     ErrorCode(String code, String message, int httpStatus) {
-        this.code = "S" + "SRV" + "LSS" + code;
+        this.code = code;
         this.message = message;
         this.httpStatus = httpStatus;
     }
