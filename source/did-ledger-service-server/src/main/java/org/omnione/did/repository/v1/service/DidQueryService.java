@@ -1,8 +1,8 @@
 package org.omnione.did.repository.v1.service;
 
-import org.omnione.did.base.constants.DidDocStatus;
 import org.omnione.did.base.db.domain.Did;
 import org.omnione.did.base.db.domain.DidDocument;
+import org.omnione.did.base.db.domain.DidDocumentStatusHistory;
 
 import java.util.Optional;
 
@@ -20,4 +20,6 @@ public interface DidQueryService {
     Optional<DidDocument> didDocFindByDid(Long did, Short version);
     void updateDeactivateByDidEntity(Long didId, Boolean deactivated);
     Optional<DidDocument> findFirstByOrderByIdDesc();
+
+    DidDocumentStatusHistory save(DidDocumentStatusHistory didDocumentStatusHistory);
 }

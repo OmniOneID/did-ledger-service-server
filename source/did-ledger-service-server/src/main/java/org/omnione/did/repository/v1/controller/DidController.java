@@ -2,9 +2,7 @@ package org.omnione.did.repository.v1.controller;
 
 import org.omnione.did.base.constants.UrlConstant;
 import org.omnione.did.repository.v1.dto.did.InputDidDocReqDto;
-import org.omnione.did.repository.v1.dto.did.TssGetDidDocResDto;
 import org.omnione.did.repository.v1.dto.did.UpdateDidDocReqDto;
-import org.omnione.did.repository.v1.dto.vc.InputVcMetaResDto;
 import org.omnione.did.repository.v1.service.DidService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +22,7 @@ public class DidController {
     }
 
     @GetMapping
-    public TssGetDidDocResDto getDid(@RequestParam(value = "did", defaultValue = "did:omn:tas") String didDoc) {
+    public String getDid(@RequestParam(value = "did", defaultValue = "did:omn:tas") String didDoc) {
         log.debug("get DID");
 
         return didService.getDid(didDoc);

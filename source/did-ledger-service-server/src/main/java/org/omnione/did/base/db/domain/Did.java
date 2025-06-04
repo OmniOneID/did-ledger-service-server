@@ -3,6 +3,7 @@ package org.omnione.did.base.db.domain;
 import org.omnione.did.base.constants.DidDocStatus;
 import jakarta.persistence.*;
 import lombok.*;
+import org.omnione.did.data.model.enums.vc.RoleType;
 
 import java.time.Instant;
 import java.util.List;
@@ -27,8 +28,9 @@ public class Did extends BaseEntity {
     @Column(name = "version", nullable = false, columnDefinition = "SMALLINT")
     private Short version;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "role")
-    private String role;
+    private RoleType role;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false, length = 20, columnDefinition = "VARCHAR(20)")

@@ -1,10 +1,7 @@
 package org.omnione.did.base.db.domain;
 
-import org.omnione.did.base.constants.DidDocStatus;
 import jakarta.persistence.*;
 import lombok.*;
-
-import javax.print.attribute.standard.MediaSize;
 
 @Builder
 @AllArgsConstructor

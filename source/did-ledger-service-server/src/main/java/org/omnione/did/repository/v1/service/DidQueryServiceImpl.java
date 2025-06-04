@@ -1,10 +1,11 @@
 package org.omnione.did.repository.v1.service;
 
 import lombok.RequiredArgsConstructor;
-import org.omnione.did.base.constants.DidDocStatus;
 import org.omnione.did.base.db.domain.Did;
 import org.omnione.did.base.db.domain.DidDocument;
+import org.omnione.did.base.db.domain.DidDocumentStatusHistory;
 import org.omnione.did.base.db.repository.DidDocumentRepository;
+import org.omnione.did.base.db.repository.DidDocumentStatusHistoryRepository;
 import org.omnione.did.base.db.repository.DidRepository;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +23,7 @@ import java.util.Optional;
 public class DidQueryServiceImpl implements DidQueryService {
     private final DidRepository didRepository;
     private final DidDocumentRepository didDocumentRepository;
-
+    private final DidDocumentStatusHistoryRepository didDocumentStatusHistoryRepository;
     @Override
     public Did save(Did did) {
         return didRepository.save(did);
@@ -51,5 +52,10 @@ public class DidQueryServiceImpl implements DidQueryService {
     @Override
     public Optional<DidDocument> findFirstByOrderByIdDesc() {
         return didDocumentRepository.findFirstByOrderByIdDesc();
+    }
+
+    @Override
+    public DidDocumentStatusHistory save(DidDocumentStatusHistory didDocumentStatusHistory) {
+        return didDocumentStatusHistoryRepository.save(didDocumentStatusHistory);
     }
 }
