@@ -26,210 +26,213 @@ import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.Optional;
 
-@Profile("!sample")
-@RequiredArgsConstructor
-@Service
 @Slf4j
+@RequiredArgsConstructor
 @Transactional
+@Profile("!sample")
+@Service
 public class DidServiceImpl implements DidService {
+    private static final String REASON_REGISTER = "Register DID Document";
+    private static final String REASON_UPDATE = "update DID Document";
+    private static final String REASON_STATUS_CHANGE = "Update DID Status";
 
     private final DidQueryService didQueryService;
 
     @Override
     public void generateDid(InputDidDocReqDto request) {
-        // TODO 소스 정리
-        try {
-            log.debug("=== Starting generateDid ===");
-            // 1. DidDoc 파싱
-            log.debug("\t--> Parsing DID Document");
-            org.omnione.did.data.model.did.DidDocument didDocument = parseDidDoc(request);
+        log.debug("=== Starting generateDid ===");
 
-            // 2. DID Doc TAS 서명 검증(권한 체크)
-            log.debug("\t--> Verify DID Document");
-            verifyDidDoc(request.getDidDoc());
+        var didDocument = parseDidDoc(request);
+        verifyDidDoc(request.getDidDoc());
 
-            // 3. Did 정보 조회
-            log.debug("\t--> Find DID");
-            Optional<Did> didResult = didQueryService.didFindByDid(didDocument.getId());
-            if (didResult.isPresent()) {
-                Did did = didResult.get();
-                // 3.2. DID Doc 업데이트 (등록된 DID가 있을 경우)
-                log.debug("\t--> Update DID Document");
-                updateDidDoc(did, didDocument);
-            } else {
-                // 3.1. DID Doc 등록 (등록된 DID가 없을 경우)
-                log.debug("\t--> Register DID Document");
-                registerDidDoc(didDocument, request.getRoleType());
-            }
+        didQueryService.didFindByDid(didDocument.getId())
+                .ifPresentOrElse(
+                        did -> updateDidDoc(did, didDocument),
+                        () -> registerDidDoc(didDocument, request.getRoleType())
+                );
 
-            log.debug("*** Finished generateDid ***");
-        } catch (Exception e) {
-            log.error("Failed to generate DID", e);
-            throw new RuntimeException(e);
-        }
+        log.debug("*** Finished generateDid ***");
     }
 
     private org.omnione.did.data.model.did.DidDocument parseDidDoc(InputDidDocReqDto request) {
-        byte[] decodedDidDocBytes = BaseMultibaseUtil.decode(request.getDidDoc().getDidDoc());
-        String didDocJson = new String(decodedDidDocBytes, StandardCharsets.UTF_8);
+        log.debug("\t--> Parsing DID Document");
 
-        DidManager didManager = BaseCoreDidUtil.parseDidDoc(didDocJson);
-        return didManager.getDocument();
+        String didDocJson = new String(BaseMultibaseUtil.decode(request.getDidDoc().getDidDoc()), StandardCharsets.UTF_8);
+        return BaseCoreDidUtil.parseDidDoc(didDocJson).getDocument();
     }
 
-    private void updateDidDoc(Did previousDid, org.omnione.did.data.model.did.DidDocument didDoc) {
+    private void updateDidDoc(Did previousDid, org.omnione.did.data.model.did.DidDocument newDoc) {
+        log.debug("\t--> Update DID Document");
+
         log.debug("\t--> Check last version of did document");
-        Optional<DidDocument> firstByOrderByIdDesc = didQueryService.findFirstByOrderByIdDesc();
+        Short newVersion = Short.parseShort(newDoc.getVersionId());
 
-        firstByOrderByIdDesc.ifPresent(didDocument -> {
-            if (didDocument.getVersion() != Short.parseShort(didDoc.getVersionId()) - 1) {
-                throw new OpenDidException(ErrorCode.DID_DOC_VERSION_MISMATCH);
-            }
-        });
-
+        didQueryService.findFirstByDidIdOrderByIdDesc(previousDid.getId())
+                .ifPresent(prevDoc -> {
+                    if (prevDoc.getVersion() != newVersion - 1) {
+                        throw new OpenDidException(ErrorCode.DID_DOC_VERSION_MISMATCH);
+                    }
+                });
         log.debug("\t--> Update did");
-        Did savedDid = didQueryService.save(Did.builder()
+        Did updatedDid = didQueryService.save(Did.builder()
                 .id(previousDid.getId())
-                .did(previousDid.getDid())
-                .role(previousDid.getRole())
                 .status(DidDocStatus.ACTIVATE)
-                .version(Short.parseShort(didDoc.getVersionId()))
+                .version(newVersion)
                 .build());
-
         log.debug("\t--> Deactivate previous did document");
-        didQueryService.updateDeactivateByDidEntity(savedDid.getId(), true);
-
+        didQueryService.updateDeactivateByDidEntity(updatedDid.getId(), true);
         log.debug("\t--> Insert did document");
-        didQueryService.save(DidDocument.builder()
-                .didId(savedDid.getId())
-                .version(Short.parseShort(didDoc.getVersionId()))
-                .document(didDoc.toJson())
-                .controller("did:omn:tas") // TODO: TAS
-                .deactivated(false)
-                .build());
-
-        log.debug("\t--> Save did document Status History");
-        DidDocument didDocument = firstByOrderByIdDesc.get();
-        DidDocumentStatusHistory updateDidDocument = DidDocumentStatusHistory.builder()
-                .version(didDocument.getVersion())
-                .fromStatus(previousDid.getStatus())
-                .toStatus(previousDid.getStatus())
-                .changedAt(Instant.now())
-                .reason("update DID Document")
-                .didId(previousDid.getId())
-                .build();
-
-        didQueryService.save(updateDidDocument);
+        didQueryService.save(buildDidDocument(updatedDid.getId(), newVersion, newDoc));
+        // TODO: Check From Status
+        saveStatusHistory(previousDid.getId(), DidDocStatus.ACTIVATE, previousDid.getStatus(), newVersion, REASON_UPDATE);
     }
 
-    private void registerDidDoc(org.omnione.did.data.model.did.DidDocument didDocument, RoleType roleType) {
-        Did didEntity = didQueryService.save(Did.builder()
-                .did(didDocument.getId())
+    private void registerDidDoc(org.omnione.did.data.model.did.DidDocument doc, RoleType roleType) {
+        log.debug("\t--> Register DID Document");
+
+        Short version = Short.parseShort(doc.getVersionId());
+        Did newDid = didQueryService.save(Did.builder()
+                .did(doc.getId())
                 .role(roleType)
                 .status(DidDocStatus.ACTIVATE)
-                .version(Short.parseShort(didDocument.getVersionId()))
-                .build());
-        didQueryService.save(DidDocument.builder()
-                .didId(didEntity.getId())
-                .version(Short.parseShort(didDocument.getVersionId()))
-                .document(didDocument.toJson())
-                .controller("did:omn:tas") // TODO: TAS DID
-                .deactivated(false)
+                .version(version)
                 .build());
 
+        didQueryService.save(buildDidDocument(newDid.getId(), version, doc));
+        saveStatusHistory(newDid.getId(), null, DidDocStatus.ACTIVATE, version, REASON_REGISTER);
+    }
+
+    private DidDocument buildDidDocument(Long didId, Short version, org.omnione.did.data.model.did.DidDocument doc) {
+
+        return DidDocument.builder()
+                .didId(didId)
+                .version(version)
+                .document(doc.toJson())
+                .controller(doc.getController())
+                .deactivated(false)
+                .build();
+    }
+
+    private void saveStatusHistory(Long didId, DidDocStatus from, DidDocStatus to, Short version, String reason) {
+        log.debug("\t--> Save did document Status History");
+
         didQueryService.save(DidDocumentStatusHistory.builder()
-                .version(Short.parseShort(didDocument.getVersionId()))
-                .toStatus(DidDocStatus.ACTIVATE)
+                .didId(didId)
+                .version(version)
+                .fromStatus(from)
+                .toStatus(to)
                 .changedAt(Instant.now())
-                .reason("Register DID Document")
-                .didId(didEntity.getId())
+                .reason(reason)
                 .build());
     }
 
     @Override
     public String getDid(String didKeyUrl) {
+        log.debug("=== Starting getDid ===");
 
         String did = DidUtil.extractDid(didKeyUrl);
-        Short version = DidUtil.extractVersion(didKeyUrl);
 
-        Did didDoc = didQueryService.didFindByDid(did)
-                .orElseThrow(() -> new OpenDidException(ErrorCode.TODO));
+        Did didEntity = didQueryService.didFindByDid(did)
+                .orElseThrow(() -> new OpenDidException(ErrorCode.DID_NOT_FOUND));
 
-        if (version == null) {
-            version = didDoc.getVersion();
-        }
+        Short version = Optional.ofNullable(DidUtil.extractVersion(didKeyUrl))
+                .orElse(didEntity.getVersion());
 
-        DidDocument didDocument = didQueryService.didDocFindByDid(didDoc.getId(), version)
-                .orElseThrow(() -> new OpenDidException(ErrorCode.TODO));
+        DidDocument doc = didQueryService.didDocFindByDidIdAndVersion(didEntity.getId(), version)
+                .orElseThrow(() -> new OpenDidException(ErrorCode.DID_DOC_NOT_FOUND));
 
-
-        return didDocument.getDocument();
+        log.debug("*** Finished getDid ***");
+        return doc.getDocument();
     }
+
 
     @Override
     public void updateStatus(UpdateDidDocReqDto request) {
-        // TODO
-        String didKeyUrl = request.getDid();
+        log.debug("=== Starting updateDidStatus ===");
 
-        String did = DidUtil.extractDid(didKeyUrl);
-        Short version = DidUtil.extractVersion(didKeyUrl);
+        String did = DidUtil.extractDid(request.getDid());
 
-        Did didEntity = didQueryService.didFindByDid(did).orElseThrow(() -> new OpenDidException(ErrorCode.TODO));
-        DidDocStatus didEntityStatus = didEntity.getStatus();
+        Did didEntity = didQueryService.didFindByDid(did)
+                .orElseThrow(() -> new OpenDidException(ErrorCode.DID_NOT_FOUND));
 
-        if (DidDocStatus.REVOKED.equals(didEntityStatus)) {
-            throw new OpenDidException(ErrorCode.TODO);
+        Short version = Optional.ofNullable(DidUtil.extractVersion(request.getDid()))
+                .orElse(didEntity.getVersion());
+
+        DidDocStatus currentStatus = didEntity.getStatus();
+        DidDocStatus targetStatus = request.getStatus();
+
+        if (DidDocStatus.TERMINATED.equals(currentStatus)) {
+            log.error("Terminated DIDs can't change their status - DID: {}", didEntity.getDid());
+            throw new OpenDidException(ErrorCode.TERMINATED_STATUS_CAN_NOT_CHANGE);
         }
 
-        DidDocStatus status = DidDocStatus.valueOf(request.getStatus());
-        didEntity.setStatus(status);
-
-
-        if (DidDocStatus.REVOKED.equals(DidDocStatus.valueOf(request.getStatus()))) {
-            // TODO: Revoked 테이블 이관
-
+        if (DidDocStatus.REVOKED.equals(currentStatus) && !DidDocStatus.TERMINATED.equals(targetStatus)) {
+            log.error("Revoked DIDs can't change their status to (De)Activate - DID: {}", didEntity.getDid());
+            throw new OpenDidException(ErrorCode.REVOKED_STATUS_CAN_NOT_CHANGE);
         }
 
+        if (DidDocStatus.TERMINATED.equals(targetStatus)) {
+            didEntity.setTerminatedTime(Instant.now());
+        } else if (DidDocStatus.REVOKED.equals(targetStatus)) {
+            didQueryService.revokeDidDocument(didEntity.getId());
+        } else {
+            DidDocument doc = didQueryService.findDidDocFirstByDidAndVersion(didEntity.getId(), version)
+                    .orElseThrow(() -> new OpenDidException(ErrorCode.DID_DOC_NOT_FOUND));
+            doc.setDeactivated(DidDocStatus.DEACTIVATE.equals(targetStatus));
+        }
+
+        saveStatusHistory(didEntity.getId(), currentStatus, targetStatus, version, REASON_STATUS_CHANGE);
+        didEntity.setStatus(targetStatus);
+
+        log.debug("*** Finished updateDidStatus ***");
     }
+
 
     private void verifyDidDoc(InvokedDidDoc invokedDidDoc) {
-        String controller = DidUtil.extractDid(invokedDidDoc.getController().getDid());
+        log.debug("\t--> Signature verification for TA");
 
-        Did did = didQueryService.didFindByDid(controller).orElseThrow(() -> new OpenDidException(ErrorCode.TODO));
-        if (!RoleType.TAS.equals(did.getRole())) {
-            throw new OpenDidException(ErrorCode.TODO);
+        String controllerDid = DidUtil.extractDid(invokedDidDoc.getController().getDid());
+
+        Did controllerDidEntity = didQueryService.didFindByDid(controllerDid)
+                .orElseThrow(() -> new OpenDidException(ErrorCode.DID_NOT_FOUND));
+
+        Short version = Optional.ofNullable(DidUtil.extractVersion(controllerDid))
+                .orElse(controllerDidEntity.getVersion());
+
+        if (!RoleType.TAS.equals(controllerDidEntity.getRole())) {
+            log.error("The DID's Role is not TA - DID: {}, Role: {}", controllerDidEntity.getDid(),
+                    controllerDidEntity.getRole().name());
+            throw new OpenDidException(ErrorCode.DID_ROLE_MISMATCH_TA);
         }
-        DidDocument didDocument = didQueryService.didDocFindByDid(did.getId(), did.getVersion()).orElseThrow(() -> new OpenDidException(ErrorCode.TODO));
-        DidManager didManager = new DidManager();
-        didManager.parse(didDocument.getDocument());
 
-        InvokedDidDoc signatureMessageObject = removeProof(invokedDidDoc);
-        String jsonString = JsonUtil.serializeAndSort(signatureMessageObject);
+        DidDocument controllerDidDoc = didQueryService.didDocFindByDidIdAndVersion(controllerDidEntity.getId(), version)
+                .orElseThrow(() -> new OpenDidException(ErrorCode.DID_DOC_NOT_FOUND));
 
-        byte[] bytes = BaseDigestUtil.generateHash(jsonString);
-        VerificationMethod verificationMethod = didManager.getVerificationMethodByKeyId("invoke"); // TODO: Invoke key ID
-        String encodedPublicKey = verificationMethod.getPublicKeyMultibase();
+        DidManager controllerDidManager = new DidManager();
+        controllerDidManager.parse(controllerDidDoc.getDocument());
 
-        BaseCryptoUtil.verifySignature(encodedPublicKey, invokedDidDoc.getProof().getProofValue(), bytes,
-                EccCurveType.fromString(invokedDidDoc.getProof().getType()));
+        InvokedDidDoc toVerify = removeProof(invokedDidDoc);
+        String json = JsonUtil.serializeAndSort(toVerify);
+        byte[] hash = BaseDigestUtil.generateHash(json);
+
+        String invocationKeyId = controllerDidManager.getDocument().getCapabilityInvocation().getFirst();
+        VerificationMethod method = controllerDidManager.getVerificationMethodByKeyId(invocationKeyId);
+        BaseCryptoUtil.verifySignature(
+                method.getPublicKeyMultibase(),
+                invokedDidDoc.getProof().getProofValue(),
+                hash,
+                EccCurveType.fromString(invokedDidDoc.getProof().getType())
+        );
     }
 
-    /**
-     * Removes the proof from a DID document.
-     *
-     * @param invokedDidDoc The DID document to remove the proof from
-     * @return DidDocument The DID document without proof
-     */
     private InvokedDidDoc removeProof(InvokedDidDoc invokedDidDoc) {
-        Proof tmpProof = new Proof();
-        tmpProof.setType(invokedDidDoc.getProof().getType());
-        tmpProof.setCreated(invokedDidDoc.getProof().getCreated());
-        tmpProof.setVerificationMethod(invokedDidDoc.getProof().getVerificationMethod());
-        tmpProof.setProofPurpose(invokedDidDoc.getProof().getProofPurpose());
-        tmpProof.setProofValue(null);
+        Proof newProof = new Proof();
+        newProof.setType(invokedDidDoc.getProof().getType());
+        newProof.setCreated(invokedDidDoc.getProof().getCreated());
+        newProof.setVerificationMethod(invokedDidDoc.getProof().getVerificationMethod());
+        newProof.setProofPurpose(invokedDidDoc.getProof().getProofPurpose());
+        newProof.setProofValue(null);
 
-        return new InvokedDidDoc(invokedDidDoc.getDidDoc(), tmpProof,
-                invokedDidDoc.getController(), invokedDidDoc.getNonce());
+        return new InvokedDidDoc(invokedDidDoc.getDidDoc(), newProof, invokedDidDoc.getController(), invokedDidDoc.getNonce());
     }
-
 }
