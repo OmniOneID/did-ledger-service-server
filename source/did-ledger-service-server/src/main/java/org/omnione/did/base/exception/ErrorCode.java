@@ -18,6 +18,7 @@ public enum ErrorCode {
     DID_DOC_VERSION_MISMATCH("SSRVLSS11500", "DidDoc version mismatch", 400),
     DID_NOT_FOUND("SSRVLSS11501", "DID not found", 400),
     ROLE_TYPE_MISMATCH("SSRVLSS11502", "Role type mismatch", 400),
+    DID_NOT_ACTIVATED("SSRVLSS11503", "DID not activated", 400),
 
 
     // 4. VC-related errors (12000 ~ 12499)
@@ -26,6 +27,7 @@ public enum ErrorCode {
 
     // 5. ZKP-related errors (12500 ~ 12999)
     INVALID_CREDENTIAL_SCHEMA_ID("SSRVLSS12500", "Invalid Credential Schema ID.", 400),
+    CREDENTIAL_SCHEMA_ALREADY_REGISTERED("SSRVLSS12501", "Failed to register Credential Schema: Credential Schemma already exists.", 400),
 
 
     // 99. Miscellaneous errors (90000 ~ 99999)

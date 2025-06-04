@@ -13,15 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.omnione.did.repository.v1.service;
+package org.omnione.did.repository.v1.service.query;
 
 import lombok.RequiredArgsConstructor;
 import org.omnione.did.base.db.domain.ZkpCredentialSchema;
 import org.omnione.did.base.db.repository.ZkpCredentialSchemaRepository;
+import org.omnione.did.base.exception.ErrorCode;
+import org.omnione.did.base.exception.OpenDidException;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
 public class ZkpCredentialSchemaQueryService {
     private final ZkpCredentialSchemaRepository zkpCredentialSchemaRepository;
+
+    public ZkpCredentialSchema save(ZkpCredentialSchema zkpCredentialSchema) {
+        return zkpCredentialSchemaRepository.save(zkpCredentialSchema);
+    }
+
+    public Optional<ZkpCredentialSchema> findBySchemaId(String schemaId) {
+        return zkpCredentialSchemaRepository.findBySchemaId(schemaId);
+    }
 }
