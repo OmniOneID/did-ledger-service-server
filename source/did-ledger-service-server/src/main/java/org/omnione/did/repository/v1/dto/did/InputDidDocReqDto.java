@@ -2,6 +2,7 @@ package org.omnione.did.repository.v1.dto.did;
 
 import lombok.*;
 import org.omnione.did.data.model.did.InvokedDidDoc;
+import org.omnione.did.data.model.enums.vc.RoleType;
 
 @Getter
 @Setter
@@ -10,6 +11,6 @@ import org.omnione.did.data.model.did.InvokedDidDoc;
 @NoArgsConstructor
 @AllArgsConstructor
 public class InputDidDocReqDto {
-    private String roleType;
+    private RoleType roleType;
     private InvokedDidDoc didDoc;
 }

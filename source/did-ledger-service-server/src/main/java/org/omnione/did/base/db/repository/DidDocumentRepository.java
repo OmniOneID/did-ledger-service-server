@@ -1,7 +1,5 @@
 package org.omnione.did.base.db.repository;
 
-import org.omnione.did.base.constants.DidDocStatus;
-import org.omnione.did.base.db.domain.Did;
 import org.omnione.did.base.db.domain.DidDocument;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;

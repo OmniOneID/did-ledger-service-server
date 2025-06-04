@@ -23,7 +23,7 @@ public class DidServiceSample implements DidService {
     }
 
     @Override
-    public TssGetDidDocResDto getDid(String did) {
+    public String getDid(String did) {
 
         String didDoc = """
                                     {
@@ -55,17 +55,7 @@ public class DidServiceSample implements DidService {
                     }
                 """;
 
-
-        try {
-            did = did.replace("did:omn:", "");
-            String encodedDidDOc = MultiBaseUtils.encode(didDoc.getBytes(StandardCharsets.UTF_8), MultiBaseType.base64url);
-
-            return TssGetDidDocResDto.builder()
-                    .didDoc(encodedDidDOc)
-                    .build();
-        } catch (CryptoException e) {
-            throw new RuntimeException(e);
-        }
+        return didDoc;
     }
 
     @Override
