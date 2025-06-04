@@ -13,11 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.omnione.did.repository.v1.service;
 
-import org.omnione.did.repository.v1.dto.common.EmptyResDto;
-import org.omnione.did.repository.v1.dto.zkp.InputZkpCredentialSchemaReqDto;
+package org.omnione.did.repository.v1.dto.common;
 
-public interface ZkpCredentialSchemaService {
-    EmptyResDto generateZkpCredentialSchema(InputZkpCredentialSchemaReqDto request);
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+/**
+ * Represents an empty response DTO.
+ * This class is used to indicate a successful operation with no specific data to return.
+ * In JSON format, this would be represented as an empty object (e.g., {}).
+ */
+@Getter
+@Setter
+@AllArgsConstructor
+@ToString
+@Builder
+public class EmptyResDto {
 }

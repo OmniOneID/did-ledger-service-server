@@ -15,9 +15,13 @@
  */
 package org.omnione.did.repository.v1.service;
 
-import org.omnione.did.repository.v1.dto.common.EmptyResDto;
-import org.omnione.did.repository.v1.dto.zkp.InputZkpCredentialSchemaReqDto;
+import lombok.RequiredArgsConstructor;
+import org.omnione.did.base.db.domain.ZkpCredentialSchema;
+import org.omnione.did.base.db.repository.ZkpCredentialSchemaRepository;
+import org.springframework.stereotype.Service;
 
-public interface ZkpCredentialSchemaService {
-    EmptyResDto generateZkpCredentialSchema(InputZkpCredentialSchemaReqDto request);
+@RequiredArgsConstructor
+@Service
+public class ZkpCredentialSchemaQueryService {
+    private final ZkpCredentialSchemaRepository zkpCredentialSchemaRepository;
 }

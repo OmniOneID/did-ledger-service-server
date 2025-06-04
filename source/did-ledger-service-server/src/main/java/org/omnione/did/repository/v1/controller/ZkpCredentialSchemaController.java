@@ -18,6 +18,8 @@ package org.omnione.did.repository.v1.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.omnione.did.base.constants.UrlConstant;
+import org.omnione.did.repository.v1.dto.common.EmptyResDto;
+import org.omnione.did.repository.v1.dto.zkp.InputZkpCredentialSchemaReqDto;
 import org.omnione.did.repository.v1.service.ZkpCredentialSchemaService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -33,8 +35,7 @@ public class ZkpCredentialSchemaController {
     private final ZkpCredentialSchemaService zkpCredentialSchemaService;
 
     @PostMapping
-    public void generateZkpCredentialSchema(@RequestBody String credentialSchema) {
-
-
+    public EmptyResDto generateZkpCredentialSchema(@RequestBody InputZkpCredentialSchemaReqDto request) {
+        return zkpCredentialSchemaService.generateZkpCredentialSchema(request);
     }
 }

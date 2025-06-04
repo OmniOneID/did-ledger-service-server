@@ -4,13 +4,32 @@ import lombok.Getter;
 
 @Getter
 public enum ErrorCode {
-    TODO("9999", "TODO.", 500),
-    VERIFY_SIGN_FAIL("1000", "Verify Signature Fail", 400),
-    CLIENT_ERROR("2001", "Client Error", 400),
-    SERVER_ERROR("2002", "Server Error", 500),
-    REQUEST_BODY_UNREADABLE("", "", 500),
-    DID_DOC_VERSION_MISMATCH("3001", "DidDoc version mismatch", 400),
-    REVOKED_VC_CANNOT_UPDATE("0001", "A revoked VC cannot be updated.", 400)
+    // 1. General errors (10000 ~ 10999)
+    CLIENT_ERROR("SSRVLSS10000", "Client Error", 400),
+    SERVER_ERROR("SSRVLSS10001", "Server Error", 500),
+
+
+    // 2. Error during API processing (11000 ~ 11499)
+    VERIFY_SIGN_FAIL("SSRVLSS11000", "Verify Signature Fail", 400),
+    REQUEST_BODY_UNREADABLE("SSRVLSS11001", "", 500),
+
+
+    // 3. DID-related errors (11500 ~ 11999)
+    DID_DOC_VERSION_MISMATCH("SSRVLSS11500", "DidDoc version mismatch", 400),
+    DID_NOT_FOUND("SSRVLSS11501", "DID not found", 400),
+    ROLE_TYPE_MISMATCH("SSRVLSS11502", "Role type mismatch", 400),
+
+
+    // 4. VC-related errors (12000 ~ 12499)
+    REVOKED_VC_CANNOT_UPDATE("SSRVLSS12000", "A revoked VC cannot be updated.", 400),
+
+
+    // 5. ZKP-related errors (12500 ~ 12999)
+    INVALID_CREDENTIAL_SCHEMA_ID("SSRVLSS12500", "Invalid Credential Schema ID.", 400),
+
+
+    // 99. Miscellaneous errors (90000 ~ 99999)
+    TODO("SSRVLSS99999", "TODO.", 500)
     ;
 
     private final String code;
