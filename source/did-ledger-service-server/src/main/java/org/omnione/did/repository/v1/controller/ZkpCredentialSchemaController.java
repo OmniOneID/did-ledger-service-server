@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(value = UrlConstant.CredentialSchema.V1)
+@RequestMapping(value = UrlConstant.LSS  + UrlConstant.CredentialSchema.V1)
 public class ZkpCredentialSchemaController {
 
     private final ZkpCredentialSchemaService zkpCredentialSchemaService;
