@@ -49,7 +49,7 @@ public class ZkpCredentialDefinitionServiceImpl implements ZkpCredentialDefiniti
         log.debug("=== Starting generateZkpCredentialDefinition ===");
 
         // 1. decode and parse the credential schema
-        CredentialDefinition credentialDefinition = decodeAndParseCredentialSchema(request.getCredentialDefinition());
+        CredentialDefinition credentialDefinition = decodeAndParseCredentialDefinition(request.getCredentialDefinition());
 
         // 2. check if the credential schema exists
         ZkpCredentialSchema zkpCredentialSchema = validateSchemaExists(credentialDefinition.getSchemaId());
@@ -79,7 +79,7 @@ public class ZkpCredentialDefinitionServiceImpl implements ZkpCredentialDefiniti
         return definitionJson;
     }
 
-    private CredentialDefinition decodeAndParseCredentialSchema(String encodedCredentialDefinition) {
+    private CredentialDefinition decodeAndParseCredentialDefinition(String encodedCredentialDefinition) {
         try {
             log.debug("\t--> Decoding Credential Definition");
             byte[] decodedData = BaseMultibaseUtil.decode(encodedCredentialDefinition);
