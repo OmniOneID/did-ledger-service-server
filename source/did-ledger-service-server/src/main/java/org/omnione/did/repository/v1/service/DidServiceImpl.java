@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.omnione.did.base.constants.DidDocStatus;
 import org.omnione.did.base.datamodel.InvokedDidDoc;
 import org.omnione.did.base.datamodel.Proof;
+import org.omnione.did.base.datamodel.ProofType;
 import org.omnione.did.base.db.domain.Did;
 import org.omnione.did.base.db.domain.DidDocument;
 import org.omnione.did.base.db.domain.DidDocumentStatusHistory;
@@ -229,7 +230,7 @@ public class DidServiceImpl implements DidService {
                 method.getPublicKeyMultibase(),
                 invokedDidDoc.getProof().getProofValue(),
                 hash,
-                EccCurveType.fromString(invokedDidDoc.getProof().getType())
+                ProofType.fromDisplayName(invokedDidDoc.getProof().getType()).toEccCurveType()
         );
     }
 
