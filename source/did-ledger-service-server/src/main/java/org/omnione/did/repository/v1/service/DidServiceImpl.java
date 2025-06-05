@@ -138,8 +138,14 @@ public class DidServiceImpl implements DidService {
         Short version = Optional.ofNullable(DidUtil.extractVersion(didKeyUrl))
                 .orElse(didEntity.getVersion());
 
-        DidDocument doc = didQueryService.didDocFindByDidIdAndVersion(didEntity.getId(), version)
-                .orElseThrow(() -> new OpenDidException(ErrorCode.DID_DOC_NOT_FOUND));
+        Optional<DidDocument> didDocument = switch (didEntity.getStatus()) {
+            case ACTIVATE, DEACTIVATE ->
+                didQueryService.didDocFindByDidIdAndVersion(didEntity.getId(), version);
+            case REVOKED, TERMINATED ->
+                didQueryService.didDocRevokedFindByDidIdAndVersion(didEntity.getId(), version);
+        };
+
+        DidDocument doc = didDocument.orElseThrow(() -> new OpenDidException(ErrorCode.DID_DOC_NOT_FOUND));
 
         log.debug("*** Finished getDid ***");
         return doc.getDocument();

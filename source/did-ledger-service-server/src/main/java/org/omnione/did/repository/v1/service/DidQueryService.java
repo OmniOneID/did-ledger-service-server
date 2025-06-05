@@ -20,6 +20,7 @@ public interface DidQueryService {
     DidDocument save(DidDocument didDocument);
     Optional<Did> didFindByDid(String did);
     Optional<DidDocument> didDocFindByDidIdAndVersion(Long did, Short version);
+    Optional<DidDocument> didDocRevokedFindByDidIdAndVersion(Long did, Short version);
     void updateDeactivateByDidEntity(Long didId, Boolean deactivated);
     Optional<DidDocument> findFirstByDidIdOrderByIdDesc(Long didId);
 

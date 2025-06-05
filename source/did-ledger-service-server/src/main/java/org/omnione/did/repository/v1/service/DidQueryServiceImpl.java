@@ -56,6 +56,11 @@ public class DidQueryServiceImpl implements DidQueryService {
     }
 
     @Override
+    public Optional<DidDocument> didDocRevokedFindByDidIdAndVersion(Long didId, Short version) {
+        return didDocumentRevokedRepository.findByDidIdAndVersion(didId, version);
+    }
+
+    @Override
     public void updateDeactivateByDidEntity(Long didId, Boolean deactivated) {
         didDocumentRepository.updateStatusByDidEntity(didId, deactivated);
     }
