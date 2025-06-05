@@ -8,6 +8,10 @@ public enum ErrorCode {
     // 1. General errors (10000 ~ 10999)
     CLIENT_ERROR("SSRVLSS10000", "Client Error", 400),
     SERVER_ERROR("SSRVLSS10001", "Server Error", 500),
+    ENCODING_FAILED("SSRVLSS10002", "Failed to encoding data.", 500),
+    DECODING_FAILED("SSRVLSS10003", "Failed to decoding data.", 400),
+    ENCRYPTION_FAILED("SSRVLSS10004", "Failed to encrypt data.", 500),
+    DECRYPTION_FAILED("SSRVLSS100015", "Failed to decrypt data.", 400),
 
 
     // 2. Error during API processing (11000 ~ 11499)
@@ -34,12 +38,23 @@ public enum ErrorCode {
     CREDENTIAL_SCHEMA_ALREADY_REGISTERED("SSRVLSS12501", "Failed to register Credential Schema: Credential Schema already exists.", 400),
     CREDENTIAL_SCHEMA_NOT_FOUND("SSRVLSS12502", "Credential Schema not found.", 500),
     CREDENTIAL_DEFINITION_ALREADY_EXISTS("SSRVLSS12503", "Failed to register Credential Definition: Credential Definition already exists.", 400),
+    CREDENTIAL_DEFINITION_NOT_FOUND("SSRVLSS12504", "Credential Definition not found.", 400),
+    INVALID_CREDENTIAL_SCHEMA("SSRVLSS12505", "Invalid Credential Schema.", 400),
+    INVALID_CREDENTIAL_DEFINITION("SSRVLSS12506", "Invalid Credential Definition.", 400),
 
 
     // 6. Policy errors (13000 ~ 13499)
     TERMINATED_STATUS_CAN_NOT_CHANGE("SSRVLSS13000", "Terminated DIDs can't change their status.", 400),
     REVOKED_STATUS_CAN_NOT_CHANGE("SSRVLSS13001", "Revoked DIDs can't change their status to (De)Activate.", 400),
     DID_ROLE_MISMATCH_TA("SSRVLSS13002", "The DID's Role is not TA.", 400),
+
+
+    // 7. DB-related errors (13500 ~ 13999)
+    DB_CONNECTION_ERROR("SSRVLSS13500", "Database connection error.", 500),
+    DB_QUERY_ERROR("SSRVLSS13501", "Database query error.", 500),
+    DB_INSERT_ERROR("SSRVLSS13502", "Database insert error.", 500),
+    DB_UPDATE_ERROR("SSRVLSS13503", "Database update error.", 500),
+    DB_DELETE_ERROR("SSRVLSS13504", "Database delete error.", 500),
 
 
     // 99. Miscellaneous errors (90000 ~ 99999)

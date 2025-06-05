@@ -35,4 +35,10 @@ public class ZkpCredentialDefinitionController {
     public void generateZkpCredentialDefinition(@RequestBody InputZkpCredentialDefinitionReqDto request) {
          zkpCredentialDefinitionService.generateZkpCredentialDefinition(request);
     }
+
+    @GetMapping
+    @ResponseBody
+    public String getZkpCredentialDefinition(@RequestParam(value="definitionId") String definitionId) {
+        return zkpCredentialDefinitionService.getZkpCredentialDefinition(definitionId);
+    }
 }

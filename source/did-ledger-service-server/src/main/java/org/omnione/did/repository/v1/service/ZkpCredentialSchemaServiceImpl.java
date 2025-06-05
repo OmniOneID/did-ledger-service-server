@@ -15,6 +15,7 @@
  */
 package org.omnione.did.repository.v1.service;
 
+import com.google.gson.JsonSyntaxException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +25,6 @@ import org.omnione.did.base.db.domain.ZkpCredentialSchema;
 import org.omnione.did.base.exception.ErrorCode;
 import org.omnione.did.base.exception.OpenDidException;
 import org.omnione.did.base.util.BaseMultibaseUtil;
-import org.omnione.did.repository.v1.dto.common.EmptyResDto;
 import org.omnione.did.repository.v1.dto.zkp.InputZkpCredentialSchemaReqDto;
 import org.omnione.did.repository.v1.service.query.ZkpCredentialSchemaQueryService;
 import org.omnione.did.zkp.datamodel.schema.AttributeType;
@@ -154,31 +154,47 @@ public class ZkpCredentialSchemaServiceImpl implements ZkpCredentialSchemaServic
     private void saveCredentialSchema(CredentialSchema credentialSchema) {
         log.debug("\t--> Saving Credential Schema in the database ***");
 
-        List<String> attrNames = credentialSchema.getAttrNames();
-        List<AttributeType> attrTypes = credentialSchema.getAttrTypes();
+        try {
+            List<String> attrNames = credentialSchema.getAttrNames();
+            List<AttributeType> attrTypes = credentialSchema.getAttrTypes();
 
-        String credentialSchemaJson = gsonWrapper.toJson(credentialSchema);
-        String attrNamesJson = gsonWrapper.toJson(attrNames);
-        String attrTypesJson = gsonWrapper.toJson(attrTypes);
+            String credentialSchemaJson = gsonWrapper.toJson(credentialSchema);
+            String attrNamesJson = gsonWrapper.toJson(attrNames);
+            String attrTypesJson = gsonWrapper.toJson(attrTypes);
 
-        zkpCredentialSchemaQueryService.save(ZkpCredentialSchema.builder()
-                .schemaId(credentialSchema.getId())
-                .name(credentialSchema.getName())
-                .version(credentialSchema.getVersion())
-                .tag(credentialSchema.getTag())
-                .schema(credentialSchemaJson)
-                .attrNames(attrNamesJson)
-                .attrTypes(attrTypesJson)
-                .build());
+            zkpCredentialSchemaQueryService.save(ZkpCredentialSchema.builder()
+                    .schemaId(credentialSchema.getId())
+                    .name(credentialSchema.getName())
+                    .version(credentialSchema.getVersion())
+                    .tag(credentialSchema.getTag())
+                    .schema(credentialSchemaJson)
+                    .attrNames(attrNamesJson)
+                    .attrTypes(attrTypesJson)
+                    .build());
+        } catch (IllegalArgumentException e) {
+            log.error("\t--> Failed to save Credential Schema: {}", e.getMessage());
+            throw new OpenDidException(ErrorCode.DB_INSERT_ERROR);
+        } catch (Exception e) {
+            log.error("\t--> Unexpected error while saving Credential Schema: {}", e.getMessage());
+            throw new OpenDidException(ErrorCode.DB_INSERT_ERROR);
+        }
 
         log.debug("\t--> Credential Schema saved successfully: {}", credentialSchema);
     }
 
     private CredentialSchema decodeAndParseCredentialSchema(String encodedVcSchema) {
-        log.debug("\t--> Decoding Credential Schema");
-        byte[] decodedData = BaseMultibaseUtil.decode(encodedVcSchema);
+        try {
+            log.debug("\t--> Decoding Credential Schema");
+            byte[] decodedData = BaseMultibaseUtil.decode(encodedVcSchema);
 
-        return GsonWrapper.getGson().fromJson(new String(decodedData), CredentialSchema.class);
+            return GsonWrapper.getGson().fromJson(new String(decodedData), CredentialSchema.class);
+        } catch (JsonSyntaxException e) {
+            log.error("\t--> Failed to decode or parse Credential Schema: {}", e.getMessage());
+            throw new OpenDidException(ErrorCode.INVALID_CREDENTIAL_SCHEMA);
+        } catch (Exception e) {
+            log.error("\t--> Unexpected error while decoding Credential Schema: {}", e.getMessage());
+            throw new OpenDidException(ErrorCode.DECODING_FAILED);
+        }
     }
 
     /**
