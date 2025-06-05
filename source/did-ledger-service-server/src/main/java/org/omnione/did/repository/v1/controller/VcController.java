@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(value = UrlConstant.LLS + UrlConstant.Vc.V1)
+@RequestMapping(value = UrlConstant.LSS + UrlConstant.Vc.V1)
 public class VcController {
 
     private final VcService vcService;

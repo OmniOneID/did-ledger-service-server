@@ -1,7 +1,7 @@
 package org.omnione.did.base.constants;
 
 public class UrlConstant {
-    public static final String LLS = "/lls";
+    public static final String LSS = "/lss";
     public static class Did {
         public static final String V1 = "/api/v1/did-doc";
 
