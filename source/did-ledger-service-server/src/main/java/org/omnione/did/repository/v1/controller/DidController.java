@@ -1,17 +1,19 @@
 package org.omnione.did.repository.v1.controller;
 
 import org.omnione.did.base.constants.UrlConstant;
+import org.omnione.did.repository.v1.dto.common.EmptyResDto;
 import org.omnione.did.repository.v1.dto.did.InputDidDocReqDto;
 import org.omnione.did.repository.v1.dto.did.UpdateDidDocReqDto;
 import org.omnione.did.repository.v1.service.DidService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(value = UrlConstant.Did.V1)
+@RequestMapping(value = UrlConstant.LLS + UrlConstant.Did.V1)
 public class DidController {
 
     private final DidService didService;
@@ -23,8 +25,6 @@ public class DidController {
 
     @GetMapping
     public String getDid(@RequestParam(value = "did", defaultValue = "did:omn:tas") String didDoc) {
-        log.debug("get DID");
-
         return didService.getDid(didDoc);
     }
 

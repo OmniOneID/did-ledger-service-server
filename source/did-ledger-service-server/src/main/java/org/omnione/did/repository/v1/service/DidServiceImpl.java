@@ -2,6 +2,8 @@ package org.omnione.did.repository.v1.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.omnione.did.base.constants.DidDocStatus;
+import org.omnione.did.base.datamodel.InvokedDidDoc;
+import org.omnione.did.base.datamodel.Proof;
 import org.omnione.did.base.db.domain.Did;
 import org.omnione.did.base.db.domain.DidDocument;
 import org.omnione.did.base.db.domain.DidDocumentStatusHistory;
@@ -11,8 +13,6 @@ import org.omnione.did.base.util.*;
 import org.omnione.did.common.util.JsonUtil;
 import org.omnione.did.core.manager.DidManager;
 import org.omnione.did.crypto.enums.EccCurveType;
-import org.omnione.did.data.model.did.InvokedDidDoc;
-import org.omnione.did.data.model.did.Proof;
 import org.omnione.did.data.model.did.VerificationMethod;
 import org.omnione.did.data.model.enums.vc.RoleType;
 import org.omnione.did.repository.v1.dto.did.InputDidDocReqDto;
@@ -196,7 +196,9 @@ public class DidServiceImpl implements DidService {
 
     private void verifyDidDoc(InvokedDidDoc invokedDidDoc) {
         log.debug("\t--> Signature verification for TA");
-
+        if(!didQueryService.existDid()) {
+            return;
+        }
         String controllerDid = DidUtil.extractDid(invokedDidDoc.getController().getDid());
 
         Did controllerDidEntity = didQueryService.didFindByDid(controllerDid)
@@ -239,6 +241,6 @@ public class DidServiceImpl implements DidService {
         newProof.setProofPurpose(invokedDidDoc.getProof().getProofPurpose());
         newProof.setProofValue(null);
 
-        return new InvokedDidDoc(invokedDidDoc.getDidDoc(), newProof, invokedDidDoc.getController(), invokedDidDoc.getNonce());
+        return new InvokedDidDoc(invokedDidDoc.getDidDoc(), invokedDidDoc.getController(), invokedDidDoc.getNonce(), newProof);
     }
 }

@@ -117,4 +117,9 @@ public class DidQueryServiceImpl implements DidQueryService {
         return didRepository.findByRole(roleType)
                 .orElseThrow(() -> new OpenDidException(ErrorCode.ROLE_DID_NOT_FOUND));
     }
+
+    @Override
+    public boolean existDid() {
+        return didRepository.count() != 0;
+    }
 }

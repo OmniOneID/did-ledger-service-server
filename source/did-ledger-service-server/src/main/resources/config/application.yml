@@ -1,6 +1,6 @@
 spring:
   application:
-    name: Repository
+    name: Ledger-Service-Server
   profiles:
     default: dev
     group:

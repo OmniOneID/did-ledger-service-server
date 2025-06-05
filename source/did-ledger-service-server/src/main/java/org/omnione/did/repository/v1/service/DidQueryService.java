@@ -33,4 +33,7 @@ public interface DidQueryService {
     Optional<DidDocument> findDidDocFirstByDidAndVersion(Long id, Short version);
 
     Did findDidFirstByRole(RoleType roleType);
+
+    boolean existDid();
+
 }

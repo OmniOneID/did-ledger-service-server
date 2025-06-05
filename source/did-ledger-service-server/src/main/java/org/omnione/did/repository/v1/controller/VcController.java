@@ -17,17 +17,16 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(value = UrlConstant.Vc.V1)
+@RequestMapping(value = UrlConstant.LLS + UrlConstant.Vc.V1)
 public class VcController {
 
     private final VcService vcService;
 
     @PostMapping
-    public ResponseEntity<EmptyResDto> inputVcMeta(@RequestBody @Valid VcMeta request) {
+    public void inputVcMeta(@RequestBody @Valid VcMeta request) {
         log.debug("generate VC");
 
         vcService.inputVcMeta(request);
-        return ResponseEntity.ok(new EmptyResDto());
     }
 
     @GetMapping
@@ -37,11 +36,9 @@ public class VcController {
         return new ResponseEntity<>(vcService.getVcMetaByVcId(vcId), HttpStatus.OK);
     }
 
-    @PutMapping
-    public ResponseEntity<EmptyResDto> updateVcMeta(@RequestBody @Valid UpdateVcStatusReqDto request) {
+    @PatchMapping
+    public void updateVcMeta(@RequestBody @Valid UpdateVcStatusReqDto request) {
         log.debug("Update VC Status");
         vcService.updateVc(request);
-
-        return ResponseEntity.ok(new EmptyResDto());
     }
 }
