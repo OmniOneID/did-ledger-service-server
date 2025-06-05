@@ -33,13 +33,13 @@ public class VcMetadata extends BaseEntity {
     private String vcSchema;
 
     @Column(name = "issuance_date", nullable = false)
-    private Instant issuanceDate;
+    private String issuanceDate;
 
     @Column(name = "valid_from", nullable = false)
-    private Instant validFrom;
+    private String validFrom;
 
     @Column(name = "valid_until", nullable = false)
-    private Instant validUntil;
+    private String validUntil;
 
     @Column(name = "format_version")
     private String formatVersion;
@@ -47,9 +47,8 @@ public class VcMetadata extends BaseEntity {
     @Column(name = "language")
     private String language;
 
-    @Enumerated(value = EnumType.STRING)
     @Column(name = "status", nullable = false)
-    private VcStatus status;
+    private String status;
 
     @Column(name = "metadata", nullable = false)
     private String metadata;
