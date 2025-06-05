@@ -15,6 +15,7 @@
  */
 package org.omnione.did.repository.v1.service;
 
+import com.google.gson.JsonSyntaxException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,14 +24,12 @@ import org.omnione.did.base.db.domain.ZkpCredentialSchema;
 import org.omnione.did.base.exception.ErrorCode;
 import org.omnione.did.base.exception.OpenDidException;
 import org.omnione.did.base.util.BaseMultibaseUtil;
-import org.omnione.did.repository.v1.dto.common.EmptyResDto;
 import org.omnione.did.repository.v1.dto.zkp.InputZkpCredentialDefinitionReqDto;
 import org.omnione.did.repository.v1.service.query.ZkpCredentialDefinitionQueryService;
 import org.omnione.did.repository.v1.service.query.ZkpCredentialSchemaQueryService;
 import org.omnione.did.zkp.datamodel.definition.CredentialDefinition;
 import org.omnione.did.zkp.datamodel.definition.CredentialDefinitionValue;
 import org.omnione.did.zkp.datamodel.enums.CredentialType;
-import org.omnione.did.zkp.datamodel.schema.CredentialSchema;
 import org.omnione.did.zkp.datamodel.util.GsonWrapper;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
@@ -64,11 +63,35 @@ public class ZkpCredentialDefinitionServiceImpl implements ZkpCredentialDefiniti
         log.debug("*** Finished generateZkpCredentialDefinition ***");
     }
 
-    private CredentialDefinition decodeAndParseCredentialSchema(String encodedCredentialDefinition) {
-        log.debug("\t--> Decoding Credential Definition");
-        byte[] decodedData = BaseMultibaseUtil.decode(encodedCredentialDefinition);
+    @Override
+    public String getZkpCredentialDefinition(String definitionId) {
+        log.debug("=== Starting getZkpCredentialDefinition ===");
 
-        return gsonWrapper.fromJson(new String(decodedData), CredentialDefinition.class);
+        // 1. find the credential definition by definitionId
+        log.debug("\t--> Finding Credential Definition by definitionId: {}", definitionId);
+        ZkpCredentialDefinition zkpCredentialDefinition = zkpCredentialDefinitionQueryService.findByDefinitionId(definitionId)
+                .orElseThrow(() -> new OpenDidException(ErrorCode.CREDENTIAL_DEFINITION_NOT_FOUND));
+
+        String definitionJson = gsonWrapper.toJson(zkpCredentialDefinition.getDefinition());
+        log.debug("\t--> Credential Definition found: {}", definitionJson);
+
+        log.debug("*** Finished getZkpCredentialDefinition ***");
+        return definitionJson;
+    }
+
+    private CredentialDefinition decodeAndParseCredentialSchema(String encodedCredentialDefinition) {
+        try {
+            log.debug("\t--> Decoding Credential Definition");
+            byte[] decodedData = BaseMultibaseUtil.decode(encodedCredentialDefinition);
+
+            return gsonWrapper.fromJson(new String(decodedData), CredentialDefinition.class);
+        } catch (JsonSyntaxException e) {
+            log.error("\t--> Failed to decode Credential Definition: {}", e.getMessage());
+            throw new OpenDidException(ErrorCode.INVALID_CREDENTIAL_DEFINITION);
+        } catch (Exception e) {
+            log.error("\t--> Unexpected error while decoding Credential Definition: {}", e.getMessage());
+            throw new OpenDidException(ErrorCode.DECODING_FAILED);
+        }
     }
 
     private ZkpCredentialSchema validateSchemaExists(String schemaId) {
@@ -89,27 +112,34 @@ public class ZkpCredentialDefinitionServiceImpl implements ZkpCredentialDefiniti
     private void saveCredentialDefinition(CredentialDefinition credentialDefinition, ZkpCredentialSchema zkpCredentialSchema) {
         log.debug("\t--> Saving Credential Definition: {}", credentialDefinition);
 
-        String definitionId = credentialDefinition.getId();
-        String schemaId = credentialDefinition.getSchemaId();
-        String version = credentialDefinition.getVer();
-        CredentialType type = credentialDefinition.getType();
-        String tag = credentialDefinition.getTag();
-        CredentialDefinitionValue value = credentialDefinition.getValue();
+        try {
+            String definitionId = credentialDefinition.getId();
+            String schemaId = credentialDefinition.getSchemaId();
+            String version = credentialDefinition.getVer();
+            CredentialType type = credentialDefinition.getType();
+            String tag = credentialDefinition.getTag();
+            CredentialDefinitionValue value = credentialDefinition.getValue();
 
-        String valueJson = gsonWrapper.toJson(value);
-        String credentialDefinitionJson = gsonWrapper.toJson(credentialDefinition);
+            String valueJson = gsonWrapper.toJson(value);
+            String credentialDefinitionJson = gsonWrapper.toJson(credentialDefinition);
 
-        zkpCredentialDefinitionQueryService.save(ZkpCredentialDefinition.builder()
-                .definitionId(definitionId)
-                .schemaId(schemaId)
-                .version(version)
-                .type(type)
-                .value(valueJson)
-                .tag(tag)
-                .definition(credentialDefinitionJson)
-                .zkpCredentialSchemaId(zkpCredentialSchema.getId())
-                .build());
-
+            zkpCredentialDefinitionQueryService.save(ZkpCredentialDefinition.builder()
+                    .definitionId(definitionId)
+                    .schemaId(schemaId)
+                    .version(version)
+                    .type(type)
+                    .value(valueJson)
+                    .tag(tag)
+                    .definition(credentialDefinitionJson)
+                    .zkpCredentialSchemaId(zkpCredentialSchema.getId())
+                    .build());
+        } catch (IllegalArgumentException  e) {
+            log.error("\t--> Failed to save Credential Definition: {}", e.getMessage());
+            throw new OpenDidException(ErrorCode.DB_INSERT_ERROR);
+        } catch (Exception e) {
+            log.error("\t--> Unexpected error while saving Credential Definition: {}", e.getMessage());
+            throw new OpenDidException(ErrorCode.DB_INSERT_ERROR);
+        }
 
         log.debug("\t--> Credential Definition saved successfully");
     }

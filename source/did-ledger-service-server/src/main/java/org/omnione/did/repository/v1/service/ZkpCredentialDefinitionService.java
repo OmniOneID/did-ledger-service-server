@@ -15,9 +15,10 @@
  */
 package org.omnione.did.repository.v1.service;
 
-import org.omnione.did.repository.v1.dto.common.EmptyResDto;
 import org.omnione.did.repository.v1.dto.zkp.InputZkpCredentialDefinitionReqDto;
 
 public interface ZkpCredentialDefinitionService {
     void generateZkpCredentialDefinition(InputZkpCredentialDefinitionReqDto request);
+
+    String getZkpCredentialDefinition(String definitionId);
 }
