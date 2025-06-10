@@ -13,16 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.omnione.did.base.db.repository;
+package org.omnione.did.repository.v1.service;
 
-import org.omnione.did.base.db.domain.ZkpCredentialDefinition;
-import org.omnione.did.base.db.domain.ZkpCredentialSchema;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import org.omnione.did.repository.v1.dto.vc.InputVcSchemaReqDto;
 
-import java.util.Optional;
+public interface VcSchemaService {
+    void generateVcSchema(InputVcSchemaReqDto request);
 
-@Repository
-public interface ZkpCredentialDefinitionRepository extends JpaRepository<ZkpCredentialDefinition, Long> {
-    Optional<ZkpCredentialDefinition> findByDefinitionId(String definitionId);
+    String getVcSchema(String schemaId);
 }

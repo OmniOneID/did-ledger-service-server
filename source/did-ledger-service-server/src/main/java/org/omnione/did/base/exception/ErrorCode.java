@@ -31,6 +31,9 @@ public enum ErrorCode {
 
     // 4. VC-related errors (12000 ~ 12499)
     REVOKED_VC_CANNOT_UPDATE("SSRVLSS12000", "A revoked VC cannot be updated.", 400),
+    INVALID_VC_SCHEMA("SSRVLSS12001", "Invalid VC Schema.", 400),
+    VC_SCHEMA_ALREADY_REGISTERED("SSRVLSS12002", "Failed to register VC Schema: VC Schema already exists.", 400),
+    VC_SCHEMA_NOT_FOUND("SSRVLSS12003", "VC Schema not found.", 500),
 
 
     // 5. ZKP-related errors (12500 ~ 12999)

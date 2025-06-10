@@ -26,6 +26,7 @@ import org.omnione.did.base.exception.ErrorCode;
 import org.omnione.did.base.exception.OpenDidException;
 import org.omnione.did.base.util.BaseMultibaseUtil;
 import org.omnione.did.repository.v1.dto.zkp.InputZkpCredentialSchemaReqDto;
+import org.omnione.did.repository.v1.service.query.DidQueryServiceImpl;
 import org.omnione.did.repository.v1.service.query.ZkpCredentialSchemaQueryService;
 import org.omnione.did.zkp.datamodel.schema.AttributeType;
 import org.omnione.did.zkp.datamodel.schema.CredentialSchema;
@@ -36,6 +37,7 @@ import org.omnione.did.data.model.enums.vc.RoleType;
 
 
 import java.util.List;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @Service
@@ -54,16 +56,19 @@ public class ZkpCredentialSchemaServiceImpl implements ZkpCredentialSchemaServic
         // 1. decode and parse the credential schema
         CredentialSchema credentialSchema = decodeAndParseCredentialSchema(request.getCredentialSchema());
 
-        // 2. extract issuer DID from the credential schema ID
+        // 2. validate the credential schema
+        validateCredentialSchema(credentialSchema);
+
+        // 3. extract issuer DID from the credential schema ID
         String issuerDid = extractIssuerDidFromCredentialSchemaId(credentialSchema.getId());
 
-        // 3. check if the credential schema already exists
+        // 4. check if the credential schema already exists
         validateSchemaNotExists(credentialSchema.getId());
 
-        // 4. validate the issuer DID
+        // 5. validate the issuer DID
         Did issuerInfo = validateIssuer(issuerDid);
 
-        // 5. save the credential schema
+        // 6. save the credential schema
         saveCredentialSchema(credentialSchema);
 
         log.debug("*** Finished generateZkpCredentialSchema ***");
@@ -121,7 +126,7 @@ public class ZkpCredentialSchemaServiceImpl implements ZkpCredentialSchemaServic
      * Validates that the entity has the role of Issuer.
      *
      * @param issuerInfo the issuer information
-     * @param issuerDid the issuer DID for logging
+     * @param issuerDid the issuer DID
      * @throws OpenDidException if the role is not Issuer
      */
     private void validateIssuerRole(Did issuerInfo, String issuerDid) {
@@ -179,13 +184,13 @@ public class ZkpCredentialSchemaServiceImpl implements ZkpCredentialSchemaServic
             throw new OpenDidException(ErrorCode.DB_INSERT_ERROR);
         }
 
-        log.debug("\t--> Credential Schema saved successfully: {}", credentialSchema);
+        log.debug("\t--> Credential Schema saved successfully");
     }
 
-    private CredentialSchema decodeAndParseCredentialSchema(String encodedVcSchema) {
+    private CredentialSchema decodeAndParseCredentialSchema(String encodedCredentialSchema) {
         try {
             log.debug("\t--> Decoding Credential Schema");
-            byte[] decodedData = BaseMultibaseUtil.decode(encodedVcSchema);
+            byte[] decodedData = BaseMultibaseUtil.decode(encodedCredentialSchema);
 
             return GsonWrapper.getGson().fromJson(new String(decodedData), CredentialSchema.class);
         } catch (JsonSyntaxException e) {
@@ -236,4 +241,22 @@ public class ZkpCredentialSchemaServiceImpl implements ZkpCredentialSchemaServic
         log.debug("\t--> Extracted issuerDid: {}", issuerDid);
         return issuerDid;
     }
+
+    private void validateCredentialSchema(CredentialSchema credentialSchema) {
+        Map<String, Object> fieldsToValidate = Map.of(
+                "Credential Schema ID", credentialSchema.getId(),
+                "Credential Schema name", credentialSchema.getName(),
+                "Credential Schema version", credentialSchema.getVersion(),
+                "Credential Schema attribute names", credentialSchema.getAttrNames(),
+                "Credential Schema tag", credentialSchema.getTag()
+        );
+
+        for (Map.Entry<String, Object> entry : fieldsToValidate.entrySet()) {
+            if (entry.getValue() == null) {
+                log.error("\t--> {} is missing", entry.getKey());
+                throw new OpenDidException(ErrorCode.INVALID_CREDENTIAL_SCHEMA);
+            }
+        }
+    }
+
 }

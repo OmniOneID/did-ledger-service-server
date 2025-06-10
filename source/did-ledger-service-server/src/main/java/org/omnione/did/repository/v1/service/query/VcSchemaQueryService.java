@@ -16,23 +16,22 @@
 package org.omnione.did.repository.v1.service.query;
 
 import lombok.RequiredArgsConstructor;
-import org.omnione.did.base.db.domain.ZkpCredentialSchema;
-import org.omnione.did.base.db.repository.ZkpCredentialSchemaRepository;
+import org.omnione.did.base.db.domain.VcSchemaInfo;
+import org.omnione.did.base.db.repository.VcSchemaRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
-public class ZkpCredentialSchemaQueryService {
-    private final ZkpCredentialSchemaRepository zkpCredentialSchemaRepository;
+public class VcSchemaQueryService {
+    private final VcSchemaRepository vcSchemaRepository;
 
-    public ZkpCredentialSchema save(ZkpCredentialSchema zkpCredentialSchema) {
-        return zkpCredentialSchemaRepository.save(zkpCredentialSchema);
+    public VcSchemaInfo save(VcSchemaInfo vcSchemaInfo) {
+        return vcSchemaRepository.save(vcSchemaInfo);
     }
 
-    public Optional<ZkpCredentialSchema> findBySchemaId(String schemaId) {
-        return zkpCredentialSchemaRepository.findBySchemaId(schemaId);
+    public Optional<VcSchemaInfo> findBySchemaId(String schemaId) {
+        return vcSchemaRepository.findBySchemaId(schemaId);
     }
-
 }

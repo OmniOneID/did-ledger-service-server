@@ -15,13 +15,8 @@
  */
 package org.omnione.did.base.db.domain;
 
-import org.omnione.did.base.constants.DidDocStatus;
 import jakarta.persistence.*;
 import lombok.*;
-import org.omnione.did.data.model.enums.vc.RoleType;
-
-import java.time.Instant;
-import java.util.List;
 
 @Builder
 @AllArgsConstructor
@@ -30,27 +25,28 @@ import java.util.List;
 @Setter
 @ToString
 @Entity
-@Table(name = "did")
-public class Did extends BaseEntity {
+@Table(name = "vc_schema")
+public class VcSchemaInfo extends BaseEntity {
     @Id
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "did", nullable = false, length = 50)
+    @Column(name = "schema_id", nullable = false, length = 100)
+    private String schemaId;
+
+    @Column(name = "title", nullable = false, length = 100)
+    private String title;
+
+    @Column(name = "version", nullable = false, length = 20)
+    private String version;
+
+    @Column(name = "description", nullable = false, length = 200)
+    private String description;
+
+    @Column(name = "schema", nullable = false)
+    private String schema;
+
+    @Column(name = "did", nullable = false, length = 100)
     private String did;
-
-    @Column(name = "version", nullable = false, columnDefinition = "SMALLINT")
-    private Short version;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "role")
-    private RoleType role;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "status", nullable = false, length = 20, columnDefinition = "VARCHAR(20)")
-    private DidDocStatus status;
-
-    @Column(name = "terminated_time")
-    private Instant terminatedTime;
 }

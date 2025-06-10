@@ -34,6 +34,8 @@ import org.omnione.did.zkp.datamodel.util.GsonWrapper;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
+
 @RequiredArgsConstructor
 @Service
 @Slf4j
@@ -51,13 +53,16 @@ public class ZkpCredentialDefinitionServiceImpl implements ZkpCredentialDefiniti
         // 1. decode and parse the credential schema
         CredentialDefinition credentialDefinition = decodeAndParseCredentialDefinition(request.getCredentialDefinition());
 
-        // 2. check if the credential schema exists
+        // 2. validate the credential definition
+        validateCredentialDefinition(credentialDefinition);
+
+        // 3. check if the credential schema exists
         ZkpCredentialSchema zkpCredentialSchema = validateSchemaExists(credentialDefinition.getSchemaId());
 
-        // 3. check if the credential definition already exists
+        // 4. check if the credential definition already exists
         validateDefinitionNotExists(credentialDefinition.getId());
 
-        // 4. save the credential definition
+        // 5. save the credential definition
         saveCredentialDefinition(credentialDefinition, zkpCredentialSchema);
 
         log.debug("*** Finished generateZkpCredentialDefinition ***");
@@ -142,5 +147,23 @@ public class ZkpCredentialDefinitionServiceImpl implements ZkpCredentialDefiniti
         }
 
         log.debug("\t--> Credential Definition saved successfully");
+    }
+
+    private void validateCredentialDefinition(CredentialDefinition credentialDefinition) {
+        Map<String, Object> fieldsToValidate = Map.of(
+                "Credential Definition ID", credentialDefinition.getId(),
+                "Credential Definition schemaId", credentialDefinition.getSchemaId(),
+                "Credential Definition version", credentialDefinition.getVer(),
+                "Credential Definition type", credentialDefinition.getType(),
+                "Credential Definition value", credentialDefinition.getValue(),
+                "Credential Definition tag", credentialDefinition.getTag()
+        );
+
+        for (Map.Entry<String, Object> entry : fieldsToValidate.entrySet()) {
+            if (entry.getValue() == null) {
+                log.error("\t--> {} is missing", entry.getKey());
+                throw new OpenDidException(ErrorCode.INVALID_CREDENTIAL_SCHEMA);
+            }
+        }
     }
 }
