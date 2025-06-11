@@ -51,7 +51,7 @@ public class VcController {
         return new ResponseEntity<>(vcService.getVcMetaByVcId(vcId), HttpStatus.OK);
     }
 
-    @PatchMapping
+    @PutMapping
     public void updateVcMeta(@RequestBody @Valid UpdateVcStatusReqDto request) {
         log.debug("Update VC Status");
         vcService.updateVc(request);
