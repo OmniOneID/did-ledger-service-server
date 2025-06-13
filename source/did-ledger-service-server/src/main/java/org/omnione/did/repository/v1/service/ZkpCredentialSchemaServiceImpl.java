@@ -83,7 +83,9 @@ public class ZkpCredentialSchemaServiceImpl implements ZkpCredentialSchemaServic
         ZkpCredentialSchema foundZkpCredentialSchema = zkpCredentialSchemaQueryService.findBySchemaId(schemaId)
                 .orElseThrow(() -> new OpenDidException(ErrorCode.CREDENTIAL_SCHEMA_NOT_FOUND));
 
-        String schemaJson = gsonWrapper.toJson(foundZkpCredentialSchema.getSchema());
+
+        CredentialSchema credentialSchema = gsonWrapper.fromJson(foundZkpCredentialSchema.getSchema(), CredentialSchema.class);
+        String schemaJson = credentialSchema.toJson();
         log.debug("\t--> Found Credential Schema: {}", schemaJson);
 
         log.debug("*** Finished getZkpCredentialSchema ***");

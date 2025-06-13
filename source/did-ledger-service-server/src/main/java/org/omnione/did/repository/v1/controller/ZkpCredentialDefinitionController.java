@@ -20,6 +20,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.omnione.did.base.constants.UrlConstant;
 import org.omnione.did.repository.v1.dto.zkp.InputZkpCredentialDefinitionReqDto;
 import org.omnione.did.repository.v1.service.ZkpCredentialDefinitionService;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
@@ -38,7 +40,10 @@ public class ZkpCredentialDefinitionController {
 
     @GetMapping
     @ResponseBody
-    public String getZkpCredentialDefinition(@RequestParam(value="definitionId") String definitionId) {
-        return zkpCredentialDefinitionService.getZkpCredentialDefinition(definitionId);
+    public ResponseEntity<String> getZkpCredentialDefinition(@RequestParam(value="definitionId") String definitionId) {
+        String zkpCredentialDefinition = zkpCredentialDefinitionService.getZkpCredentialDefinition(definitionId);
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(zkpCredentialDefinition);
     }
 }

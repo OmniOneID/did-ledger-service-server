@@ -77,7 +77,9 @@ public class ZkpCredentialDefinitionServiceImpl implements ZkpCredentialDefiniti
         ZkpCredentialDefinition zkpCredentialDefinition = zkpCredentialDefinitionQueryService.findByDefinitionId(definitionId)
                 .orElseThrow(() -> new OpenDidException(ErrorCode.CREDENTIAL_DEFINITION_NOT_FOUND));
 
-        String definitionJson = gsonWrapper.toJson(zkpCredentialDefinition.getDefinition());
+        CredentialDefinition credentialDefinition = gsonWrapper.fromJson(zkpCredentialDefinition.getDefinition(), CredentialDefinition.class);
+        String definitionJson = credentialDefinition.toJson();
+
         log.debug("\t--> Credential Definition found: {}", definitionJson);
 
         log.debug("*** Finished getZkpCredentialDefinition ***");

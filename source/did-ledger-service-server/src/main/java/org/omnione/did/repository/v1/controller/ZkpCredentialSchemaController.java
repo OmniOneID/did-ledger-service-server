@@ -21,6 +21,8 @@ import org.omnione.did.base.constants.UrlConstant;
 import org.omnione.did.repository.v1.dto.common.EmptyResDto;
 import org.omnione.did.repository.v1.dto.zkp.InputZkpCredentialSchemaReqDto;
 import org.omnione.did.repository.v1.service.ZkpCredentialSchemaService;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
@@ -39,7 +41,10 @@ public class ZkpCredentialSchemaController {
 
     @GetMapping
     @ResponseBody
-    public String getZkpCredentialSchema(@RequestParam(value="schemaId") String schemaId) {
-        return zkpCredentialSchemaService.getZkpCredentialSchema(schemaId);
+    public ResponseEntity<String> getZkpCredentialSchema(@RequestParam(value="schemaId") String schemaId) {
+        String zkpCredentialSchema = zkpCredentialSchemaService.getZkpCredentialSchema(schemaId);
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(zkpCredentialSchema);
     }
 }
