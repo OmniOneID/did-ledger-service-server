@@ -1,18 +1,18 @@
 ---
 puppeteer:
-    pdf:
-        format: A4
-        displayHeaderFooter: true
-        landscape: false
-        scale: 0.8
-        margin:
-            top: 1.2cm
-            right: 1cm
-            bottom: 1cm
-            left: 1cm
-    image:
-        quality: 100
-        fullPage: false
+  pdf:
+    format: A4
+    displayHeaderFooter: true
+    landscape: false
+    scale: 0.8
+    margin:
+      top: 1.2cm
+      right: 1cm
+      bottom: 1cm
+      left: 1cm
+  image:
+    quality: 100
+    fullPage: false
 ---
 
 Open DID Ledger Service Server Installation And Operation Guide
@@ -26,85 +26,92 @@ Table of Contents
 
 - [1. Introduction](#1-introduction)
   - [1.1. Overview](#11-overview)
-  - [1.2. DID Ledger Service Server Definition](#12-did-ledger-service-server-definition)
+  - [1.2. Ledger Service Server Definition](#12-ledger-service-server-definition)
   - [1.3. System Requirements](#13-system-requirements)
-- [2. Preparation](#2-preparation)
+- [2. Prerequisites](#2-prerequisites)
   - [2.1. Git Installation](#21-git-installation)
-- [3. Cloning the Source Code from GitHub](#3-cloning-the-source-code-from-github)
-  - [3.1. Cloning the Source Code](#31-cloning-the-source-code)
+- [3. Cloning Source Code from GitHub](#3-cloning-source-code-from-github)
+  - [3.1. Source Code Cloning](#31-source-code-cloning)
   - [3.2. Directory Structure](#32-directory-structure)
-- [4. How to Run the Server](#4-how-to-run-the-server)
+- [4. Server Execution Methods](#4-server-execution-methods)
   - [4.1. Running with IntelliJ IDEA (Gradle Support)](#41-running-with-intellij-idea-gradle-support)
-    - [4.1.1. Installing and Setting Up IntelliJ IDEA](#411-installing-and-setting-up-intellij-idea)
-    - [4.1.2. Opening the Project in IntelliJ](#412-opening-the-project-in-intellij)
+    - [4.1.1. IntelliJ IDEA Installation and Setup](#411-intellij-idea-installation-and-setup)
+    - [4.1.2. Opening Project in IntelliJ](#412-opening-project-in-intellij)
     - [4.1.3. Gradle Build](#413-gradle-build)
-    - [4.1.4. Running the Server](#414-running-the-server)
+    - [4.1.4. Server Execution](#414-server-execution)
     - [4.1.5. Server Configuration](#415-server-configuration)
-  - [4.2. Running the Server Using Console Commands](#42-running-the-server-using-console-commands)
-    - [4.2.1. Gradle Build Command](#421-gradle-build-command)
-    - [4.2.2. Running the Server](#422-running-the-server)
-    - [4.2.4. Server Configuration](#424-server-configuration)
+  - [4.2. Running with Console Commands](#42-running-with-console-commands)
+    - [4.2.1. Gradle Build Commands](#421-gradle-build-commands)
+    - [4.2.2. Server Execution Method](#422-server-execution-method)
+    - [4.2.3. Server Configuration Method](#423-server-configuration-method)
   - [4.3. Running with Docker](#43-running-with-docker)
-- [5. Configuration Guide.](#5-configuration-guide)
+- [5. Configuration Guide](#5-configuration-guide)
   - [5.1. application.yml](#51-applicationyml)
-    - [5.1.1.  Spring Basic Settings](#511-spring-basic-settings)
-    - [5.1.2. Jackson Basic Settings](#512-jackson-basic-settings)
-    - [5.1.3. Server Settings](#513-server-settings)
+    - [5.1.1. Spring Basic Configuration](#511-spring-basic-configuration)
+    - [5.1.2. Jackson Basic Configuration](#512-jackson-basic-configuration)
+    - [5.1.3. Server Configuration](#513-server-configuration)
   - [5.2. application-logging.yml](#52-application-loggingyml)
     - [5.2.1. Logging Configuration](#521-logging-configuration)
-  - [5.3. blockchain.properties](#53-blockchainproperties)
-    - [5.3.1. Blockchain Integration Settings](#531-blockchain-integration-settings)
+  - [5.3. application-database.yml](#53-application-databaseyml)
+    - [5.3.1. Database Integration Configuration](#531-database-integration-configuration)
 - [6. Profile Configuration and Usage](#6-profile-configuration-and-usage)
   - [6.1. Profile Overview (`sample`, `dev`)](#61-profile-overview-sample-dev)
     - [6.1.1. `sample` Profile](#611-sample-profile)
     - [6.1.2. `dev` Profile](#612-dev-profile)
-  - [6.2. How to Configure Profiles](#62-how-to-configure-profiles)
-    - [6.2.1. Running the Server Using an IDE](#621-running-the-server-using-an-ide)
-    - [6.2.2. Running the Server Using Console Commands](#622-running-the-server-using-console-commands)
-    - [6.2.3. Running the Server Using Docker](#623-running-the-server-using-docker)
-- [7. Running After Building with Docker](#7-running-after-building-with-docker)
-  - [7.1. How to Build a Docker Image (Based on `Dockerfile`)](#71-how-to-build-a-docker-image-based-on-dockerfile)
-  - [7.2. Running the Docker Image](#72-running-the-docker-image)
+  - [6.2. Profile Configuration Method](#62-profile-configuration-method)
+    - [6.2.1. When Running Server with IDE](#621-when-running-server-with-ide)
+    - [6.2.2. When Running Server with Console Commands](#622-when-running-server-with-console-commands)
+    - [6.2.3. When Running Server with Docker](#623-when-running-server-with-docker)
+- [7. Building and Running with Docker](#7-building-and-running-with-docker)
+  - [7.1. Docker Image Build Method (`Dockerfile` Based)](#71-docker-image-build-method-dockerfile-based)
+  - [7.2. Docker Image Execution](#72-docker-image-execution)
   - [7.3. Running with Docker Compose](#73-running-with-docker-compose)
-    - [7.3.1. `docker-compose.yml` File Explanation](#731-docker-composeyml-file-explanation)
-    - [7.3.2. Running and Managing Containers](#732-running-and-managing-containers)
-    - [7.3.3. How to Configure the Server](#733-how-to-configure-the-server)
-    
+    - [7.3.1. `docker-compose.yml` File Description](#731-docker-composeyml-file-description)
+    - [7.3.2. Container Execution and Management](#732-container-execution-and-management)
+    - [7.3.3. Server Configuration Method](#733-server-configuration-method)
 
 # 1. Introduction
 
 ## 1.1. Overview
-
-This document provides a guide for the installation and operation of the DID Ledger Service server. It explains the DID Ledger Service installation process, configuration methods, and operation procedures step-by-step, helping users install and manage the server efficiently.
+This document provides a guide for the installation and operation of the DID Ledger Service server. It explains the installation process, configuration methods, and execution procedures step by step to enable users to efficiently install and operate the service.
 
 For the complete installation guide of OpenDID, please refer to the [Open DID Installation Guide].
 
 <br/>
 
-## 1.2. DID Ledger Service Server Definition
+## 1.2. Ledger Service Server Definition
 
-The DID Ledger Service Server manages DID Documents and VC Metadata on the blockchain ledger. It provides APIs for registering, retrieving, and updating DID Documents, as well as managing VC (Verifiable Credential) metadata. The server acts as a bridge between applications and the blockchain network, ensuring secure and reliable management of decentralized identity data.
+The DID Ledger Service Server is an alternative service that utilizes PostgreSQL database to provide the same functionality as blockchain.
+
+Key Features:
+- DID Document creation, registration, and status changes
+- VC Meta creation and VC status changes
+- VC Schema registration and management
+- ZKP Credential Schema and ZKP Credential Definition registration and management
+
+Through this server, you can build a stable and efficient decentralized identity management system without the need for complex blockchain infrastructure.
 
 <br/>
 
 ## 1.3. System Requirements
-- **Java 17** or higher
+- **Java 21** or higher
 - **Gradle 7.0** or higher
 - **Docker** and **Docker Compose** (when using Docker)
-- **PostgreSQL 12** or higher (for production environment)
-- At least **4GB RAM** and **20GB of disk space**
+- **PostgreSQL 13** or higher (when using dev profile)
+- Minimum **2GB RAM** and **10GB disk space**
 
 <br/>
 
-# 2. Preparation
+# 2. Prerequisites
 
-This chapter provides the necessary preparatory steps before installing the components of the Open DID project.
+This chapter guides you through the prerequisites needed before installing the components of the Open DID project.
 
 ## 2.1. Git Installation
 
-`Git` is a distributed version control system that tracks changes in the source code and supports collaboration among multiple developers. Git is essential for managing the source code and version control of the Open DID project.
+`Git` is a distributed version control system that tracks changes in source code and supports collaboration among multiple developers. Git is essential for managing and version controlling the source code of the Open DID project.
 
-After a successful installation, you can check the version of Git with the following command:
+If installation is successful, you can check the Git version using the following command:
+
 ```bash
 git --version
 ```
@@ -114,17 +121,15 @@ git --version
 
 <br/>
 
+# 3. Cloning Source Code from GitHub
 
-# 3. Cloning the Source Code from GitHub
+## 3.1. Source Code Cloning
 
-## 3.1. Cloning the Source Code
+The `git clone` command clones source code from a remote repository hosted on GitHub to your local computer. Using this command, you can work with the entire source code and related files of the project locally. After cloning, you can proceed with necessary work within the repository and push changes back to the remote repository.
 
-The `git clone` command allows you to copy the source code from a remote repository hosted on GitHub to your local computer. By using this command, you can work on the entire source code and related files locally. After cloning, you can proceed with the necessary tasks within the repository and push any changes back to the remote repository.
-
-Open the terminal and run the following commands to copy the DID Ledger Service server repository to your local computer:
-
+Open a terminal and execute the following command to copy the Ledger Service server repository to your local computer:
 ```bash
-# Clone the repository from the Git repository
+# Clone repository from Git repository
 git clone https://github.com/OmniOneID/did-ledger-service-server.git
 
 # Navigate to the cloned repository
@@ -152,17 +157,18 @@ did-ledger-service-server
 ├── SECURITY.md
 ├── docs
 │   ├── api
-│       └── ledgerService_API.md
+│       └── LedgerService_API.md
 │   ├── errorCode
-│       └── ledgerService_ErrorCode.md
+│       └── LedgerService_ErrorCode.md
 │   └── installation
 │       └── OpenDID_LedgerService_InstallationAndOperation_Guide.md
+├── gradle
 ├── libs
 │   └── did-sdk-common-2.0.0.jar
 │   └── did-blockchain-sdk-server-2.0.0.jar
-│   └── did-core-sdk-server-2.0.0..jar
+│   └── did-core-sdk-server-2.0.0.jar
 │   └── did-crypto-sdk-server-2.0.0.jar
-│   └── did-datamodel-server-2.0.0.jar
+│   └── did-datamodel-sdk-server-2.0.0.jar
 │   └── did-wallet-sdk-server-2.0.0.jar
 │   └── did-zkp-sdk-server-2.0.0.jar
 ├── sample
@@ -173,111 +179,112 @@ did-ledger-service-server
     └── main
         ├── java
         └── resources
+            ├── config
+            └── db
+└── build.gradle
+└── README.md
 ```
 
 | Name                    | Description                                    |
 | ----------------------- | ---------------------------------------------- |
-| CHANGELOG.md            | Changes by version for the project             |
+| CHANGELOG.md            | Version-specific changes of the project       |
 | CODE_OF_CONDUCT.md      | Code of conduct for contributors               |
 | CONTRIBUTING.md         | Contribution guidelines and procedures         |
 | dependencies-license.md | License information for project dependencies   |
-| MAINTAINERS.md          | Guidelines for project maintainers             |
-| RELEASE-PROCESS.md      | Procedure for releasing a new version          |
+| MAINTAINERS.md          | Guidelines for project maintainers            |
+| RELEASE-PROCESS.md      | Procedures for releasing new versions          |
 | SECURITY.md             | Security policy and vulnerability reporting    |
 | docs                    | Documentation                                  |
-| ┖ api                   | API guide documents                            |
-| ┖ errorCode             | Error codes and troubleshooting guide          |
-| ┖ installation          | Installation and configuration guide           |
-| libs                    | External libraries and dependencies (DID SDKs) |
-| sample                  | Sample files and test data                     |
-| ┖ data                  | Sample DID Documents and VC Metadata          |
+| ┖ api                   | API guide documentation                        |
+| ┖ errorCode             | Error codes and troubleshooting guides        |
+| ┖ installation          | Installation and configuration guides         |
+| gradle                  | Gradle build settings and scripts             |
+| libs                    | External libraries and dependencies            |
+| sample                  | Sample files                                   |
 | src                     | Main source code directory                     |
-| ┖ main                  | Application source code                        |
-| build.gradle            | Gradle build configuration file                |
-| README.md               | Project overview and instructions              |
+| ┖ main/java             | Java source code                               |
+| ┖ main/resources        | Configuration files and resources              |
+| build.gradle            | Gradle build configuration file               |
+| README.md               | Source code overview and guidance              |
+
 <br/>
 
+# 4. Server Execution Methods
+This chapter guides you through three methods of running the server.
 
-# 4. How to Run the Server
-This chapter explains three methods to run the server.
+1. **Using IDE**: You can open the project in an Integrated Development Environment (IDE), set up execution configuration, and run the server directly. This method is useful for quickly testing code changes during development.
 
-The project source is located in the root directory, and depending on the method, you need to load and configure the source from that directory.
+2. **Using console commands after build**: After building the project, you can run the server by executing the generated JAR file from the console using commands (`java -jar`). This method is mainly used when deploying the server or running it in production environments.
 
-1. **Using an IDE**: You can open the project in an Integrated Development Environment (IDE), set up the run configuration, and directly run the server. This method is useful when quickly testing code changes during development.
+3. **Building with Docker**: You can build the server as a Docker image and run it as a Docker container. This method has the advantage of maintaining consistency across environments and facilitating deployment and scaling.
 
-2. **Using console commands after building**: After building the project, you can run the server by executing the generated JAR file with a console command (`java -jar`). This method is mainly used when deploying or running the server in a production environment.
-
-3. **Building with Docker**: You can build the server as a Docker image and run it as a Docker container. This method ensures consistency across environments and makes deployment and scaling easier.
-   
 ## 4.1. Running with IntelliJ IDEA (Gradle Support)
 
-IntelliJ IDEA is a widely used Integrated Development Environment (IDE) for Java development. It supports build tools like Gradle, making project setup and dependency management very convenient. Since the DID Ledger Service server is built using Gradle, you can easily configure and run the server within IntelliJ IDEA.
+IntelliJ IDEA is an Integrated Development Environment (IDE) widely used for Java development. It supports build tools like Gradle, making project setup and dependency management very easy. Since the Open DID server is built using Gradle, you can easily set up the project and run the server in IntelliJ IDEA.
 
-### 4.1.1. Installing and Setting Up IntelliJ IDEA
+### 4.1.1. IntelliJ IDEA Installation and Setup
 1. Install IntelliJ. (Refer to the link below for installation instructions)
 
 > **Reference Links**
-> - [Download IntelliJ IDEA](https://www.jetbrains.com/idea/download/)
+> - [IntelliJ IDEA Download](https://www.jetbrains.com/idea/download/)
 
-### 4.1.2. Opening the Project in IntelliJ
-- Launch IntelliJ and select `File -> New -> Project` from Existing Sources. When the file selection window appears, choose the 'did-ledger-service-server' folder from the repository cloned in [3.1. Cloning the Source Code](#31-cloning-the-source-code)
-- When the project opens, the `build.gradle` file will be automatically recognized.
-- Gradle will automatically download the necessary dependency files. Please wait until this process is completed.
+### 4.1.2. Opening Project in IntelliJ
+- Launch IntelliJ and select `File -> Open`. When the file selection window appears, select the root folder of the repository cloned in [3.1. Source Code Cloning](#31-source-code-cloning).
+- When you open the project, the build.gradle file is automatically recognized.
+- Gradle automatically downloads the necessary dependency files. Wait for this process to complete.
 
 ### 4.1.3. Gradle Build
-- In the Gradle tab in IntelliJ IDEA, run `Tasks -> build -> build`.
-- Once the build is successfully completed, the project will be ready for execution.
+- In IntelliJ IDEA's `Gradle` tab, execute `Tasks -> build -> build`.
+- When the build completes successfully, the project is ready to run.
 
-### 4.1.4. Running the Server
-- In the Gradle tab of IntelliJ IDEA, select `Tasks -> application -> bootRun` and run it.
-- Gradle will automatically build and run the server.
-- Check the console log for the message "Started [ApplicationName] in [time] seconds" to confirm that the server has started successfully.
-- Once the server is running properly, open your browser and navigate to http://localhost:8094/swagger-ui/index.html to verify that the API documentation is displayed correctly through Swagger UI.
+### 4.1.4. Server Execution
+- In IntelliJ IDEA's Gradle tab, select and run Tasks -> application -> bootRun.
+- Gradle automatically builds and runs the server.
+- Check the console log for the "Started [ApplicationName] in [time] seconds" message to confirm that the server has started normally.
 
 > **Note**
-> - The DID Ledger Service server is initially configured to use the `sample` profile.
-> - When the sample profile is set, the server will run without required configurations (e.g., database). For more details, refer to [6. Profile Configuration and Usage](#6-profile-configuration-and-usage)
-
+> - The Ledger Service server is initially configured with the sample profile.
+> - When configured with the sample profile, the server starts while ignoring essential configurations (e.g., database). For details, please refer to [6. Profile Configuration and Usage](#6-profile-configuration-and-usage).
 
 <br/>
 
 ### 4.1.5. Server Configuration
-- The server settings must be modified according to the deployment environment to ensure stable operation. For example, you need to adjust configuration elements such as database connection information, port numbers, blockchain integration details, etc., based on the specific environment.
-- The server configuration files are located at `src/main/resource/config.`
-- For detailed configuration instructions, please refer to [5. Configuration Guide.](#5-configuration-guide)
+- The server needs to modify necessary configurations according to the deployment environment to ensure stable operation. For example, database connection information, port numbers, blockchain integration information, and other configuration components need to be adjusted for each environment.
+- The server configuration files are located in the `src/main/resources/config` path.
+- For detailed configuration methods, please refer to [5. Configuration Guide](#5-configuration-guide).
 
 <br/>
 
-## 4.2. Running the Server Using Console Commands
+## 4.2. Running with Console Commands
 
-This section provides instructions on how to run the DID Ledger Service server using console commands. It explains the process of building the project with Gradle and running the server using the generated JAR file.
+This section guides you through running the DID Ledger Service server using console commands. It explains the process of building the project using Gradle and running the server using the generated JAR file.
 
-### 4.2.1. Gradle Build Command
+### 4.2.1. Gradle Build Commands
 
-- Build the source using `gradlew`:
+- Build the source using gradlew:
   ```shell
-    # Navigate to the cloned repository directory
+    # Navigate to the cloned repository
     cd did-ledger-service-server
 
-    # Grant execute permission to the Gradle Wrapper
+    # Grant execution permission to Gradle Wrapper
     chmod 755 ./gradlew
 
-    # Clean build the project (delete previous build files and rebuild)
+    # Clean build the project (delete previous build files and build anew)
     ./gradlew clean build
   ```
   > Note
-  > - `gradlew` is short for Gradle Wrapper, a script used to run Gradle in a project. Even if Gradle is not installed locally, it automatically downloads and runs the version of Gradle specified by the project, allowing developers to build the project in a consistent environment, regardless of whether Gradle is installed.
+  > - gradlew is short for Gradle Wrapper, a script used to execute Gradle in a project. Even if Gradle is not installed locally, it automatically downloads and executes the version of Gradle specified by the project. This allows developers to build the project in the same environment regardless of whether Gradle is installed.
 
-- Navigate to the build folder and confirm that the JAR file has been generated:
+- Navigate to the built folder and confirm that the JAR file has been created:
     ```shell
       cd build/libs
       ls
     ```
-- This command generates the file `did-ledger-service-server-2.0.0.jar`
+- This command creates the `did-ledger-service-server-2.0.0.jar` file.
 
 <br/>
 
-### 4.2.2. Running the Server
+### 4.2.2. Server Execution Method
 Run the server using the built JAR file:
 
 ```bash
@@ -285,225 +292,201 @@ java -jar did-ledger-service-server-2.0.0.jar
 ```
 
 > **Note**
-> - The DID Ledger Service server is initially configured to use the `sample` profile.
-> - When the sample profile is set, the server will run without required configurations (e.g., database). For more details, refer to [6. Profile Configuration and Usage](#6-profile-configuration-and-usage)
+> - The Ledger Service server is initially configured with the sample profile.
+> - When configured with the sample profile, the server starts while ignoring essential configurations (e.g., database). For details, please refer to [6. Profile Configuration and Usage](#6-profile-configuration-and-usage).
 
 <br/>
 
-<br/>
-
-### 4.2.4. Server Configuration
-- The server settings must be modified according to the deployment environment to ensure stable operation. For example, you need to adjust configuration elements such as database connection information, port numbers, blockchain integration details, etc., based on the specific environment.
-- The server configuration files are located at `src/main/resource/config.`
-- For detailed configuration instructions, please refer to [5. Configuration Guide.](#5-configuration-guide)
+### 4.2.3. Server Configuration Method
+- The server needs to modify necessary configurations according to the deployment environment to ensure stable operation. For example, database connection information, port numbers, blockchain integration information, and other configuration components need to be adjusted for each environment.
+- The server configuration files are located in the `src/main/resources/config` path.
+- For detailed configuration methods, please refer to [5. Configuration Guide](#5-configuration-guide).
 
 <br/>
 
 ## 4.3. Running with Docker
-- For the process of building, configuring, and running a Docker image, please refer to [7. Running After Building with Docker](#7-running-after-building-with-docker)
+- For Docker image building, configuration, execution, and other processes, please refer to [7. Building and Running with Docker](#7-building-and-running-with-docker) below.
 
 <br/>
 
-# 5. Configuration Guide.
-
-This chapter provides guidance on each configuration value included in all of the server's configuration files. Each setting is a crucial element that controls the server's behavior and environment, so proper configuration is necessary for stable server operation. Refer to the descriptions and examples for each item to apply the appropriate settings for your environment.
-
-Please note that settings with the 🔒 icon are fixed by default or generally do not require modification.
+# 5. Configuration Guide
 
 ## 5.1. application.yml
 
-- Role: The application.yml file defines the basic configuration for the Spring Boot application. Through this file, you can specify various environment variables such as the application's name, database settings, and profile configurations, all of which have a significant impact on the application's behavior.
+- Role: The application.yml file defines the basic configuration of a Spring Boot application. Through this file, you can specify various environment variables such as application name, database settings, profile settings, etc., which significantly affect the application's behavior.
 
 - Location: `src/main/resources/config`
 
-### 5.1.1. Spring Basic Settings
-* `spring.application.name`: 
-    - Specifies the name of the application.
-    - Purpose: Primarily used for identifying the application in log messages, monitoring tools, or within Spring Cloud services.
-    - Example: `LedgerService`
+### 5.1.1. Spring Basic Configuration
+* `spring.application.name`:
+  - Specifies the name of the application.
+  - Purpose: Used by other services to identify this application.
+  - Example: `Ledger-Service-Server`
 
-* `spring.profiles.active`:  
-  - Defines the active profile.
-  - Purpose: Selects either the sample or development environment and loads the corresponding settings. For more details on profiles, refer to [6. Profile Configuration and Usage](#6-profile-configuration-and-usage)
+* `spring.profiles.default`:
+  - Defines the default profile to activate.
+  - Purpose: Sets the default profile to use when no other profile is specified.
   - Supported profiles: sample, dev
-  - Example: `sample`, `dev`
+  - Example: `sample`
 
 * `spring.profiles.group.dev`: 🔒
   - Defines individual profiles included in the `dev` profile group.
-  - Purpose: Manages configurations for the development environment.
-  - Profile file naming convention: The configuration files corresponding to each profile must use the exact name as defined in the group. For example, the databases profile is written as application-databases.yml, and the blockchain profile as application-blockchain.yml. The file names must match the names listed under group.dev.
+  - Purpose: Groups and manages configurations used in development environments.
+  - Profile file naming convention: Configuration files corresponding to each profile use the names defined in the group as-is. For example, the auth profile is written as application-auth.yml, and the database profile as application-database.yml.
 
 * `spring.profiles.group.sample`: 🔒
   - Defines individual profiles included in the `sample` profile group.
-  - Purpose: Manages configurations for the sample environment.
-  - Profile file naming convention: The configuration files corresponding to each profile must use the exact name as defined in the group. For example, the databases profile is written as application-databases.yml, and the blockchain profile as application-blockchain.yml. The file names must match the names listed under group.sample.
+  - Purpose: Groups and manages configurations used in sample environments.
+  - Profile file naming convention: Configuration files corresponding to each profile use the names defined in the group as-is.
 
 <br/>
 
-### 5.1.2. Jackson Basic Settings
+### 5.1.2. Jackson Basic Configuration
 
-Jackson is the default JSON serialization/deserialization library used in Spring Boot. By configuring Jackson, you can adjust the serialization format and methods for JSON data, which can improve performance and efficiency during data transmission.
+Jackson is a JSON serialization/deserialization library used by default in Spring Boot. Through Jackson configuration, you can adjust the serialization method or format of JSON data, improving performance and efficiency during data transmission.
 
-* `spring.jackson.default-property-inclusion`: 🔒 
-    - Configures the application to exclude properties from serialization when their value is null.
-    - Example: non_null
-
-* `spring.jackson.serialization.fail-on-empty-beans`: 🔒 
-    - Prevents errors from being thrown when serializing empty objects.
-    - Example: false
+* `spring.jackson.default-property-inclusion`: 🔒
+  - Sets not to serialize when property values are null.
+  - Example: non_null
 
 <br/>
-      
-### 5.1.3. Server Settings
-The server settings define the port number on which the application will listen for requests.
 
-* `server.port`:  
-    - The port number on which the application will run. The default port for the DID Ledger Service server is 8094.
-    - Example : 8094
+### 5.1.3. Server Configuration
+Server configuration defines the port number where the application will receive requests.
+
+* `server.port`:
+  - The port number where the application will run. The default value for the Ledger Service server port configuration is 8098.
+  - Value: 8098
 
 <br/>
 
 ## 5.2. application-logging.yml
-- Role: Configures log groups and log levels. This configuration file allows you to define log groups for specific packages or modules and specify log levels individually for each group.
+- Role: Sets log groups and log levels. Through this configuration file, you can define log groups for specific packages or modules and specify log levels individually for each group.
 
 - Location: `src/main/resources/config`
 
 ### 5.2.1. Logging Configuration
-* `logging.level`: 
-    - Specifies the log level.
-    - By setting the level to debug, you will be able to see all log messages at the DEBUG level or higher (INFO, WARN, ERROR, FATAL) for the specified packages.
+* `logging.level`:
+  - Sets the log level.
+  - By setting the level to debug, you can see all log messages at DEBUG level and above (INFO, WARN, ERROR, FATAL) for specified packages.
 
 <br/>
 
-## 5.3. blockchain.properties
+## 5.3. application-database.yml
 
-- Role: Configures blockchain server information for integration with the DID Ledger Service server. When you install the Hyperledger Besu network according to the blockchain installation guide in [Open DID Installation Guide], private keys, certificates, and server connection information configuration files are automatically generated. In blockchain.properties, you set the paths where these files are located and the network configuration.
+- Role: Configures database connection information to be used by the DID Ledger Service server. It includes configurations for integration with PostgreSQL database and also manages JPA and Liquibase settings.
 
-- Location: `src/main/resources/properties`
+- Location: `src/main/resources/config`
 
-### 5.3.1. Blockchain Integration Configuration
+### 5.3.1. Database Integration Configuration
 
-#### EVM Network Configuration
-
-- `evm.network.url`:
-  - EVM Network address. Use this fixed value when running Besu on the same local as the client. (Default Port: 8545)
-  - Example: http://localhost:8545
-
-- `evm.chainId`:
-  - Chain ID identifier. Currently uses a fixed value of 1337. (Default Value: 1337)
-  - Example: 1337
-
-- `evm.gas.limit`:
-  - Maximum gas limit allowed for Hyperledger Besu EVM transactions. Currently uses a fixed value as Free Gas. (Default Value: 100000000)
-  - Example: 100000000
-
-- `evm.gas.price`:
-  - Gas price per unit. Currently uses a fixed value of 0 as Free Gas. (Default Value: 0)
-  - Example: 0
-
-- `evm.connection.timeout`: 
-  - Network connection timeout value (milliseconds). Currently uses the recommended fixed value of 10000. (Default Value: 10000)
-  - Example: 10000
-
-#### EVM Contract Configuration
-
-- `evm.contract.address`: 
-  - Address value of the OpenDID Contract returned when deploying Smart Contract with Hardhat. For detailed guide, refer to [DID Besu Contract].
-  - Example: 0xa0E49611FB410c00f425E83A4240e1681c51DDf4
-
-- `evm.contract.privateKey`: 
-  - Private key used for blockchain transactions. Enter the key string defined in accounts inside hardhat.config.js (remove the 0x string at the beginning) to enable transactions with Owner privileges (Default setting). For detailed guide, refer to [DID Besu Contract].
-  - Example: 8f2a55949038a9610f50fb23b5883af3b4ecb3c3bb792cbcefbd1542c692be63
-
-#### Database Configuration (for dev profile)
+#### PostgreSQL Database Configuration
 
 - `spring.datasource.url`:
-  - PostgreSQL database connection URL
-  - Example: jdbc:postgresql://localhost:5432/ledger_service
+  - Sets the PostgreSQL database connection URL.
+  - Example: `jdbc:postgresql://localhost:5432/ledger_service`
 
 - `spring.datasource.username`:
-  - Database username
-  - Example: ledger_user
+  - Sets the database username.
+  - Example: `ledger_user`
 
 - `spring.datasource.password`:
-  - Database password
-  - Example: your_password_here
+  - Sets the database password.
+  - Example: `your_password_here`
+
+- `spring.datasource.driver-class-name`:
+  - Sets the PostgreSQL JDBC driver class name.
+  - Example: `org.postgresql.Driver`
+
+#### JPA Configuration
+
+- `spring.jpa.hibernate.ddl-auto`:
+  - Sets Hibernate's DDL auto-generation option.
+  - Options: `none`, `validate`, `update`, `create`, `create-drop`
+  - Example: `none` (none is recommended for production environments)
+
+- `spring.jpa.show-sql`:
+  - Sets whether to output SQL queries executed by JPA to the console.
+  - Example: `false` (false is recommended for production environments)
+
+#### Liquibase Configuration
+
+- `spring.liquibase.change-log`:
+  - Sets the path to the Liquibase change log file.
+  - Example: `classpath:db/changelog/db.changelog-master.xml`
 
 <br/>
-
 
 # 6. Profile Configuration and Usage
 
 ## 6.1. Profile Overview (`sample`, `dev`)
-The DID Ledger Service server supports two profiles, `dev` and `sample`, to allow operation in various environments.
+The DID Ledger Service server supports two profiles, `sample` and `dev`, to run in various environments.
 
-Each profile is designed to apply the appropriate settings for its environment. By default, the DID Ledger Service server is configured to use the `sample` profile, which is designed to run the server independently without connecting to external services such as a database or blockchain. The `sample` profile is ideal for testing API calls, allowing developers to quickly verify the basic functionality of the application. This profile returns fixed response data for all API calls, making it useful in early development environments.
+Each profile is designed to apply configurations appropriate for the corresponding environment. By default, the DID Ledger Service server is configured with the `sample` profile, which is designed to run the server independently without integration with external services such as databases or blockchains. The `sample` profile is suitable for API call testing, allowing developers to quickly verify the basic operation of the application. This profile returns fixed response data for all API calls, making it useful in initial development environments.
 
-Sample API calls are written as JUnit tests, which can be referenced when writing your own tests.
+Sample API calls are written as JUnit tests, so you can refer to them when writing tests.
 
-On the other hand, the `dev` profile is designed to perform actual operations. When using this profile, testing and validation with real data are possible. Activating the dev profile enables integration with external services such as databases and blockchain, allowing you to test the application's behavior in a real-world environment.
-
+On the other hand, the `dev` profile is designed to perform actual operations. Using this profile enables testing and verification with real data. When the `dev` profile is activated, it integrates with actual external services such as databases and blockchains, allowing you to test application behavior in real environments.
 
 ### 6.1.1. `sample` Profile
-The `sample` profile is designed to run the server independently without connecting to external services (e.g., databases, blockchain). This profile is suitable for testing API calls, allowing developers to quickly verify the basic functionality of the application. It returns fixed response data for all API calls, making it useful in the early development stage or for functional testing. Since no integration with external systems is required, it provides an environment where the server can be run and tested standalone.
+The `sample` profile is designed to run the server independently without integration with external services (DB, blockchain, etc.). This profile is suitable for API call testing and allows developers to quickly verify the basic operation of the application. It returns fixed response data for all API calls, making it useful for initial development stages or functional testing. Since no integration with external systems is required, it provides an environment where you can run and test the server standalone.
 
 ### 6.1.2. `dev` Profile
-The `dev` profile includes settings suited for the development environment and is used on development servers. To use this profile, you will need configuration for the development environment's database and blockchain node.
+The `dev` profile includes configurations suitable for development environments and is used on development servers. To use this profile, configuration for development environment databases and blockchain nodes is required.
 
+## 6.2. Profile Configuration Method
+This section explains how to change profiles for each execution method.
 
-## 6.2. How to Configure Profiles
-This section explains how to switch profiles for each server operation method.
+### 6.2.1. When Running Server with IDE
+- **Configuration File Selection:** Select the `application.yml` file from the `src/main/resources/config` path.
+- **Profile Specification:** Add the `--spring.profiles.active={profile}` option in the IDE's run configuration (Run/Debug Configurations) to activate the desired profile.
+- **Configuration Application:** The corresponding configuration file is applied according to the activated profile.
 
-### 6.2.1. Running the Server Using an IDE
-- **Select Configuration File:**  In the `src/main/resources path`, select the `application.yml` file.
-- **Specify Profile:** In the IDE's Run/Debug Configurations, add the option `--spring.profiles.active={profile}` to activate the desired profile.
-- **Apply Configuration:** The configuration file corresponding to the activated profile will be applied.
+### 6.2.2. When Running Server with Console Commands
+- **Configuration File Selection:** Prepare profile-specific configuration files in the same directory as the built JAR file or in the path where configuration files are located.
+- **Profile Specification:** Add the `--spring.profiles.active={profile}` option to the server execution command to activate the desired profile.
 
-### 6.2.2. Running the Server Using Console Commands
-- **Select Configuration File:** Prepare the profile-specific configuration files in the same directory as the built JAR file or in the directory where the configuration files are located.
-- **Specify Profile:** Add the option `--spring.profiles.active={profile}` to the server startup command to activate the desired profile.
-  
   ```bash
   java -jar build/libs/did-ledger-service-server-2.0.0.jar --spring.profiles.active={profile}
   ```
 
-- **Apply Configuration:** The configuration file corresponding to the activated profile will be applied.
+- **Configuration Application:** The corresponding configuration file is applied according to the activated profile.
 
-### 6.2.3. Running the Server Using Docker
-- **Select Configuration File:** When creating a Docker image, specify the configuration file path in the Dockerfile, or mount external configuration files to the Docker container.
-- **Specify Profile:** Set the `SPRING_PROFILES_ACTIVE` environment variable in the Docker Compose file or the Docker run command to specify the profile.
-  
+### 6.2.3. When Running Server with Docker
+- **Configuration File Selection:** When creating a Docker image, specify the configuration file path in the Dockerfile or mount external configuration files to the Docker container.
+- **Profile Specification:** Set the `SPRING_PROFILES_ACTIVE` environment variable in the Docker Compose file or Docker execution command to specify the profile.
+
   ```yaml
   environment:
     - SPRING_PROFILES_ACTIVE={profile}
   ```
 
-- **Apply Configuration:** The specified profile's configuration will be applied when the Docker container is executed.
+- **Configuration Application:** Configuration is applied according to the profile specified when running the Docker container.
 
-By following these methods, you can flexibly switch profile-specific settings and easily apply the appropriate configuration for your project environment.
+You can flexibly change profile-specific configurations according to each method and easily apply configurations suitable for your project environment.
 
 <br/>
 
-# 7. Running After Building with Docker
+# 7. Building and Running with Docker
 
-## 7.1. How to Build a Docker Image (Based on `Dockerfile`)
-Build the Docker image using the following command:
+## 7.1. Docker Image Build Method (`Dockerfile` Based)
+Build the Docker image with the following command:
 
 ```bash
 docker build -t did-ledger-service-server .
 ```
 
-## 7.2. Running the Docker Image
-Run the built image with the following command:
+## 7.2. Docker Image Execution
+Run the built image:
 
 ```bash
-docker run -d -p 8094:8094 did-ledger-service-server
+docker run -d -p 8098:8098 did-ledger-service-server
 ```
 
 ## 7.3. Running with Docker Compose
 
-### 7.3.1. `docker-compose.yml` File Explanation
-The `docker-compose.yml` file allows you to easily manage multiple containers.
+### 7.3.1. `docker-compose.yml` File Description
+You can easily manage multiple containers using the `docker-compose.yml` file.
 
 ```yaml
 version: '3'
@@ -511,11 +494,13 @@ services:
   app:
     image: did-ledger-service-server
     ports:
-      - "8094:8094"
+      - "8098:8098"
     volumes:
       - ${your-config-dir}:/app/config
     environment:
       - SPRING_PROFILES_ACTIVE=sample
+    depends_on:
+      - postgres
   
   postgres:
     image: postgres:13
@@ -532,20 +517,18 @@ volumes:
   postgres_data:
 ```
 
-### 7.3.2. Running and Managing Containers
-Run the container using Docker Compose with the following command:
+### 7.3.2. Container Execution and Management
+Run containers using Docker Compose with the following command:
 
 ```bash
 docker-compose up -d
 ```
 
-### 7.3.3. How to Configure the Server
-In the example above, the `${your-config-dir}` directory is mounted to `/app/config` inside the container to share configuration files.
+### 7.3.3. Server Configuration Method
+In the above example, mount the `${your-config-dir}` directory to `/app/config` inside the container to share configuration files.
+- If additional configuration is needed, you can change settings by adding separate property files to the mounted folder.
+  - For example, add an `application.yml` file to `${your-config-dir}` and write the configurations to change in this file.
+  - The `application.yml` file located in `${your-config-dir}` takes priority over the default configuration file.
+- For detailed configuration, refer to [5. Configuration Guide](#5-configuration-guide).
 
-- If additional configuration is required, you can modify settings by adding separate property files to the mounted folder.
-For example, add an application.yml file to `${your-config-dir}` and write the necessary configuration changes in this file.
-The `application.yml` file located in `${your-config-dir}` will take precedence over the default configuration files.
-- For detailed configuration instructions, please refer to [5. Configuration Guide.](#5-configuration-guide)
-
-[Open DID Installation Guide]: https://github.com/OmniOneID/did-release/blob/develop/unrelease-V1.0.1.0/OepnDID_Installation_Guide-V1.0.1.0.md
-[DID Besu Contract]: https://github.com/OmniOneID/did-besu-contract
+[Open DID Installation Guide]: https://github.com/OmniOneID/did-release/blob/develop/release-V2.0.0.0/OpenDID_Installation_Guide-V2.0.0.0_ko.md
