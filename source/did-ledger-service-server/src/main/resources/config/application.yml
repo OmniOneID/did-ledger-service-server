@@ -2,7 +2,7 @@ spring:
   application:
     name: Ledger-Service-Server
   profiles:
-    default: sample
+    default: dev
     group:
       dev:
         - auth
