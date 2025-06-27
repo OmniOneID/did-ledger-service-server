@@ -59,23 +59,41 @@ Below is a description of each folder and file in the directory:
 | SECURITY.md                  | Security policies and vulnerability reporting   |
 | docs                         | Documentation                                   |
 | ┖ api                        | API guide documentation                         |
+| ┖ db                         | Database Table Specifications                   |
 | ┖ errorCode                  | Error codes and troubleshooting guides          |
 | ┖ installation               | Installation and setup instructions             |
-| source                       | Source code for the server                      |
-| ┖ did-ledger-server          | Ledger Service Server source code               |
+| source                       | Source code for the server and admin console    |
+| ┖ did-issuer-server          | Ledger Service Server source code               |
+
+
+## Libraries
+
+Libraries used in this project are organized into two main categories:
+
+1. **Open DID Libraries**: These libraries are developed by the Open DID project and are available in the [libs folder](libs). They include:
+
+    - `did-sdk-common-2.0.0.jar`
+    - `did-blockchain-sdk-server-2.0.0.jar`
+    - `did-core-sdk-server-2.0.0.jar`
+    - `did-crypto-sdk-server-2.0.0.jar`
+    - `did-datamodel-sdk-server-2.0.0.jar`
+    - `did-wallet-sdk-server-2.0.0.jar`
+    - `did-zkp-sdk-server-2.0.0.jar`
+
+2. **Third-Party Libraries**: These libraries are open-source dependencies managed via the [build.gradle](build.gradle) file. For a detailed list of third-party libraries and their licenses, please refer to the [dependencies-license.md](../../dependencies-license.md) file.
 
 
 ## Installation And Operation Guide
 
 For detailed instructions on installing the Ledger Server, please refer to the guide below:
-- [OpenDID Ledger Server Installation Guide](docs/installation/OpenDID_LedgerService_InstallationAndOperation_Guide.md)
+- [OpenDID Ledger Server Installation Guide](docs/installation/OpenDID_LedgerService_Installation_Guide.md)
 - 
 ## API Reference
 
 API documentation is available in two main types:
 
 - **Ledger API**: Detailed reference for the Ledger Server's API endpoints and usage.
-   - [Ledger API Reference](docs/api/LedgerService_API.md)
+   - [Ledger API Reference](docs/api/Ledger_API.md)
 
 ## Change Log
 
