@@ -12,16 +12,16 @@
                 <column name="did_id" type="bigint">
                     <constraints nullable="false" />
                 </column>
-                <column name="did" type="VARCHAR(50)">
+                <column name="document" type="TEXT">
                     <constraints nullable="false" unique="false"/>
                 </column>
-                <column name="document" type="TEXT">
+                <column name="controller" type="VARCHAR(100)">
                     <constraints nullable="false" unique="false"/>
                 </column>
                 <column name="version" type="SMALLINT">
                     <constraints nullable="false" unique="false"/>
                 </column>
-                <column name="status" type="VARCHAR(20)">
+                <column name="deactivated" type="BOOLEAN">
                     <constraints nullable="false" unique="false"/>
                 </column>
                 <column name="created_at" type="TIMESTAMP" defaultValue="NOW()">

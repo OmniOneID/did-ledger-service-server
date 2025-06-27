@@ -1,3 +1,18 @@
+/*
+ * Copyright 2025 OmniOne.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.omnione.did.repository.v1.service.sample;
 
 import org.omnione.did.crypto.enums.MultiBaseType;
@@ -5,6 +20,7 @@ import org.omnione.did.crypto.exception.CryptoException;
 import org.omnione.did.crypto.util.MultiBaseUtils;
 import org.omnione.did.repository.v1.dto.did.InputDidDocReqDto;
 import org.omnione.did.repository.v1.dto.did.TssGetDidDocResDto;
+import org.omnione.did.repository.v1.dto.did.UpdateDidDocReqDto;
 import org.omnione.did.repository.v1.service.DidService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Profile;
@@ -22,7 +38,7 @@ public class DidServiceSample implements DidService {
     }
 
     @Override
-    public TssGetDidDocResDto getDid(String did) {
+    public String getDid(String did) {
 
         String didDoc = """
                                     {
@@ -54,16 +70,11 @@ public class DidServiceSample implements DidService {
                     }
                 """;
 
+        return didDoc;
+    }
 
-        try {
-            did = did.replace("did:omn:", "");
-            String encodedDidDOc = MultiBaseUtils.encode(didDoc.getBytes(StandardCharsets.UTF_8), MultiBaseType.base64url);
+    @Override
+    public void updateStatus(UpdateDidDocReqDto request) {
 
-            return TssGetDidDocResDto.builder()
-                    .didDoc(encodedDidDOc)
-                    .build();
-        } catch (CryptoException e) {
-            throw new RuntimeException(e);
-        }
     }
 }

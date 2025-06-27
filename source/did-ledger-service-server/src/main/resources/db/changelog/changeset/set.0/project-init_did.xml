@@ -9,7 +9,7 @@
                 <column name="id" type="BIGINT" autoIncrement="true">
                     <constraints primaryKey="true" nullable="false" />
                 </column>
-                <column name="did" type="VARCHAR(50)">
+                <column name="did" type="VARCHAR(100)">
                     <constraints nullable="false" unique="true" />
                 </column>
                 <column name="version" type="SMALLINT">
@@ -20,6 +20,9 @@
                 </column>
                 <column name="status" type="VARCHAR(20)">
                     <constraints nullable="false" unique="false"/>
+                </column>
+                <column name="terminated_time" type="TIMESTAMP">
+                    <constraints nullable="true" unique="false"/>
                 </column>
                 <column name="created_at" type="TIMESTAMP" defaultValue="NOW()">
                     <constraints nullable="false" unique="false" />
