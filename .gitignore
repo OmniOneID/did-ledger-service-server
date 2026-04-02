@@ -205,3 +205,15 @@ README.html
 !**/did-*.jar
 !**/opendid-*.jar
 
+### Claude Code ###
+CLAUDE.md
+
+### Frontend ###
+**/frontend/node_modules/
+**/frontend/dist/
+**/frontend/.vite/
+**/frontend/.env.local
+**/frontend/.env.*.local
+**/frontend/tsconfig.tsbuildinfo
+**/src/main/resources/static/
+

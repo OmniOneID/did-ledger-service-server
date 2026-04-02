@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+
+        <changeSet id="modify-column-from_status-nullable_vc_status_history" author="system">
+            <modifyDataType tableName="vc_status_history" columnName="from_status" newDataType="VARCHAR(20)"/>
+            <dropNotNullConstraint tableName="vc_status_history" columnName="from_status" columnDataType="VARCHAR(20)"/>
+        </changeSet>
+
+</databaseChangeLog>

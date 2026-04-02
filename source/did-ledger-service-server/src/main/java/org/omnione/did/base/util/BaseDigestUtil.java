@@ -16,9 +16,9 @@
 
 package org.omnione.did.base.util;
 
-import lombok.extern.slf4j.Slf4j;
 import org.omnione.did.base.exception.ErrorCode;
 import org.omnione.did.base.exception.OpenDidException;
+import lombok.extern.slf4j.Slf4j;
 import org.omnione.did.crypto.enums.DigestType;
 import org.omnione.did.crypto.exception.CryptoException;
 import org.omnione.did.crypto.util.DigestUtils;

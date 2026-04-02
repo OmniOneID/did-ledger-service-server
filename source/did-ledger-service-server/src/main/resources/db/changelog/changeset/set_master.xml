@@ -5,5 +5,7 @@
   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
 
   <includeAll path="set.0" relativeToChangelogFile="true" />
-
+  <includeAll path="set.1" relativeToChangelogFile="true" />
+  <include file="set.2/add-pwdAlgo-column_admin.xml" relativeToChangelogFile="true" />
+  <include file="set.2/update-password_reset_reason_admin.xml" relativeToChangelogFile="true" />
 </databaseChangeLog>

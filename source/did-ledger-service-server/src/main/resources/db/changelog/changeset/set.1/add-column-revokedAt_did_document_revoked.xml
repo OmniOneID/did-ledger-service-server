@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+
+        <changeSet id="add-column-revokedAt_did_document_revoked" author="yklee0911">
+            <!-- Step 1: Add column as nullable -->
+            <addColumn tableName="did_document_revoked">
+                <column name="revoked_at" type="TIMESTAMP">
+                    <constraints nullable="true" />
+                </column>
+            </addColumn>
+            
+            <!-- Step 2: Update existing records with created_at value as default -->
+            <update tableName="did_document_revoked">
+                <column name="revoked_at" valueComputed="created_at"/>
+                <where>revoked_at IS NULL</where>
+            </update>
+            
+            <!-- Step 3: Make column NOT NULL -->
+            <addNotNullConstraint tableName="did_document_revoked" columnName="revoked_at" columnDataType="TIMESTAMP"/>
+        </changeSet>
+
+</databaseChangeLog>

@@ -1,6 +1,5 @@
 package org.omnione.did.base.datamodel;
 
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 

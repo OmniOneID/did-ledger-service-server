@@ -17,6 +17,9 @@ package org.omnione.did.base.db.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.time.Instant;
 
 @Builder
 @AllArgsConstructor
@@ -46,4 +49,8 @@ public class DidDocumentRevoked extends BaseEntity {
 
     @Column(name = "did_id", nullable = false)
     private Long didId;
+
+    @CreationTimestamp
+    @Column(name = "revoked_at", nullable = false)
+    private Instant revokedAt;
 }

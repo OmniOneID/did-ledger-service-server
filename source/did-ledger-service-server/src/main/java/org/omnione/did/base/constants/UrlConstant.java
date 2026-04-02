@@ -1,28 +1,16 @@
 package org.omnione.did.base.constants;
 
 public class UrlConstant {
-    public static final String LSS = "/lss";
-    public static class Did {
-        public static final String V1 = "/api/v1/did-doc";
 
-//        public static final String DID_PATH_VAL = "/{did}";
+    public static class LSS {
+        public static final String AGENT_V1 = "/lss/api/v1";
+        public static final String ADMIN_V1 = "/lss/admin/v1";
     }
 
-    public static class Vc {
-        public static final String V1 = "/api/v1/vc-meta";
-//        public static final String VC_META = "/vc-meta";
-//        public static final String VC_ID_PATH_VAL = "/{vcId}";
-    }
+    public static final String DID = "/did-doc";
+    public static final String VC = "/vc-meta";
+    public static final String VC_SCHEMA = "/vc-schema";
+    public static final String CREDENTIAL_SCHEMA = "/credential-schema";
+    public static final String CREDENTIAL_DEFINITION = "/credential-definition";
 
-    public static class CredentialSchema {
-        public static final String V1 = "/api/v1/credential-schema";
-    }
-
-    public static class CredentialDefinition {
-        public static final String V1 = "/api/v1/credential-definition";
-    }
-
-    public static class VcSchema {
-        public static final String V1 = "/api/v1/vc-schema";
-    }
 }

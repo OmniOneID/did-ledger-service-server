@@ -19,8 +19,9 @@ import org.omnione.did.base.db.domain.DidDocumentStatusHistory;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
+import java.util.List;
 
 @Repository
-public interface DidDocumentStatusHistoryRepository extends JpaRepository<DidDocumentStatusHistory, Long> {
+public interface DidDocumentStatusHistoryRepository extends JpaRepository<DidDocumentStatusHistory, Long>, DidDocumentStatusHistoryRepositoryAdmin {
+    List<DidDocumentStatusHistory> findAllByDidIdOrderByChangedAtDesc(Long didId);
 }

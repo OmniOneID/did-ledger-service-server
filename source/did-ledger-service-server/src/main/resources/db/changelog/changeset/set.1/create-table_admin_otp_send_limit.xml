@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+
+    <changeSet id="create-table_admin_otp_send_limit" author="yklee0911">
+        <createTable tableName="admin_otp_send_limit">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="login_id" type="varchar(50)">
+                <constraints nullable="false" unique="false" />
+            </column>
+            <column name="send_date" type="date">
+                <constraints nullable="false" unique="false" />
+            </column>
+            <column name="daily_send_count" type="smallint" defaultValue="0">
+                <constraints nullable="false" unique="false" />
+            </column>
+            <column name="last_sent_at" type="timestamp">
+                <constraints nullable="true" unique="false" />
+            </column>
+            <column name="cooldown_until" type="timestamp">
+                <constraints nullable="true" unique="false" />
+            </column>
+            <column name="blocked" type="boolean" defaultValue="false">
+                <constraints nullable="false" unique="false" />
+            </column>
+            <column name="created_at" type="timestamp">
+                <constraints nullable="false" unique="false"/>
+            </column>
+            <column name="updated_at" type="timestamp">
+                <constraints nullable="true" unique="false"/>
+            </column>
+        </createTable>
+        
+        <!-- Add unique constraint for login_id and send_date -->
+        <addUniqueConstraint 
+            tableName="admin_otp_send_limit" 
+            columnNames="login_id,send_date" 
+            constraintName="uk_admin_otp_send_limit_login_id_date"/>
+    </changeSet>
+
+</databaseChangeLog>

@@ -1,9 +1,10 @@
 package org.omnione.did.base.util;
 
+import org.omnione.did.base.exception.OpenDidException;
 import org.omnione.did.core.data.rest.SignatureParams;
+import org.omnione.did.core.exception.CoreException;
 import org.omnione.did.core.manager.DidManager;
 import org.omnione.did.data.model.did.DidDocument;
-import org.omnione.did.data.model.did.VerificationMethod;
 
 import java.util.List;
 
@@ -45,8 +46,7 @@ public class BaseCoreDidUtil {
     public static List<String> getAllSignKeyIdList(DidManager didmanager) {
         try {
             return didmanager.getAllSignKeyIdList();
-        } catch (Exception e) {
-            System.out.println("Failed to get sign key ids: " + e.getMessage());
+        } catch ( CoreException e) {
             throw new RuntimeException("Failed to get sign key ids: " + e.getMessage());
         }
     }
@@ -61,8 +61,8 @@ public class BaseCoreDidUtil {
         try {
             DidManager didManager = parseDidDoc(didDocument);
             return didManager.getAllSignKeyIdList();
-        } catch (Exception e) {
-            System.out.println("Failed to get sign key ids: " + e.getMessage());
+        } catch (CoreException e) {
+
             throw new RuntimeException("Failed to get sign key ids: " + e.getMessage());
         }
     }
@@ -76,8 +76,8 @@ public class BaseCoreDidUtil {
     public static List<SignatureParams> getAllSignDataList(DidManager didManager, List<String> keyIdList) {
         try {
             return didManager.getOriginDataForSign(keyIdList);
-        } catch (Exception e) {
-            System.out.println("Failed to get sign data: " + e.getMessage());
+        } catch (CoreException e) {
+
             throw new RuntimeException("Failed to get sign data: " + e.getMessage());
         }
     }
@@ -92,8 +92,7 @@ public class BaseCoreDidUtil {
         try {
             DidManager didManager = parseDidDoc(ownerDidDoc.toJson());
             return didManager.getOriginDataForSign(keyIdList);
-        } catch (Exception e) {
-            System.out.println("Failed to get sign data: " + e.getMessage());
+        } catch ( CoreException e) {
             throw new RuntimeException("Failed to get sign data: " + e.getMessage());
         }
     }
@@ -108,8 +107,7 @@ public class BaseCoreDidUtil {
         try {
             List<String> allSignKeyIdList = getAllSignKeyIdList(didManager);
             return getAllSignDataList(didManager, allSignKeyIdList);
-        }  catch (Exception e) {
-            System.out.println("Failed to get sign data: " + e.getMessage());
+        }  catch (OpenDidException e) {
             throw new RuntimeException("Failed to get sign data: " + e.getMessage());
         }
     }
@@ -125,8 +123,7 @@ public class BaseCoreDidUtil {
             DidManager didManager = parseDidDoc(ownerDidDoc.toJson());
             List<String> allSignKeyIdList = getAllSignKeyIdList(didManager);
             return getAllSignDataList(didManager, allSignKeyIdList);
-        }  catch (Exception e) {
-            System.out.println("Failed to get sign data: " + e.getMessage());
+        }  catch (OpenDidException e) {
             throw new RuntimeException("Failed to get sign data: " + e.getMessage());
         }
     }
@@ -140,8 +137,7 @@ public class BaseCoreDidUtil {
     public static void addProofsToDidDoc(DidManager didManager, List<SignatureParams> signatureParamsList) {
         try {
             didManager.addProof(signatureParamsList);
-        } catch (Exception e) {
-            System.out.println("Failed to add proof to DID document: " + e.getMessage());
+        } catch (CoreException e) {
             throw new RuntimeException("Failed to add proof to DID document: " + e.getMessage());
         }
     }

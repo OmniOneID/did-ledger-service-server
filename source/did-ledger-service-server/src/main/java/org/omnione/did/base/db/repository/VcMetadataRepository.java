@@ -22,6 +22,6 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface VcMetadataRepository extends JpaRepository<VcMetadata, Long> {
+public interface VcMetadataRepository extends JpaRepository<VcMetadata, Long>, VcMetadataRepositoryAdmin {
     Optional<VcMetadata> findByVcId(String vcId);
 }

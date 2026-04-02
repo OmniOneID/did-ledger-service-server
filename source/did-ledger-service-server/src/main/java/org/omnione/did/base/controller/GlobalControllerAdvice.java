@@ -1,8 +1,10 @@
 package org.omnione.did.base.controller;
 
+import org.omnione.did.base.constants.LogAttrs;
 import org.omnione.did.base.exception.ErrorCode;
 import org.omnione.did.base.exception.OpenDidException;
 import org.omnione.did.base.response.ErrorResponse;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
@@ -17,16 +19,25 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @RestControllerAdvice(basePackages = {"org.omnione.did"})
 public class GlobalControllerAdvice {
+    private void mark(HttpServletRequest req, String code, Exception ex) {
+        req.setAttribute(LogAttrs.ERROR_CODE, code);
+        req.setAttribute(LogAttrs.ERROR_CLASS, ex.getClass().getName());
+        req.setAttribute(LogAttrs.ERROR_MSG, ex.getMessage()); // 민감정보 주의
+    }
+
 
     @ExceptionHandler(OpenDidException.class)
-    public ResponseEntity<ErrorResponse> handleTasException(OpenDidException ex) {
+    public ResponseEntity<ErrorResponse> handleTasException(OpenDidException ex, HttpServletRequest req)  {
+        mark(req, ex.getErrorCode().getCode(), ex);
+
         int httpStatus = ex.getErrorCode().getHttpStatus();
         ErrorResponse errorResponse = new ErrorResponse(ex.getErrorCode().getCode(), ex.getErrorCode().getMessage());
         return new ResponseEntity<>(errorResponse, HttpStatus.valueOf(httpStatus));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorResponse> handleValidationException(MethodArgumentNotValidException ex) {
+    public ResponseEntity<ErrorResponse> handleValidationException(MethodArgumentNotValidException ex, HttpServletRequest req)  {
+        mark(req, "REQUEST_VALIDATION_ERROR", ex);
         int httpStatus = 500;
 
         String errorMessages = ex.getBindingResult()
@@ -40,7 +51,8 @@ public class GlobalControllerAdvice {
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseEntity<ErrorResponse> handleValidationException(HttpMessageNotReadableException ex) {
+    public ResponseEntity<ErrorResponse> handleValidationException(HttpMessageNotReadableException ex, HttpServletRequest req) {
+        mark(req, ErrorCode.REQUEST_BODY_UNREADABLE.getCode(), ex);
         ErrorResponse errorResponse = new ErrorResponse(ErrorCode.REQUEST_BODY_UNREADABLE);
         return new ResponseEntity<>(errorResponse, HttpStatus.valueOf(500));
     }

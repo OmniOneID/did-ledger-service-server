@@ -2,6 +2,8 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.2.4'
     id 'io.spring.dependency-management' version '1.1.4'
+    id 'com.github.jk1.dependency-license-report' version '2.0'
+    id 'com.github.node-gradle.node' version '5.0.0'
 }
 
 group = 'org.omnione.did'
@@ -15,6 +17,13 @@ configurations {
     compileOnly {
         extendsFrom annotationProcessor
     }
+}
+
+ext {
+    set('springCloudVersion', "2023.0.1")
+    set("skipFrontendBuild", System.getProperty("skipFrontendBuild"))
+    set("frontendResourceDir", "${project.projectDir}/../did-ledger-service-admin/frontend")
+    set("backendResourceDir", "${projectDir}/src/main/resources/static")
 }
 
 springBoot {
@@ -60,9 +69,87 @@ dependencies {
     implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.5'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
 
+    // QueryDSL
+    implementation 'io.github.openfeign.querydsl:querydsl-jpa:6.11'
+    annotationProcessor 'io.github.openfeign.querydsl:querydsl-apt:6.11:jpa'
+    annotationProcessor "jakarta.annotation:jakarta.annotation-api"
+    annotationProcessor "jakarta.persistence:jakarta.persistence-api"
+
+    // API Feign
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+
+    implementation 'io.jsonwebtoken:jjwt-api:0.12.5'
+    runtimeOnly   'io.jsonwebtoken:jjwt-impl:0.12.5'
+    runtimeOnly   'io.jsonwebtoken:jjwt-jackson:0.12.5'
+
     implementation fileTree(dir: "libs", includes: ["*"])
+    implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.5'
+
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
 }
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+import com.github.gradle.node.npm.task.NpmTask
+import com.github.jk1.license.render.*
+import com.github.jk1.license.filter.LicenseBundleNormalizer
+import com.github.jk1.license.filter.ExcludeTransitiveDependenciesFilter
+
+licenseReport {
+    outputDir = "$projectDir/build/licenses"
+    renderers = [new InventoryMarkdownReportRenderer()]
+    filters = [new LicenseBundleNormalizer(), new ExcludeTransitiveDependenciesFilter()]
+}
+
+node {
+    version = "22.9.0"
+    download = true
+    nodeProjectDir = file("${frontendResourceDir}")
+    workDir = layout.buildDirectory.dir("nodejs").get().asFile
+    npmWorkDir = layout.buildDirectory.dir("npm").get().asFile
+}
+
+import com.github.gradle.node.npm.task.NpmTask
+
+tasks.register('deleteFrontResources', Delete) {
+    delete "${backendResourceDir}/**"
+    delete "${backendResourceDir}"
+    delete "${frontendResourceDir}/dist/**"
+    delete "${frontendResourceDir}/dist"
+}
+
+tasks.register('npm_install', NpmTask) {
+    dependsOn tasks.named("nodeSetup")
+    workingDir = file("${frontendResourceDir}")
+    args = ['install']
+}
+
+tasks.register('npm_build', NpmTask) {
+    dependsOn 'deleteFrontResources'
+    dependsOn 'npm_install'
+    workingDir = file("${frontendResourceDir}")
+    args = ['run', 'build']
+}
+
+tasks.register('copyFrontResources', Copy) {
+    dependsOn 'npm_build'
+    from "${frontendResourceDir}/dist"
+    into "${backendResourceDir}"
+}
+
+tasks.named('copyFrontResources') {
+    mustRunAfter('npm_build')
+}
+
+tasks.named('processResources') {
+    if (!Boolean.valueOf(skipFrontendBuild)) {
+        dependsOn('npm_build', 'copyFrontResources')
+    }
 }

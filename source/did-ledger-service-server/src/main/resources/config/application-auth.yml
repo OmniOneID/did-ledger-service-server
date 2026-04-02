@@ -1,3 +1,9 @@
 auth:
   token:
     enable: false
+
+security:
+  jwt:
+    secret: "c2FtcGxlZW5jcnlwdGtleV9zYW1wbGVlbmNyeXB0a2V5X3NhbXBsZWVuY3J5cHRrZXlfc2FtcGxlZW5jcnlwdGtleV9zYW1wbGVlbmNyeXB0a2V5X3NhbXBsZWVuY3J5cHRrZXlfc2FtcGxlZW5jcnlwdGtleV9zYW1wbGVlbmNyeXB0a2V5X3NhbXBsZWVuY3J5cHRrZXlfc2FtcGxlZW5jcnlwdGtleV9zYW1wbGVlbmNyeXB0a2V5X3NhbXBsZWVuY3J5cHRrZXlfc2FtcGxlZW5jcnlwdGtleV9zYW1wbGVlbmNyeXB0a2V5X3NhbXBsZWVuY3J5cHRrZXlfc2FtcGxlZW5jcnlwdGtleQ"
+    access-ttl-seconds: 1800
+    refresh-ttl-seconds: 1209600

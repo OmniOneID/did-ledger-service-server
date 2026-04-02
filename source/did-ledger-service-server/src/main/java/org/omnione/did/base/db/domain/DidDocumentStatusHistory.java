@@ -2,7 +2,7 @@ package org.omnione.did.base.db.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.omnione.did.base.constants.DidDocStatus;
+import org.omnione.did.data.model.enums.did.DidDocStatus;
 
 import java.time.Instant;
 

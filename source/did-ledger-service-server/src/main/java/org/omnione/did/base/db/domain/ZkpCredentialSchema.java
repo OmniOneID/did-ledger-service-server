@@ -2,9 +2,6 @@ package org.omnione.did.base.db.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.omnione.did.data.model.enums.vc.VcStatus;
-
-import java.time.Instant;
 
 @Builder
 @AllArgsConstructor

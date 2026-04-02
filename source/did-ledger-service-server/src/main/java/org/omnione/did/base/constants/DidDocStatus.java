@@ -2,8 +2,8 @@ package org.omnione.did.base.constants;
 
 
 public enum DidDocStatus {
-    ACTIVATE,
-    DEACTIVATE,
+    ACTIVATED,
+    DEACTIVATED,
     REVOKED,
     TERMINATED
 }

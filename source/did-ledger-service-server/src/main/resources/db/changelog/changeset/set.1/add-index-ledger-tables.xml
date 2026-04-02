@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+
+    <!-- Did 테이블 - 실제 사용되는 인덱스만 -->
+    <changeSet id="add-index-did-role-only" author="system">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists indexName="idx_did_role"/>
+            </not>
+        </preConditions>
+        
+        <comment>Add index on role column for findByRole() queries</comment>
+
+        <createIndex indexName="idx_did_role" tableName="did">
+            <column name="role"/>
+        </createIndex>
+
+    </changeSet>
+
+    <!-- DidDocument 테이블 - 핵심 조회 패턴만 -->
+    <changeSet id="add-index-did-document-core" author="system">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists indexName="idx_did_document_did_id"/>
+            </not>
+        </preConditions>
+        
+        <comment>Add index on did_id for all DID document queries</comment>
+
+        <createIndex indexName="idx_did_document_did_id" tableName="did_document">
+            <column name="did_id"/>
+        </createIndex>
+
+    </changeSet>
+
+    <changeSet id="add-index-did-document-version" author="system">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists indexName="idx_did_document_did_id_version"/>
+            </not>
+        </preConditions>
+        
+        <comment>Add compound index for findByDidIdAndVersion() queries</comment>
+
+        <createIndex indexName="idx_did_document_did_id_version" tableName="did_document">
+            <column name="did_id"/>
+            <column name="version"/>
+        </createIndex>
+
+    </changeSet>
+
+    <!-- VcMetadata 테이블 - 유일한 조회 패턴만 -->
+    <changeSet id="add-index-vc-metadata-core" author="system">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists indexName="idx_vc_metadata_vc_id"/>
+            </not>
+        </preConditions>
+        
+        <comment>Add index on vc_id for findByVcId() queries (primary lookup method)</comment>
+
+        <createIndex indexName="idx_vc_metadata_vc_id" tableName="vc_metadata">
+            <column name="vc_id"/>
+        </createIndex>
+
+    </changeSet>
+
+</databaseChangeLog>

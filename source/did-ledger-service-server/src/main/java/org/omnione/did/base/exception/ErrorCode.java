@@ -34,6 +34,7 @@ public enum ErrorCode {
     INVALID_VC_SCHEMA("SSRVLSS12001", "Invalid VC Schema.", 400),
     VC_SCHEMA_ALREADY_REGISTERED("SSRVLSS12002", "Failed to register VC Schema: VC Schema already exists.", 400),
     VC_SCHEMA_NOT_FOUND("SSRVLSS12003", "VC Schema not found.", 500),
+    VC_STATUS_HISTORY_NOT_FOUND("SSRVLSS12004", "VC Status History not found.", 400),
 
 
     // 5. ZKP-related errors (12500 ~ 12999)
@@ -60,10 +61,36 @@ public enum ErrorCode {
     DB_DELETE_ERROR("SSRVLSS13504", "Database delete error.", 500),
 
 
+    // 8. Admin-related errors (14000 ~ 14499)
+    ADMIN_INFO_NOT_FOUND("SSRVLSS14000", "Admin not found.", 400),
+    ADMIN_ALREADY_EXISTS("SSRVLSS14001", "Failed to register admin: admin is already registered.", 400),
+    ADMIN_PASSWORD_POLICY_NOT_FOUND("SSRVLSS14002", "Failed to find admin password policy: policy is not registered.", 500),
+    DAILY_OTP_SEND_LIMIT_EXCEEDED("SSRVLSS14003", "Daily OTP limit exceeded.", 400),
+    OTP_COOLDOWN_NOT_EXPIRED("SSRVLSS14004", "Please wait before requesting another OTP.", 400),
+    INVALID_OTP("SSRVLSS14005", "Invalid OTP code.", 400),
+    OTP_EXPIRED("SSRVLSS14006", "OTP has expired. Please request a new one.", 400),
+    OTP_VERIFY_LIMIT_EXCEEDED("SSRVLSS14007", "Too many verification attempts.", 400),
+    ADMIN_NOT_FOUND_FOR_PASSWORD_RESET("SSRVLSS14008", "Admin not found.", 400),
+    EMAIL_SEND_FAILED("SSRVLSS14009", "Failed to send email.", 500),
+
+
+    // 9. ApiKey-related errors (14500 ~ 14999)
+    API_KEY_NOT_FOUND("SSRVLSS14500", "API Key not found.", 400),
+    API_KEY_GENERATION_FAILED("SSRVLSS14501", "Failed to generate unique API key after maximum attempts.", 500),
+    API_KEY_MISSING("SSRVLSS14502", "API Key is missing in request header.", 401),
+    API_KEY_INVALID("SSRVLSS14503", "Invalid API key.", 401),
+    API_KEY_INSUFFICIENT_PERMISSION("SSRVLSS14504", "Insufficient permissions for this API.", 403),
+    API_KEY_VALIDATION_ERROR("SSRVLSS14505", "API key validation failed.", 500),
+
+
+    // 10. ServerConfig-related errors (15000 ~ 15499)
+    SERVER_CONFIG_NOT_FOUND("SSRVLSS15000", "Server configuration not found.", 400),
+    SERVER_CONFIG_KEY_NOT_FOUND("SSRVLSS15001", "Server configuration key not found.", 400),
+    SERVER_CONFIG_UPDATE_FAILED("SSRVLSS15002", "Failed to update server configuration.", 500),
+
+
     // 99. Miscellaneous errors (90000 ~ 99999)
     TODO("SSRVLSS99999", "TODO.", 500),
-
-
     ;
 
 

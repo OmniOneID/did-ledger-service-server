@@ -33,6 +33,7 @@ public interface DidDocumentRepository extends JpaRepository<DidDocument, Long> 
     Optional<DidDocument> findFirstByDidIdOrderByIdDesc(Long didId);
 
     List<DidDocument> findAllByDidId(Long didId);
+    List<DidDocument> findAllByDidIdOrderByVersionDesc(Long didId);
 
     void deleteAllByDidId(Long didId);
 }

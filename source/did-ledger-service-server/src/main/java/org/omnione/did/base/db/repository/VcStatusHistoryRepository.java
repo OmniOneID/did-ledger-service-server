@@ -15,11 +15,20 @@
  */
 package org.omnione.did.base.db.repository;
 
-import org.omnione.did.base.db.domain.DidDocumentRevoked;
 import org.omnione.did.base.db.domain.VcStatusHistory;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
-public interface VcStatusHistoryRepository extends JpaRepository<VcStatusHistory, Long> {
+public interface VcStatusHistoryRepository extends JpaRepository<VcStatusHistory, Long>, VcStatusHistoryRepositoryAdmin {
+    
+    /**
+     * Finds all status history records for a specific VC ID, ordered by change date descending.
+     *
+     * @param vcId the VC ID to search for
+     * @return list of VcStatusHistory records ordered by changedAt desc
+     */
+    List<VcStatusHistory> findAllByVcIdOrderByChangedAtDesc(String vcId);
 }

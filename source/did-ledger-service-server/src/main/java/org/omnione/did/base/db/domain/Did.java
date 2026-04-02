@@ -15,13 +15,12 @@
  */
 package org.omnione.did.base.db.domain;
 
-import org.omnione.did.base.constants.DidDocStatus;
 import jakarta.persistence.*;
 import lombok.*;
+import org.omnione.did.data.model.enums.did.DidDocStatus;
 import org.omnione.did.data.model.enums.vc.RoleType;
 
 import java.time.Instant;
-import java.util.List;
 
 @Builder
 @AllArgsConstructor
