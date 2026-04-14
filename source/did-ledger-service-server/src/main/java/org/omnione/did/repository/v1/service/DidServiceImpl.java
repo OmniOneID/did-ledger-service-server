@@ -92,6 +92,8 @@ public class DidServiceImpl implements DidService {
         log.debug("\t--> Update did");
         Did updatedDid = didQueryService.save(Did.builder()
                 .id(previousDid.getId())
+                .did(previousDid.getDid())
+                .role(previousDid.getRole())
                 .status(DidDocStatus.ACTIVATE)
                 .version(newVersion)
                 .build());
