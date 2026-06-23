@@ -37,7 +37,7 @@ public class DidUtil {
     }
 
     public static Short extractVersion(String url) {
-        String versionParam = "version=";
+        String versionParam = "versionId=";
         int versionStart = url.indexOf(versionParam);
 
         if (versionStart == -1) {
