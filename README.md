@@ -1,17 +1,25 @@
 # Ledger Service Server Source Code
 
-Welcome to the Ledger Service Server source code repository. This directory contains the core source code and build configurations for the Ledger Service Server.
+Welcome to the Ledger Service Server source code repository. This repository contains the source code, documentation, and build configurations for the Ledger Service Server (LSS) and the LSS Admin Console.
 
 ## S/W Specifications
-| Category           | Details                                         |
-|--------------------|-------------------------------------------------|
-| OS                 | macOS / Linux / Windows 10 or higher            |
-| Language           | Java 21 or higher                               |
-| IDE                | IntelliJ IDEA                                   |
-| Build System       | Gradle 7.0 or higher                            |
-| Compatibility      | Requires JDK 21 or higher                       |
-| Docker             | Docker and Docker Compose must be installed     |
-| Other Requirements | Minimum 2GB RAM and 10GB of disk space required |
+| Category           | Details                                                        |
+|--------------------|----------------------------------------------------------------|
+| OS                 | macOS / Linux / Windows 10 or higher                           |
+| Language           | Java 21 or higher                                              |
+| IDE                | IntelliJ IDEA                                                  |
+| Build System       | Gradle 8.7 (Gradle Wrapper included)                           |
+| Compatibility      | Requires JDK 21 or higher                                      |
+| Database           | PostgreSQL                                                     |
+| Frontend           | Node.js 22.9.0 (downloaded automatically by the Gradle build)  |
+| Other Requirements | Minimum 2GB RAM and 10GB of disk space required                |
+
+## Key Features
+- DID Document registration, lookup, and status changes
+- VC Meta registration, lookup, and VC status changes
+- VC Schema, ZKP Credential Schema, and ZKP Credential Definition registration and lookup
+- API key authentication for Agent API (`/lss/api/v1`) calls using the `X-API-Key` header (roles: `TAS`, `ISSUER`, `READ`)
+- LSS Admin Console, served by the server itself (`http://{host}:8098/`): DID, VC Metadata, and VC Schema lookup, API key management, admin management, server configuration, and API and audit log lookup
 
 ## Folder Structure
 Here's an overview of the directory structure.
@@ -26,6 +34,7 @@ did-ledger-service-server
 ├── dependencies-license.md
 ├── MAINTAINERS.md
 ├── README.md
+├── README_ko.md
 ├── RELEASE-PROCESS.md
 ├── SECURITY.md
 ├── docs
@@ -37,9 +46,11 @@ did-ledger-service-server
 │   │   └── LedgerService_ErrorCode_ko.md
 │   └── installation
 │       ├── OpenDID_LedgerService_InstallationAndOperation_Guide.md
-│       └── OpenDID_LedgerServicer_InstallationAndOperation_Guide_ko.md
+│       └── OpenDID_LedgerService_InstallationAndOperation_Guide_ko.md
 └── source
-    └── main
+    ├── did-ledger-service-admin
+    │   └── frontend
+    └── did-ledger-service-server
 
 ```
 
@@ -47,35 +58,38 @@ did-ledger-service-server
 
 Below is a description of each folder and file in the directory:
 
-| Name                         | Description                                     |
-| ---------------------------- |-------------------------------------------------|
-| CHANGELOG.md                 | Version-specific changes in the project         |
-| CODE_OF_CONDUCT.md           | Code of conduct for contributors                |
-| CONTRIBUTING.md              | Contribution guidelines and procedures          |
-| LICENSE                      | License                                         |
-| dependencies-license.md      | Licenses for the project’s dependency libraries |
-| MAINTAINERS.md               | Guidelines for project maintainers              |
-| RELEASE-PROCESS.md           | Procedures for releasing new versions           |
-| SECURITY.md                  | Security policies and vulnerability reporting   |
-| docs                         | Documentation                                   |
-| ┖ api                        | API guide documentation                         |
-| ┖ errorCode                  | Error codes and troubleshooting guides          |
-| ┖ installation               | Installation and setup instructions             |
-| source                       | Source code for the server                      |
-| ┖ did-ledger-server          | Ledger Service Server source code               |
+| Name                         | Description                                          |
+| ---------------------------- |------------------------------------------------------|
+| CHANGELOG.md                 | Version-specific changes in the project              |
+| CODE_OF_CONDUCT.md           | Code of conduct for contributors                     |
+| CONTRIBUTING.md              | Contribution guidelines and procedures               |
+| LICENSE                      | License                                              |
+| dependencies-license.md      | Licenses for the project’s dependency libraries      |
+| MAINTAINERS.md               | Guidelines for project maintainers                   |
+| RELEASE-PROCESS.md           | Procedures for releasing new versions                |
+| SECURITY.md                  | Security policies and vulnerability reporting        |
+| docs                         | Documentation                                        |
+| ┖ api                        | API guide documentation                              |
+| ┖ errorCode                  | Error codes and troubleshooting guides               |
+| ┖ installation               | Installation, setup, and operation instructions      |
+| source                       | Source code for the server and admin console         |
+| ┖ did-ledger-service-admin   | LSS Admin Console frontend (React, TypeScript) source code |
+| ┖ did-ledger-service-server  | Ledger Service Server (Spring Boot) source code      |
 
 
 ## Installation And Operation Guide
 
-For detailed instructions on installing the Ledger Server, please refer to the guide below:
-- [OpenDID Ledger Server Installation Guide](docs/installation/OpenDID_LedgerService_InstallationAndOperation_Guide.md)
-- 
+For detailed instructions on installing and operating the Ledger Service Server, including the Admin Console and API key operation, please refer to the guide below:
+- [OpenDID Ledger Service Server Installation And Operation Guide](docs/installation/OpenDID_LedgerService_InstallationAndOperation_Guide.md)
+
 ## API Reference
 
 API documentation is available in two main types:
 
 - **Ledger API**: Detailed reference for the Ledger Server's API endpoints and usage.
    - [Ledger API Reference](docs/api/LedgerService_API.md)
+- **Error Code**: Reference for the error codes returned by the Ledger Server.
+   - [Ledger Error Code Reference](docs/errorCode/LedgerService_ErrorCode.md)
 
 ## Change Log
 
