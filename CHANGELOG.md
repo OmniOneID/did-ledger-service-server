@@ -1,6 +1,14 @@
 # Changelog
 
-## v1.0.0 (2025-6-12)
+## v2.0.1 (2026-04-14)
+
+### 🐛 Bug Fixes
+    - Ledger Service Server
+        - Fixed an issue where the existing `did` and `role` values were not preserved during DID Document update
+        - Resolved a not-null constraint violation on the `did` column during DID Document version update
+        - Fixed a 500 error in the DID Document update flow (`propose-update-diddoc` → `request-update-diddoc`)
+
+## v2.0.0 (2025-06-12)
 
 ### 🚀 New Features
     - Ledger Service Server
