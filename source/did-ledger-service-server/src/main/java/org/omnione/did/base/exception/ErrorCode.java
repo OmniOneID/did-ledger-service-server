@@ -81,6 +81,7 @@ public enum ErrorCode {
     API_KEY_INVALID("SSRVLSS14503", "Invalid API key.", 401),
     API_KEY_INSUFFICIENT_PERMISSION("SSRVLSS14504", "Insufficient permissions for this API.", 403),
     API_KEY_VALIDATION_ERROR("SSRVLSS14505", "API key validation failed.", 500),
+    API_KEY_EXPIRED("SSRVLSS14506", "API key has expired.", 401),
 
 
     // 10. ServerConfig-related errors (15000 ~ 15499)

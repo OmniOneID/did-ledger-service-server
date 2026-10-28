@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
 import java.util.HexFormat;
 import java.util.Optional;
 
@@ -81,14 +82,20 @@ public class ApiKeyValidationService {
             return ValidationResult.failure(ErrorCode.API_KEY_INVALID);
         }
         
-        // 4. Check role-based permissions
+        // 4. Check that the API key has not expired
+        if (!apiKeyEntity.getExpiresAt().isAfter(Instant.now())) {
+            log.warn("Expired API key: {}, expiresAt: {}", maskApiKey(apiKey), apiKeyEntity.getExpiresAt());
+            return ValidationResult.failure(ErrorCode.API_KEY_EXPIRED);
+        }
+        
+        // 5. Check role-based permissions
         boolean hasPermission = checkRolePermission(apiKeyEntity.getRole(), requiredRole);
         if (!hasPermission) {
             log.warn("API key role '{}' does not have permission for required role '{}'", apiKeyEntity.getRole(), requiredRole);
             return ValidationResult.failure(ErrorCode.API_KEY_INSUFFICIENT_PERMISSION);
         }
         
-        // 5. Update last_used_at timestamp using database's current timestamp
+        // 6. Update last_used_at timestamp using database's current timestamp
         try {
             updateLastUsedAt(apiKeyEntity.getApiKey());
             log.debug("API key validation successful and last_used_at updated using DB timestamp. Key role: {}, Required role: {}", 
