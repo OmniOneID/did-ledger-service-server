@@ -107,12 +107,13 @@ public class SecurityConfig {
         String[] GET_PERMIT_ALL = {
                 "/", "/static/**",
                 "/assets/**", "/error",
+                // Read by the password reset screen before login; updating the policy requires authentication
+                "/lss/admin/v1/admin-password-policy",
         };
 
         String[] PERMIT_ALL = {
                 "/health",
                 "/actuator/health",
-                "/lss/admin/v1/admin-password-policy",
                 "/lss/admin/v1/dids/detail",
         };
         // Allowed API
