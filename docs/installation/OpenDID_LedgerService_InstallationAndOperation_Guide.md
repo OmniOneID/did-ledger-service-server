@@ -19,7 +19,7 @@ Open DID Ledger Service Server Installation And Operation Guide
 ==
 
 - Date: 2026-10-27
-- Version: v2.1.0
+- Version: v3.0.0
 
 Table of Contents
 ==
