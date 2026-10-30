@@ -30,7 +30,8 @@ export const requestApi = async (
 ): Promise<ApiResponse> => {
   const fullUrl = `${baseUrl}/${endpoint}`;
   const isFormData = body instanceof FormData;
-  const accessToken = tokenStore.getAccess();
+  const isLogin = endpoint === 'login';
+  const accessToken = isLogin ? null : tokenStore.getAccess();
 
   const headers: HeadersInit | undefined = isFormData
       ? undefined
@@ -59,7 +60,7 @@ export const requestApi = async (
     window.location.replace('/sign-in');
   }
 
-  if (res.status === 401 && !_retry) {
+  if (res.status === 401 && !_retry && !isLogin) {
     try {
       await refreshAccessToken(baseUrl);
       return requestApi(baseUrl, endpoint, method, body, true);

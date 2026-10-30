@@ -7,6 +7,7 @@ import { Outlet, useNavigate } from 'react-router';
 import { ExtendedSession, SessionContext } from './context/SessionContext';
 import { PasswordPolicyProvider } from './context/PasswordPolicyContext';
 import customTheme from './theme';
+import { tokenStore } from './utils/authTokens';
 
 const NAVIGATION: Navigation = [
   {
@@ -136,6 +137,7 @@ function AppContent() {
 
   const signOut = useCallback(() => {
     setSession(null);
+    tokenStore.clear();
     
     // activeSession 마커도 클리어
     sessionStorage.removeItem('activeSession');
