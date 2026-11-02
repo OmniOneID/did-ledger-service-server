@@ -20,7 +20,7 @@ import org.omnione.did.base.db.domain.Did;
 import org.omnione.did.base.db.domain.VcSchemaInfo;
 import org.omnione.did.base.exception.ErrorCode;
 import org.omnione.did.base.exception.OpenDidException;
-import org.omnione.did.base.util.BaseMultibaseUtil;
+import org.omnione.did.common.util.multibase.BaseMultibaseUtil;
 import org.omnione.did.repository.v1.agent.dto.vc.InputVcSchemaReqDto;
 import org.omnione.did.repository.v1.agent.service.query.DidQueryServiceImpl;
 import org.omnione.did.repository.v1.agent.service.query.VcSchemaQueryService;

@@ -53,6 +53,13 @@ public enum ProofType {
         }
     }
 
+    public org.omnione.did.common.datamodel.enums.crypto.EccCurveType toCommonSdkEccCurveType() {
+        return switch (toEccCurveType()) {
+            case Secp256k1 -> org.omnione.did.common.datamodel.enums.crypto.EccCurveType.SECP256K1;
+            case Secp256r1 -> org.omnione.did.common.datamodel.enums.crypto.EccCurveType.SECP256R1;
+        };
+    }
+
     public static ProofType fromDisplayName(String displayName) {
         for (ProofType type : ProofType.values()) {
             if (type.displayName.equals(displayName)) {

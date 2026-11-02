@@ -19,8 +19,9 @@ import org.omnione.did.base.db.domain.ApiKey;
 import org.omnione.did.base.db.repository.ApiKeyRepository;
 import org.omnione.did.base.exception.ErrorCode;
 import org.omnione.did.base.exception.OpenDidException;
-import org.omnione.did.base.util.BaseDigestUtil;
-import org.omnione.did.base.util.RandomUtil;
+import org.omnione.did.common.exception.CommonSdkException;
+import org.omnione.did.common.util.digest.BaseDigestUtil;
+import org.omnione.did.common.util.IdGenerator;
 import org.omnione.did.repository.v1.admin.dto.apikey.*;
 import org.omnione.did.repository.v1.admin.service.query.ApiKeyQueryService;
 import org.omnione.did.repository.v1.common.dto.EmptyResDto;
@@ -293,7 +294,7 @@ public class ApiKeyManagementService {
         int attempts = 0;
         
         do {
-            plainApiKey = API_KEY_PREFIX + RandomUtil.generateUUID();
+            plainApiKey = API_KEY_PREFIX + IdGenerator.generateUUID();
             attempts++;
             
             if (attempts > MAX_GENERATION_ATTEMPTS) {
@@ -325,7 +326,7 @@ public class ApiKeyManagementService {
         try {
             byte[] hashBytes = BaseDigestUtil.generateHash(plainApiKey);
             return HexFormat.of().formatHex(hashBytes);
-        } catch (OpenDidException e) {
+        } catch (OpenDidException | CommonSdkException e) {
             log.error("Failed to hash API key", e);
             throw new OpenDidException(ErrorCode.API_KEY_GENERATION_FAILED);
         }

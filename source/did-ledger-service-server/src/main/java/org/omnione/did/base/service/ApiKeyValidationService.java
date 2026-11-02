@@ -6,7 +6,8 @@ import org.omnione.did.base.db.domain.ApiKey;
 import org.omnione.did.base.db.repository.ApiKeyRepository;
 import org.omnione.did.base.exception.ErrorCode;
 import org.omnione.did.base.exception.OpenDidException;
-import org.omnione.did.base.util.BaseDigestUtil;
+import org.omnione.did.common.exception.CommonSdkException;
+import org.omnione.did.common.util.digest.BaseDigestUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -148,7 +149,7 @@ public class ApiKeyValidationService {
         try {
             byte[] hashBytes = BaseDigestUtil.generateHash(plainApiKey);
             return HexFormat.of().formatHex(hashBytes);
-        } catch (OpenDidException e) {
+        } catch (OpenDidException | CommonSdkException e) {
             log.error("Failed to hash API key", e);
             throw new RuntimeException("Failed to hash API key", e);
         }

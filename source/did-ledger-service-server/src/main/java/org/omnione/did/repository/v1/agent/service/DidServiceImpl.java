@@ -24,6 +24,11 @@ import org.omnione.did.base.db.domain.DidDocumentStatusHistory;
 import org.omnione.did.base.exception.ErrorCode;
 import org.omnione.did.base.exception.OpenDidException;
 import org.omnione.did.base.util.*;
+import org.omnione.did.common.exception.CommonSdkException;
+import org.omnione.did.common.util.crypto.BaseCryptoUtil;
+import org.omnione.did.common.util.did.BaseCoreDidUtil;
+import org.omnione.did.common.util.digest.BaseDigestUtil;
+import org.omnione.did.common.util.multibase.BaseMultibaseUtil;
 import org.omnione.did.repository.v1.agent.dto.did.InputDidDocReqDto;
 import org.omnione.did.repository.v1.agent.dto.did.UpdateDidDocReqDto;
 import org.omnione.did.repository.v1.agent.service.query.DidQueryService;
@@ -258,16 +263,26 @@ public class DidServiceImpl implements DidService {
 
         InvokedDidDoc toVerify = removeProof(invokedDidDoc);
         String json = JsonUtil.serializeAndSort(toVerify);
-        byte[] hash = BaseDigestUtil.generateHash(json);
+        // Keep the error codes the removed local utils returned (hash: TODO, signature: VERIFY_SIGN_FAIL)
+        final byte[] hash;
+        try {
+            hash = BaseDigestUtil.generateHash(json);
+        } catch (CommonSdkException e) {
+            throw new OpenDidException(ErrorCode.TODO);
+        }
 
         String invocationKeyId = controllerDidManager.getDocument().getCapabilityInvocation().getFirst();
         VerificationMethod method = controllerDidManager.getVerificationMethodByKeyId(invocationKeyId);
-        BaseCryptoUtil.verifySignature(
-                method.getPublicKeyMultibase(),
-                invokedDidDoc.getProof().getProofValue(),
-                hash,
-                ProofType.fromDisplayName(invokedDidDoc.getProof().getType()).toEccCurveType()
-        );
+        try {
+            BaseCryptoUtil.verifySignature(
+                    method.getPublicKeyMultibase(),
+                    invokedDidDoc.getProof().getProofValue(),
+                    hash,
+                    ProofType.fromDisplayName(invokedDidDoc.getProof().getType()).toCommonSdkEccCurveType()
+            );
+        } catch (CommonSdkException e) {
+            throw new OpenDidException(ErrorCode.VERIFY_SIGN_FAIL);
+        }
     }
 
     private InvokedDidDoc removeProof(InvokedDidDoc invokedDidDoc) {
