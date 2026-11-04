@@ -23,7 +23,7 @@ import org.omnione.did.base.db.domain.DidDocument;
 import org.omnione.did.base.db.domain.DidDocumentStatusHistory;
 import org.omnione.did.base.exception.ErrorCode;
 import org.omnione.did.base.exception.OpenDidException;
-import org.omnione.did.base.util.*;
+import org.omnione.did.common.util.DidUtil;
 import org.omnione.did.common.exception.CommonSdkException;
 import org.omnione.did.common.util.crypto.BaseCryptoUtil;
 import org.omnione.did.common.util.did.BaseCoreDidUtil;

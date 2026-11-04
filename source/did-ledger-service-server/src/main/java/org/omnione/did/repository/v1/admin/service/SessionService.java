@@ -25,7 +25,7 @@ import org.omnione.did.base.db.domain.AdminPasswordResetToken;
 import org.omnione.did.base.db.repository.AdminRepository;
 import org.omnione.did.base.exception.ErrorCode;
 import org.omnione.did.base.exception.OpenDidException;
-import org.omnione.did.base.util.OtpGenerator;
+import org.omnione.did.common.util.OtpGenerator;
 import org.omnione.did.repository.v1.admin.api.NotiFeign;
 import org.omnione.did.repository.v1.admin.api.dto.EmailTemplate;
 import org.omnione.did.repository.v1.admin.api.dto.RequestSendEmailReqDto;
