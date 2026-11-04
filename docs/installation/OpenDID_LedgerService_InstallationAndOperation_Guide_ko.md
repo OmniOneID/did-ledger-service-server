@@ -110,7 +110,7 @@ DID Ledger Service Server(LSS)는 PostgreSQL 데이터베이스를 활용하여 
 - VC Schema 등록 및 관리
 - ZKP Credential Schema, ZKP Credential Definition 등록 및 관리
 - API Key 기반 Agent API 호출 인증 (Role: `TAS`, `ISSUER`, `READ`)
-- LSS Admin Console: DID, VC Metadata, VC Schema 조회, API Key 관리, 관리자 관리, 서버 설정, API 로그 및 감사 로그 조회
+- LSS Admin Console: DID, VC Metadata, VC Schema, ZKP Credential Schema, ZKP Credential Definition 조회, API Key 관리, 관리자 관리, 서버 설정, API 로그 및 감사 로그 조회
 
 이 서버를 통해 복잡한 블록체인 인프라 구축 없이도 안정적이고 효율적인 분산 신원 관리 시스템을 구축할 수 있습니다.
 
@@ -375,8 +375,8 @@ IntelliJ IDEA는 Java 개발에 널리 사용되는 통합 개발 환경(IDE)으
       cd build/libs
       ls
     ```
-- 이 명령어는 `did-ledger-service-server-2.0.0.jar` 파일을 생성합니다. (파일명의 버전은 `build.gradle`의 `version` 값을 따릅니다.)
-- 함께 생성되는 `did-ledger-service-server-2.0.0-plain.jar`는 의존성이 포함되지 않은 JAR이므로, 서버 실행에는 `-plain`이 붙지 않은 JAR 파일을 사용합니다.
+- 이 명령어는 `did-ledger-service-server-3.0.0.jar` 파일을 생성합니다. (파일명의 버전은 `build.gradle`의 `version` 값을 따릅니다.)
+- 함께 생성되는 `did-ledger-service-server-3.0.0-plain.jar`는 의존성이 포함되지 않은 JAR이므로, 서버 실행에는 `-plain`이 붙지 않은 JAR 파일을 사용합니다.
 
 <br/>
 
@@ -384,7 +384,7 @@ IntelliJ IDEA는 Java 개발에 널리 사용되는 통합 개발 환경(IDE)으
 빌드된 JAR 파일을 사용하여 서버를 구동합니다:
 
 ```bash
-java -jar did-ledger-service-server-2.0.0.jar
+java -jar did-ledger-service-server-3.0.0.jar
 ```
 
 - 서버가 정상적으로 구동되면 브라우저에서 `http://localhost:8098/`(Admin Console)과 `http://localhost:8098/swagger-ui.html`(Swagger UI)에 접속할 수 있습니다.
@@ -723,7 +723,7 @@ DID Ledger Service 서버는 다양한 환경에서 실행될 수 있도록 `sam
 - **프로파일 지정:** 서버 구동 명령어에 `--spring.profiles.active={profile}` 옵션을 추가하여 원하는 프로파일을 활성화합니다.
 
   ```bash
-  java -jar build/libs/did-ledger-service-server-2.0.0.jar --spring.profiles.active={profile}
+  java -jar build/libs/did-ledger-service-server-3.0.0.jar --spring.profiles.active={profile}
   ```
 
 - **설정 적용:** 활성화된 프로파일에 따라 해당 설정 파일이 적용됩니다.
@@ -747,7 +747,7 @@ Admin Console은 다음 메뉴를 제공합니다.
 | ---- | --------- | ---- |
 | DID List | DID List, DID Change History | DID 및 DID Document 조회, DID Document 상태 변경 이력 조회 |
 | VC Metadata List | VC Metadata List, VC Change History | VC Meta 조회, VC 상태 변경 이력 조회 |
-| Schema Management | VC Schema List | VC Schema 조회 |
+| Schema Management | VC Schema List, ZKP Credential Schema List, ZKP Credential Definition List | VC Schema, ZKP Credential Schema, ZKP Credential Definition 조회 |
 | API Key Management | - | Agent API 호출용 API Key 발급, 비활성화/활성화, 갱신 ([8. API Key 운영](#8-api-key-운영) 참고) |
 | Admin Management | Admin Management, Password Policy Settings | 관리자 계정 관리 및 비밀번호 정책 설정 |
 | Server Configuration | - | API Key 검증 사용 여부 설정 ([8.4. API Key 검증 활성화](#84-api-key-검증-활성화) 참고) |

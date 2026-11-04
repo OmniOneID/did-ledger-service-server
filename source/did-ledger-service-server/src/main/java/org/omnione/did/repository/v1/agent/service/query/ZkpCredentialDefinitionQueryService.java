@@ -17,7 +17,13 @@ package org.omnione.did.repository.v1.agent.service.query;
 
 import org.omnione.did.base.db.domain.ZkpCredentialDefinition;
 import org.omnione.did.base.db.repository.ZkpCredentialDefinitionRepository;
+import org.omnione.did.base.db.repository.ZkpCredentialDefinitionRepositoryAdmin;
+import org.omnione.did.base.exception.ErrorCode;
+import org.omnione.did.base.exception.OpenDidException;
+import org.omnione.did.repository.v1.admin.dto.zkp.ZkpCredentialDefinitionDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -26,6 +32,7 @@ import java.util.Optional;
 @Service
 public class ZkpCredentialDefinitionQueryService {
     private final ZkpCredentialDefinitionRepository zkpCredentialDefinitionRepository;
+    private final ZkpCredentialDefinitionRepositoryAdmin zkpCredentialDefinitionRepositoryAdmin;
 
     public Optional<ZkpCredentialDefinition> findByDefinitionId(String credentialDefinitionId) {
         return zkpCredentialDefinitionRepository.findByDefinitionId(credentialDefinitionId);
@@ -33,5 +40,15 @@ public class ZkpCredentialDefinitionQueryService {
 
     public ZkpCredentialDefinition save(ZkpCredentialDefinition zkpCredentialDefinition) {
         return zkpCredentialDefinitionRepository.save(zkpCredentialDefinition);
+    }
+
+    public Page<ZkpCredentialDefinitionDto> searchZkpCredentialDefinitionList(String searchKey, String searchValue, Pageable pageable) {
+        return zkpCredentialDefinitionRepositoryAdmin.searchZkpCredentialDefinition(searchKey, searchValue, pageable)
+                .map(ZkpCredentialDefinitionDto::fromEntity);
+    }
+
+    public ZkpCredentialDefinition findById(Long id) {
+        return zkpCredentialDefinitionRepository.findById(id)
+                .orElseThrow(() -> new OpenDidException(ErrorCode.CREDENTIAL_DEFINITION_NOT_FOUND));
     }
 }

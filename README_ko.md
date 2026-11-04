@@ -21,7 +21,7 @@ LedgerService 서버 Repository에 오신 것을 환영합니다. <br>
 - VC Meta 등록, 조회, VC 상태 변경
 - VC Schema, ZKP Credential Schema, ZKP Credential Definition 등록 및 조회
 - `X-API-Key` Header를 이용한 Agent API(`/lss/api/v1`) 호출 API Key 인증 (Role: `TAS`, `ISSUER`, `READ`)
-- 서버에 포함되어 제공되는 LSS Admin Console(`http://{host}:8098/`): DID, VC Metadata, VC Schema 조회, API Key 관리, 관리자 관리, 서버 설정, API 로그 및 감사 로그 조회
+- 서버에 포함되어 제공되는 LSS Admin Console(`http://{host}:8098/`): DID, VC Metadata, VC Schema, ZKP Credential Schema, ZKP Credential Definition 조회, API Key 관리, 관리자 관리, 서버 설정, API 로그 및 감사 로그 조회
 
 ## 폴더 구조
 프로젝트 디렉터리 내 주요 폴더와 문서에 대한 개요:

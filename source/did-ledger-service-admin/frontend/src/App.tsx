@@ -49,6 +49,14 @@ const NAVIGATION: Navigation = [
         segment: 'vc-schema-list',
         title: 'VC Schema List',
       },
+      {
+        segment: 'zkp-credential-schema-list',
+        title: 'ZKP Credential Schema List',
+      },
+      {
+        segment: 'zkp-credential-definition-list',
+        title: 'ZKP Credential Definition List',
+      },
     ],
   },
   {

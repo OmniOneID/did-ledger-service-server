@@ -110,7 +110,7 @@ Key Features:
 - VC Schema registration and management
 - ZKP Credential Schema and ZKP Credential Definition registration and management
 - API key based authentication of Agent API calls (Roles: `TAS`, `ISSUER`, `READ`)
-- LSS Admin Console: DID, VC Metadata, and VC Schema lookup, API key management, admin management, server configuration, and API log and audit log lookup
+- LSS Admin Console: DID, VC Metadata, VC Schema, ZKP Credential Schema, and ZKP Credential Definition lookup, API key management, admin management, server configuration, and API log and audit log lookup
 
 Through this server, you can build a stable and efficient decentralized identity management system without the need for complex blockchain infrastructure.
 
@@ -375,8 +375,8 @@ This section guides you through running the DID Ledger Service server using cons
       cd build/libs
       ls
     ```
-- This command creates the `did-ledger-service-server-2.0.0.jar` file. (The version in the file name follows the `version` value in `build.gradle`.)
-- The `did-ledger-service-server-2.0.0-plain.jar` file created alongside it does not contain dependencies, so use the JAR file without `-plain` to run the server.
+- This command creates the `did-ledger-service-server-3.0.0.jar` file. (The version in the file name follows the `version` value in `build.gradle`.)
+- The `did-ledger-service-server-3.0.0-plain.jar` file created alongside it does not contain dependencies, so use the JAR file without `-plain` to run the server.
 
 <br/>
 
@@ -384,7 +384,7 @@ This section guides you through running the DID Ledger Service server using cons
 Run the server using the built JAR file:
 
 ```bash
-java -jar did-ledger-service-server-2.0.0.jar
+java -jar did-ledger-service-server-3.0.0.jar
 ```
 
 - Once the server is running, you can access `http://localhost:8098/` (Admin Console) and `http://localhost:8098/swagger-ui.html` (Swagger UI) in a browser.
@@ -723,7 +723,7 @@ This section explains how to change profiles for each execution method.
 - **Profile Specification:** Add the `--spring.profiles.active={profile}` option to the server execution command to activate the desired profile.
 
   ```bash
-  java -jar build/libs/did-ledger-service-server-2.0.0.jar --spring.profiles.active={profile}
+  java -jar build/libs/did-ledger-service-server-3.0.0.jar --spring.profiles.active={profile}
   ```
 
 - **Configuration Application:** The corresponding configuration file is applied according to the activated profile.
@@ -747,7 +747,7 @@ The Admin Console provides the following menus.
 | ---- | -------- | ----------- |
 | DID List | DID List, DID Change History | DID and DID Document lookup, DID Document status change history lookup |
 | VC Metadata List | VC Metadata List, VC Change History | VC Meta lookup, VC status change history lookup |
-| Schema Management | VC Schema List | VC Schema lookup |
+| Schema Management | VC Schema List, ZKP Credential Schema List, ZKP Credential Definition List | VC Schema, ZKP Credential Schema, and ZKP Credential Definition lookup |
 | API Key Management | - | Issuing, deactivating/activating, and renewing API keys for calling the Agent API (see [8. API Key Operation](#8-api-key-operation)) |
 | Admin Management | Admin Management, Password Policy Settings | Admin account management and password policy settings |
 | Server Configuration | - | Setting whether to use API key validation (see [8.4. Enabling API Key Validation](#84-enabling-api-key-validation)) |

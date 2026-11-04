@@ -20,6 +20,10 @@ import VcChangeHistoryPage from "./pages/vc-metadatas/vc-change-history/VcChange
 import VcMetadataDetailPage from "./pages/vc-metadatas/vc-metadata-list/VcMetadataDetailPage";
 import VcSchemaListPage from "./pages/schemas/vc-schema-list/VcSchemaListPage";
 import VcSchemaDetailPage from "./pages/schemas/vc-schema-list/VcSchemaDetailPage";
+import ZkpCredentialSchemaListPage from "./pages/schemas/zkp-credential-schema-list/ZkpCredentialSchemaListPage";
+import ZkpCredentialSchemaDetailPage from "./pages/schemas/zkp-credential-schema-list/ZkpCredentialSchemaDetailPage";
+import ZkpCredentialDefinitionListPage from "./pages/schemas/zkp-credential-definition-list/ZkpCredentialDefinitionListPage";
+import ZkpCredentialDefinitionDetailPage from "./pages/schemas/zkp-credential-definition-list/ZkpCredentialDefinitionDetailPage";
 import ApiLogManagementPage from './pages/log/ApiLogManagementPage';
 import AuditApiLogManagementPage from './pages/log/AuditApiLogManagementPage';
 
@@ -78,6 +82,22 @@ const router = createBrowserRouter([
           {
             path: 'schemas/vc-schema-list/:id',
             Component: VcSchemaDetailPage,
+          },
+          {
+            path: 'schemas/zkp-credential-schema-list',
+            Component: ZkpCredentialSchemaListPage,
+          },
+          {
+            path: 'schemas/zkp-credential-schema-list/:id',
+            Component: ZkpCredentialSchemaDetailPage,
+          },
+          {
+            path: 'schemas/zkp-credential-definition-list',
+            Component: ZkpCredentialDefinitionListPage,
+          },
+          {
+            path: 'schemas/zkp-credential-definition-list/:id',
+            Component: ZkpCredentialDefinitionDetailPage,
           },
           {
             path: 'schemas',

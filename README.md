@@ -19,7 +19,7 @@ Welcome to the Ledger Service Server source code repository. This repository con
 - VC Meta registration, lookup, and VC status changes
 - VC Schema, ZKP Credential Schema, and ZKP Credential Definition registration and lookup
 - API key authentication for Agent API (`/lss/api/v1`) calls using the `X-API-Key` header (roles: `TAS`, `ISSUER`, `READ`)
-- LSS Admin Console, served by the server itself (`http://{host}:8098/`): DID, VC Metadata, and VC Schema lookup, API key management, admin management, server configuration, and API and audit log lookup
+- LSS Admin Console, served by the server itself (`http://{host}:8098/`): DID, VC Metadata, VC Schema, ZKP Credential Schema, and ZKP Credential Definition lookup, API key management, admin management, server configuration, and API and audit log lookup
 
 ## Folder Structure
 Here's an overview of the directory structure.
