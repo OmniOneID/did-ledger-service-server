@@ -736,6 +736,8 @@ You can flexibly change profile-specific configurations according to each method
 
 ## 7.1. Admin Console Overview
 
+For screen-by-screen usage, see the [LSS Admin Console Operation Guide](../admin/OpenDID_LedgerServiceAdmin_Operation_Guide.md).
+
 The LSS Admin Console is a web interface for managing the Ledger Service server. Its source code is located in `source/did-ledger-service-admin/frontend` and is written with React, TypeScript, MUI (Toolpad Core), and Vite. The built Admin Console is included as static resources of the Ledger Service server and is served on the same port as the server without a separate web server.
 
 - Access address: `http://{server address}:8098/`

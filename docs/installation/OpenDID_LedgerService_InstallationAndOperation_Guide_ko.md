@@ -736,6 +736,8 @@ DID Ledger Service 서버는 다양한 환경에서 실행될 수 있도록 `sam
 
 ## 7.1. Admin Console 개요
 
+화면별 사용 방법은 [LSS Admin Console 운영 가이드](../admin/OpenDID_LedgerServiceAdmin_Operation_Guide_ko.md)를 참고하세요.
+
 LSS Admin Console은 Ledger Service 서버를 관리하기 위한 웹 화면입니다. 소스 코드는 `source/did-ledger-service-admin/frontend`에 있으며 React, TypeScript, MUI(Toolpad Core), Vite로 작성되어 있습니다. 빌드된 Admin Console은 Ledger Service 서버의 정적 리소스로 포함되어, 별도의 웹 서버 없이 서버와 같은 포트로 제공됩니다.
 
 - 접속 주소: `http://{서버 주소}:8098/`

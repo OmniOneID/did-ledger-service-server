@@ -40,9 +40,15 @@ did-ledger-service-server
 ├── RELEASE-PROCESS.md
 ├── SECURITY.md
 ├── docs
+│   ├── admin
+│   │   ├── OpenDID_LedgerServiceAdmin_Operation_Guide.md
+│   │   └── OpenDID_LedgerServiceAdmin_Operation_Guide_ko.md
 │   ├── api
 │   │   ├── LedgerService_API.md
 │   │   └── LedgerService_API_ko.md
+│   ├── db
+│   │   ├── OpenDID_TableDefinition_LSS.md
+│   │   └── OpenDID_TableDefinition_LSS_ko.md
 │   ├── errorCode
 │   │   ├── LedgerService_ErrorCode.md
 │   │   └── LedgerService_ErrorCode_ko.md
@@ -72,6 +78,8 @@ did-ledger-service-server
 | SECURITY.md                  | 보안 정책 및 취약성 보고 방법                         |
 | docs                         | 문서화                                                |
 | ┖ api                        | API 가이드 문서                                       |
+| ┖ admin                      | Admin Console 운영 가이드                            |
+| ┖ db                         | 데이터베이스 테이블 정의                             |
 | ┖ errorCode                  | 오류 코드 및 문제 해결 가이드                         |
 | ┖ installation               | 설치, 설정 및 운영 지침                               |
 | source                       | 서버 및 관리자 콘솔 소스 코드 프로젝트                |
@@ -84,6 +92,9 @@ did-ledger-service-server
 
 Admin Console 사용 방법과 API Key 운영 방법을 포함한 Ledger Service 서버의 설치 및 운영에 대한 자세한 지침은 아래 가이드를 참조하십시오:
 - [OpenDID Ledger Service Server Installation And Operation Guide](docs/installation/OpenDID_LedgerService_InstallationAndOperation_Guide_ko.md)
+
+Admin Console의 화면별 사용 방법은 아래 가이드를 참조하십시오:
+- [OpenDID Ledger Service Admin Operation Guide](docs/admin/OpenDID_LedgerServiceAdmin_Operation_Guide_ko.md)
 
 
 ## API 참고 문서

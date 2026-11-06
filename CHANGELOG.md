@@ -13,6 +13,7 @@
         - Admin accounts, password policy, API logs, audit logs, and server configuration
 
 ### 🔧 Changes
+- Added the Admin Console operation guide and the table definition document
     - Server version 3.0.0 (`did-ledger-service-server-3.0.0.jar`)
     - Uses `did-common-sdk-server` 3.0.0 instead of local utilities
     - Versioned DID lookup reads `versionId` from the DID key URL

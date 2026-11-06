@@ -38,9 +38,15 @@ did-ledger-service-server
 ├── RELEASE-PROCESS.md
 ├── SECURITY.md
 ├── docs
+│   ├── admin
+│   │   ├── OpenDID_LedgerServiceAdmin_Operation_Guide.md
+│   │   └── OpenDID_LedgerServiceAdmin_Operation_Guide_ko.md
 │   ├── api
 │   │   ├── LedgerService_API.md
 │   │   └── LedgerService_API_ko.md
+│   ├── db
+│   │   ├── OpenDID_TableDefinition_LSS.md
+│   │   └── OpenDID_TableDefinition_LSS_ko.md
 │   ├── errorCode
 │   │   ├── LedgerService_ErrorCode.md
 │   │   └── LedgerService_ErrorCode_ko.md
@@ -70,6 +76,8 @@ Below is a description of each folder and file in the directory:
 | SECURITY.md                  | Security policies and vulnerability reporting        |
 | docs                         | Documentation                                        |
 | ┖ api                        | API guide documentation                              |
+| ┖ admin                      | Admin Console operation guide                        |
+| ┖ db                         | Database table definitions                           |
 | ┖ errorCode                  | Error codes and troubleshooting guides               |
 | ┖ installation               | Installation, setup, and operation instructions      |
 | source                       | Source code for the server and admin console         |
@@ -81,6 +89,9 @@ Below is a description of each folder and file in the directory:
 
 For detailed instructions on installing and operating the Ledger Service Server, including the Admin Console and API key operation, please refer to the guide below:
 - [OpenDID Ledger Service Server Installation And Operation Guide](docs/installation/OpenDID_LedgerService_InstallationAndOperation_Guide.md)
+
+For screen-by-screen usage of the Admin Console, see the following guide:
+- [OpenDID Ledger Service Admin Operation Guide](docs/admin/OpenDID_LedgerServiceAdmin_Operation_Guide.md)
 
 ## API Reference
 
