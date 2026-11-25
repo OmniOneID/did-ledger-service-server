@@ -81,6 +81,9 @@ public class SecurityConfig {
                                                          .AuthorizationManagerRequestMatcherRegistry configurer) {
         allowedUrlsConfigurer(configurer);
         configurer
+                .requestMatchers(HttpMethod.POST,
+                        "/lss/admin/v1/admins", "/lss/admin/v1/admins/root/reset-password").hasRole("ROOT")
+                .requestMatchers(HttpMethod.DELETE, "/lss/admin/v1/admins").hasRole("ROOT")
                 .requestMatchers("/lss/admin/**").hasAnyRole("NORMAL", "ROOT")
                 .requestMatchers("/lss/admin/v1/**").hasAnyRole("NORMAL", "ROOT");
         configurer.anyRequest().permitAll();
