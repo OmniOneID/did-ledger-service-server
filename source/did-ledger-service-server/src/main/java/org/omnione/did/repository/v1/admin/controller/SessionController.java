@@ -61,15 +61,36 @@ public class SessionController {
             targetType = "ADMIN", actionType = ActionType.CREATE)
     @PostMapping("/refresh-token")
     public TokenRes refresh(@RequestBody RefreshReq req) {
-        var jws = jwtService.parse(req.refreshToken());
-        if (!jwtService.isRefreshToken(jws)) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid refresh token");
+        try {
+            var jws = jwtService.parse(req.refreshToken());
+            if (!jwtService.isRefreshToken(jws) || !jwtService.isCurrentSession(jws)) {
+                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid refresh token");
+            }
+            Long adminId = Long.valueOf(jws.getPayload().getSubject());
+            AdminDto admin = sessionService.requestAdminLoginById(adminId);
+            String newAccess = jwtService.createAccessToken(admin);
+            return new TokenRes(newAccess);
+        } catch (io.jsonwebtoken.JwtException | IllegalArgumentException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid refresh token", e);
         }
-        Long adminId = Long.valueOf(jws.getPayload().getSubject());
+    }
 
-        AdminDto admin = sessionService.requestAdminLoginById(adminId);
-        String newAccess = jwtService.createAccessToken(admin);
-        return new TokenRes(newAccess);
+    @PostMapping("/logout")
+    @ArticleLog(name = "[Admin] Logout", description = "Revoke administrator sessions",
+            targetType = "ADMIN", actionType = ActionType.LOGOUT)
+    public void logout(@RequestBody RefreshReq req, jakarta.servlet.http.HttpServletRequest request) {
+        try {
+            var token = jwtService.parse(req.refreshToken());
+            if (!jwtService.isRefreshToken(token) || !jwtService.isCurrentSession(token)) {
+                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid refresh token");
+            }
+            Long adminId = Long.valueOf(token.getPayload().getSubject());
+            request.setAttribute("targetId", adminId.toString());
+            request.setAttribute("requesterId", adminId.toString());
+            jwtService.revokeAllSessions(adminId);
+        } catch (io.jsonwebtoken.JwtException | IllegalArgumentException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid refresh token", e);
+        }
     }
 
     @ArticleLog(name = "[Admin] OTP Send for Password reset", description = "OTP sent for password reset.",

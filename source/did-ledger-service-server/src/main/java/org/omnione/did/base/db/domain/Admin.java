@@ -32,6 +32,10 @@ import java.time.Instant;
 @Entity
 @Table(name = "\"admin\"")
 public class Admin extends BaseEntity implements Serializable {
+    @Builder.Default
+    @Column(name = "session_version", nullable = false)
+    private Long sessionVersion = 0L;
+
     @Id
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -31,6 +31,11 @@ export const requestApi = async (
   const fullUrl = `${baseUrl}/${endpoint}`;
   const isFormData = body instanceof FormData;
   const isLogin = endpoint === 'login';
+  if (!isLogin && tokenStore.isPendingLogout()) {
+    sessionStorage.removeItem('session');
+    window.location.replace('/sign-in');
+    throw new Error('SESSION_EXPIRED');
+  }
   const accessToken = isLogin ? null : tokenStore.getAccess();
 
   const headers: HeadersInit | undefined = isFormData

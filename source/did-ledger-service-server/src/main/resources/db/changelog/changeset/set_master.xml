@@ -8,4 +8,5 @@
   <includeAll path="set.1" relativeToChangelogFile="true" />
   <include file="set.2/add-pwdAlgo-column_admin.xml" relativeToChangelogFile="true" />
   <include file="set.2/update-password_reset_reason_admin.xml" relativeToChangelogFile="true" />
+  <include file="set.2/add-column_admin_session_version.xml" relativeToChangelogFile="true"/>
 </databaseChangeLog>
