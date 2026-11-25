@@ -39,6 +39,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 var jws = jwtService.parse(token);
                 var claims = jws.getPayload();
 
+                if (!"access".equals(claims.get("typ", String.class))
+                        || !jwtService.isCurrentSession(jws)) {
+                    res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                    return;
+                }
+
                 Long adminId = Long.valueOf(claims.getSubject());
                 String loginId = claims.get("loginId", String.class);
                 String role = claims.get("role", String.class);

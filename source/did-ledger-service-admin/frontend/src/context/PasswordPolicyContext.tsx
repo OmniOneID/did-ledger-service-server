@@ -1,3 +1,4 @@
+import { tokenStore } from '../utils/authTokens';
 import React, { createContext, useContext, useState, ReactNode, useCallback, useEffect } from 'react';
 import { useDialogs } from '@toolpad/core';
 import CustomDialog from '../components/dialog/CustomDialog';
@@ -52,44 +53,12 @@ export const PasswordPolicyProvider: React.FC<{ children: ReactNode }> = ({ chil
 
   // Auto-load policy on mount (only once)
   useEffect(() => {
-    let mounted = true;
+    const onAuthenticated = () => { void loadPolicy(); };
+    if (tokenStore.getRefresh()) onAuthenticated();
+    window.addEventListener('admin-authenticated', onAuthenticated);
+    return () => window.removeEventListener('admin-authenticated', onAuthenticated);
+  }, [loadPolicy]);
 
-    const autoLoad = async () => {
-      if (hasTriedLoading || isLoading) {
-        return;
-      }
-
-      setIsLoading(true);
-      setError(null);
-      setHasTriedLoading(true);
-
-      try {
-        const response = await getAdminPasswordPolicyInfo();
-
-        if (mounted && response && response.data) {
-          setPolicy(response.data);
-        }
-      } catch (err) {
-        if (mounted) {
-          const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
-          setError(errorMessage);
-          console.warn(`Failed to load password policy: ${errorMessage}`);
-        }
-      } finally {
-        if (mounted) {
-          setIsLoading(false);
-        }
-      }
-    };
-
-    autoLoad();
-
-    return () => {
-      mounted = false;
-    };
-  }, []);
-
-  // Update policy in context (for real-time updates after policy changes)
   const updatePolicy = useCallback((newPolicy: PasswordPolicy) => {
     setPolicy(newPolicy);
     setError(null);

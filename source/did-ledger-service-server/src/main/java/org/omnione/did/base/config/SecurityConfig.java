@@ -100,6 +100,7 @@ public class SecurityConfig {
         String[] POST_PERMIT_ALL = {
                 "/lss/admin/v1/login",
                 "/lss/admin/v1/refresh-token",
+                "/lss/admin/v1/logout",
                 "/lss/admin/v1/password-reset/send-otp",
                 "/lss/admin/v1/password-reset/verify-otp",
                 "/lss/admin/v1/refresh-token",
@@ -114,7 +115,6 @@ public class SecurityConfig {
         String[] PERMIT_ALL = {
                 "/health",
                 "/actuator/health",
-                "/lss/admin/v1/dids/detail",
         };
         // Allowed API
         configurer.requestMatchers(HttpMethod.POST, POST_PERMIT_ALL).permitAll()
