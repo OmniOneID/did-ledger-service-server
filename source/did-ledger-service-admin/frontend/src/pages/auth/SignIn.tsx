@@ -1,6 +1,6 @@
 import { AuthProvider, AuthResponse, SignInPage } from '@toolpad/core/SignInPage';
 import { useState } from 'react';
-import { useNavigate } from 'react-router';
+import { Navigate, useNavigate } from 'react-router';
 import { requestLogin, requestPasswordReset, requestChangeAdminIdAndPassword } from '../../apis/admin-api';
 import { useSession } from '../../context/SessionContext';
 import { sha256Hash } from '../../utils/sha256-hash';
@@ -40,7 +40,7 @@ interface PasswordResetData {
 }
 
 export default function SignIn() {
-  const { setSession } = useSession();
+  const { session, setSession } = useSession();
   const navigate = useNavigate();
   const [requirePasswordReset, setRequirePasswordReset] = useState(false);
   const [requireChangeIdAndPassword, setRequireChangeIdAndPassword] = useState(false);
@@ -98,7 +98,7 @@ export default function SignIn() {
 
       const session = {
         user: {
-          id: data.admin.loginId,
+          id: data.admin.loginId || email,
           role: data.admin.role,
         },
       };
@@ -146,7 +146,7 @@ export default function SignIn() {
 
       const session = {
         user: {
-          id: data.admin.loginId,
+          id: data.admin.loginId || passwordResetData.email,
           role: data.admin.role
         }
       };
@@ -237,6 +237,8 @@ export default function SignIn() {
   const Title = () => <p style={{ fontWeight: 700, fontSize: '32px', lineHeight: '150%', margin: 0 }}>LS Admin Login</p>;
   const SubTitle = () => <p style={{ fontSize: '14px', marginBottom: 16, marginTop: 8 }}>Welcome, please sign in to continue</p>;
 
+  if (session && !tokenStore.isPendingLogout()) return <Navigate to="/" replace />;
+
   return (
       <>
         <SignInPage
@@ -285,9 +287,9 @@ export default function SignIn() {
               },
             }}
             sx={{
-              '& .MuiContainer-root': { maxWidth: 'none', width: 540, height: 500 },
+          '& .MuiContainer-root': { maxWidth: 'none', width: 540, minHeight: 500 },
               '& .MuiContainer-root > .MuiBox-root:first-of-type': {
-                height: 410,
+            minHeight: 410,
                 borderRadius: '4px',
                 boxShadow: 'none',
                 backgroundColor: 'white',
