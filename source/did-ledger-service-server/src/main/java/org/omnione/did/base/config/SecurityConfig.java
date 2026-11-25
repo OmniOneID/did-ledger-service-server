@@ -63,6 +63,8 @@ public class SecurityConfig {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .exceptionHandling(ex -> ex.authenticationEntryPoint(
+                        (req, res, error) -> res.sendError(jakarta.servlet.http.HttpServletResponse.SC_UNAUTHORIZED)))
                 .authorizeHttpRequests(this::authorizeHttpRequestsCustomizer)
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
@@ -107,8 +109,6 @@ public class SecurityConfig {
         String[] GET_PERMIT_ALL = {
                 "/", "/static/**",
                 "/assets/**", "/error",
-                // Read by the password reset screen before login; updating the policy requires authentication
-                "/lss/admin/v1/admin-password-policy",
         };
 
         String[] PERMIT_ALL = {

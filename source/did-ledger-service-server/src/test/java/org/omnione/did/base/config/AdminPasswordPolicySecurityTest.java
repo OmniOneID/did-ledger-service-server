@@ -19,6 +19,7 @@ import static org.mockito.Mockito.verify;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(controllers = AdminPasswordPolicyManagementController.class)
@@ -40,9 +41,20 @@ class AdminPasswordPolicySecurityTest {
     private ApiLogService apiLogService;
 
     @Test
-    void passwordPolicyCanBeReadWithoutLogin() throws Exception {
+    void passwordPolicyCannotBeReadWithoutLogin() throws Exception {
         mockMvc.perform(get(PASSWORD_POLICY_URL))
+                .andExpect(status().isUnauthorized())
+                .andExpect(content().string(""));
+
+        verify(adminPasswordPolicyManagementService, never()).findAdminPasswordPolicy();
+    }
+
+    @Test
+    void passwordPolicyCanBeReadByLoggedInAdmin() throws Exception {
+        mockMvc.perform(get(PASSWORD_POLICY_URL).with(user("admin").roles("ROOT")))
                 .andExpect(status().isOk());
+
+        verify(adminPasswordPolicyManagementService).findAdminPasswordPolicy();
     }
 
     @Test
