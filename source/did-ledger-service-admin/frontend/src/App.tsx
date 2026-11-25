@@ -2,12 +2,16 @@ import { CssBaseline, GlobalStyles } from '@mui/material';
 import type { Navigation } from '@toolpad/core/AppProvider';
 import { ReactRouterAppProvider } from '@toolpad/core/react-router';
 import { DialogsProvider } from '@toolpad/core/useDialogs';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Outlet, useNavigate } from 'react-router';
+import { useIdleLogout } from './hooks/useIdleLogout';
 import { ExtendedSession, SessionContext } from './context/SessionContext';
 import { PasswordPolicyProvider } from './context/PasswordPolicyContext';
 import customTheme from './theme';
 import { tokenStore } from './utils/authTokens';
+import { restoreSessionFromToken } from './utils/authSync';
+import FullscreenLoader from './components/loading/FullscreenLoader';
+import { ADMIN_LOGOUT_EVENT, logoutAdmin } from './utils/logout';
 
 const NAVIGATION: Navigation = [
   {
@@ -104,56 +108,69 @@ function AppContent() {
   const navigate = useNavigate();
   
   const [session, setSessionState] = useState<ExtendedSession | null>(() => {
-    // 1. 먼저 sessionStorage의 activeSession 마커 확인
-    const activeSession = sessionStorage.getItem('activeSession');
-    
-    if (!activeSession) {
-      // sessionStorage에 activeSession 마커가 없음
-      // = 브라우저 재시작 또는 서버 재부팅으로 sessionStorage 클리어됨
-      console.log('No active session marker found, clearing localStorage session');
-      localStorage.removeItem('session'); // localStorage 세션도 클리어
-      return null; // 로그인 페이지로 보내기
-    }
-    
-    // 2. activeSession이 있으면 저장된 세션 데이터 확인
-    // sessionStorage 먼저 확인 후 localStorage 확인
-    const sessionStorageSession = sessionStorage.getItem('session');
-    const localStorageSession = localStorage.getItem('session');
-    
-    const storedSession = sessionStorageSession || localStorageSession;
-    
-    if (storedSession) {
-      console.log('Session restored from storage');
-      return JSON.parse(storedSession);
-    }
-    
-    return null;
+    const storedSession = sessionStorage.getItem('session') ?? localStorage.getItem('session');
+    return storedSession && tokenStore.getRefresh() ? JSON.parse(storedSession) : null;
   });
+  const [isRestoring, setIsRestoring] = useState(() => !session && !!tokenStore.getRefresh());
   
   const setSession = useCallback((newSession: ExtendedSession | null) => {
     setSessionState(newSession);
     if (newSession) {
+      sessionStorage.setItem('session', JSON.stringify(newSession));
       localStorage.setItem('session', JSON.stringify(newSession));
     } else {
+      sessionStorage.removeItem('session');
       localStorage.removeItem('session'); 
     }
+  }, []);
+
+  useEffect(() => {
+    if (session || !tokenStore.getRefresh()) return;
+    void restoreSessionFromToken('/lss/admin/v1')
+      .then((restored) => { if (restored) setSessionState(restored); })
+      .finally(() => setIsRestoring(false));
   }, []);
 
   const signIn = useCallback(() => {
     navigate('/sign-in');
   }, [navigate]);
 
-  const signOut = useCallback(() => {
+  const signOut = useCallback(async () => {
+    if (tokenStore.isPendingLogout()) {
+      sessionStorage.removeItem('session');
+      sessionStorage.removeItem('activeSession');
+      window.location.replace('/sign-in');
+      return;
+    }
+    await logoutAdmin('/lss/admin/v1');
     setSession(null);
-    tokenStore.clear();
-    
-    // activeSession 마커도 클리어
-    sessionStorage.removeItem('activeSession');
-    
     navigate('/sign-in');
   }, [navigate, setSession]);
 
+  useEffect(() => {
+    const onStorage = (event: StorageEvent) => {
+      if (event.key === ADMIN_LOGOUT_EVENT && event.newValue) {
+        tokenStore.markRemoteLogout(event.newValue);
+      }
+    };
+    window.addEventListener('storage', onStorage);
+    return () => window.removeEventListener('storage', onStorage);
+  }, [navigate, setSession]);
+
+  useIdleLogout(session !== null, signOut);
+
+  const displaySession = useMemo(() => session ? {
+    ...session,
+    user: {
+      ...session.user,
+      name: session.user?.name || session.user?.id || 'Admin',
+      email: session.user?.email || session.user?.id || undefined,
+    },
+  } : null, [session]);
+
   const sessionContextValue = useMemo(() => ({ session, setSession }), [session, setSession]);
+
+  if (isRestoring) return <FullscreenLoader open />;
 
   return (
     <SessionContext.Provider value={sessionContextValue}>
@@ -161,7 +178,7 @@ function AppContent() {
         <PasswordPolicyProvider>
           <ReactRouterAppProvider
             navigation={NAVIGATION}
-            session={session}
+            session={displaySession}
             authentication={{ signIn, signOut }}
             theme={customTheme}
           >
