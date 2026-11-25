@@ -63,13 +63,21 @@ export const requestApi = async (
   if (res.status === 401 && !_retry && !isLogin) {
     try {
       await refreshAccessToken(baseUrl);
-      return requestApi(baseUrl, endpoint, method, body, true);
     } catch {
       tokenStore.clear();
       // activeSession 마커도 클리어
       sessionStorage.removeItem('activeSession');
       window.location.replace('/sign-in');
+      throw new Error('SESSION_EXPIRED');
     }
+    return requestApi(baseUrl, endpoint, method, body, true);
+  }
+
+  if (res.status === 401 && _retry && !isLogin) {
+    tokenStore.clear();
+    sessionStorage.removeItem('activeSession');
+    window.location.replace('/sign-in');
+    throw new Error('SESSION_EXPIRED');
   }
 
   if (!res.ok) {
