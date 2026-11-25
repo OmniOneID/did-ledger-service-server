@@ -5,6 +5,7 @@ import { requestLogin, requestPasswordReset, requestChangeAdminIdAndPassword } f
 import { useSession } from '../../context/SessionContext';
 import { sha256Hash } from '../../utils/sha256-hash';
 import { tokenStore } from '../../utils/authTokens';
+import { emailRegex } from '../../utils/regex';
 import PasswordResetDialog from './PasswordResetDialog';
 import ChangeIdAndPasswordDialog from './ChangeIdAndPasswordDialog';
 import ForgotPasswordDialog from './ForgotPasswordDialog';
@@ -53,15 +54,30 @@ export default function SignIn() {
   const [rememberMe, setRememberMe] = useState<boolean>(() => {
     return localStorage.getItem('rememberMe') === 'true';
   });
+  const [emailError, setEmailError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
 
   const handleSignIn = async (
       provider: AuthProvider,
       formData?: FormData,
       callbackUrl?: string
   ): Promise<AuthResponse> => {
+    const email = ((formData?.get('email') as string) ?? '').trim();
+    const password = (formData?.get('password') as string) ?? '';
+
+    const nextEmailError = !email
+      ? 'Please enter your email.'
+      : !emailRegex.test(email)
+        ? 'Please enter a valid email address.'
+        : '';
+    const nextPasswordError = password ? '' : 'Please enter your password.';
+    setEmailError(nextEmailError);
+    setPasswordError(nextPasswordError);
+    if (nextEmailError || nextPasswordError) {
+      return {};
+    }
+
     try {
-      const email = formData?.get('email') as string;
-      const password = formData?.get('password') as string;
       const hashedPassword = await sha256Hash(password);
 
       const { data }: { data: LoginResponse } = await requestLogin({
@@ -266,9 +282,20 @@ export default function SignIn() {
             slotProps={{
               emailField: {
                 defaultValue: rememberMe ? localStorage.getItem('email') ?? '' : '',
+                type: 'text',
+                error: !!emailError,
+                helperText: emailError,
+                onChange: () => emailError && setEmailError(''),
+                slotProps: { htmlInput: { required: false, inputMode: 'email' } },
                 sx: { '& .MuiOutlinedInput-root': { height: 48 } },
               },
-              passwordField: { sx: { '& .MuiOutlinedInput-root': { height: 48 } } },
+              passwordField: {
+                error: !!passwordError,
+                helperText: passwordError,
+                onChange: () => passwordError && setPasswordError(''),
+                slotProps: { htmlInput: { required: false } },
+                sx: { '& .MuiOutlinedInput-root': { height: 48 } },
+              },
               rememberMe: {
                 checked: rememberMe,
                 onChange: (_e, checked) => setRememberMe(checked),
