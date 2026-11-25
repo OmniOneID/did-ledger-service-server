@@ -22,6 +22,7 @@ import org.omnione.did.repository.v1.admin.dto.admin.*;
 import org.omnione.did.repository.v1.admin.service.AdminManagementService;
 import org.omnione.did.repository.v1.common.dto.EmptyResDto;
 import jakarta.validation.Valid;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -111,8 +112,9 @@ public class AdminManagementController {
     @ArticleLog(name = "[Admin Manage] Delete Admin", description = "Delete admin",
             targetType = "ADMIN", targetId = "#id", actionType = ActionType.DELETE)
     @RequestMapping(value = "/admins", method = RequestMethod.DELETE)
-    public EmptyResDto deleteAdmin(@RequestParam Long id) {
-        return adminManagementService.deleteAdmin(id);
+    public EmptyResDto deleteAdmin(@RequestParam Long id, HttpServletRequest request) {
+        request.setAttribute("targetId", adminManagementService.deleteAdmin(id));
+        return new EmptyResDto();
     }
 
     /**

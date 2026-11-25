@@ -146,17 +146,17 @@ public class AdminManagementService {
         return result;
     }
 
-    public EmptyResDto deleteAdmin(Long id) {
+    public String deleteAdmin(Long id) {
         log.debug("=== Starting deleteAdmin ===");
 
         log.debug("\t--> Finding admin to delete with id: {}", id);
-        adminQueryService.findById(id);
+        Admin admin = adminQueryService.findById(id);
         
         log.debug("\t--> Deleting admin");
         adminRepository.deleteById(id);
 
         log.debug("=== Finished deleteAdmin ===");
-        return new EmptyResDto();
+        return admin.getLoginId();
     }
 
     public EmptyResDto resetPasswordByRoot(ResetPasswordByRootReqDto resetPasswordByRootReqDto) {
