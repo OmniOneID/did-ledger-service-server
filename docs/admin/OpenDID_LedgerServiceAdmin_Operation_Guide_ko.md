@@ -97,7 +97,7 @@ LSS Admin Console은 Ledger Service 서버를 관리하는 웹 기반 관리 도
 
 <img src="./images/sign-in.png" width="600"/>
 
-초기 관리자 계정과 최초 로그인 절차는 [설치 및 운영 가이드 7.3](../installation/OpenDID_LedgerService_InstallationAndOperation_Guide_ko.md#73-최초-로그인-및-초기-설정)을, `Forgot your password?`로 비밀번호를 재설정하는 절차는 [7.4](../installation/OpenDID_LedgerService_InstallationAndOperation_Guide_ko.md#74-비밀번호-분실-시-재설정)를 참고하세요.
+초기 관리자 계정과 최초 로그인 절차는 [설치 및 운영 가이드 7.3](../installation/OpenDID_LedgerService_InstallationAndOperation_Guide_ko.md#73-최초-로그인-및-초기-설정)을 참고하세요.
 
 <br/>
 

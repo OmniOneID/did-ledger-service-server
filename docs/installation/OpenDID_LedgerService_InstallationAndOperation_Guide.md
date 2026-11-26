@@ -83,7 +83,6 @@ Table of Contents
     - [7.3.1. Initial Admin Account](#731-initial-admin-account)
     - [7.3.2. Changing ID and Password on First Login](#732-changing-id-and-password-on-first-login)
     - [7.3.3. Adding Admins and Password Policy](#733-adding-admins-and-password-policy)
-  - [7.4. Resetting a Forgotten Password](#74-resetting-a-forgotten-password)
 - [8. API Key Operation](#8-api-key-operation)
   - [8.1. API Key Overview](#81-api-key-overview)
   - [8.2. Issuing an API Key](#82-issuing-an-api-key)
@@ -819,7 +818,7 @@ When the server starts for the first time, the following ROOT admin account is c
 1. Access `http://{server address}:8098/` in a browser. If you are not logged in, the login screen (`LS Admin Login`) is displayed.
 2. Log in with the ID and password in [7.3.1. Initial Admin Account](#731-initial-admin-account).
 3. When you log in with the ROOT account for the first time, the ID and password change screen is displayed. Enter a new ID and a new password.
-   - The new ID must be in email format. Because password reset OTPs are sent to this address (see [7.4. Resetting a Forgotten Password](#74-resetting-a-forgotten-password)), use an address that can actually receive email.
+   - The new ID must be in email format.
    - The new password must satisfy the password policy. (See [7.3.3. Adding Admins and Password Policy](#733-adding-admins-and-password-policy))
 4. When the change is complete, you are logged in automatically with the new ID and password and moved to the DID List screen.
 
@@ -841,27 +840,6 @@ When the server starts for the first time, the following ROOT admin account is c
   | Password expiry period | 365 days |
 
 - **Password expiry:** When the expiry period has passed since the password was last changed, the password change screen is displayed at the next login. If the expiry period is 0 or less, expiry is not checked.
-
-<br/>
-
-## 7.4. Resetting a Forgotten Password
-
-If an admin forgets the password, the password can be reset from the login screen using an email OTP.
-
-1. Select `Forgot your password?` on the login screen.
-2. Enter the admin ID (email address) and request an OTP. A 6-digit OTP is sent to that address.
-3. Enter the received OTP and a new password to reset the password.
-
-| Item | Value |
-| ---- | ----- |
-| OTP validity | 5 minutes |
-| OTP resend wait time | 1 minute |
-| Maximum sends per day | 5 (when exceeded, OTP sending for that ID is blocked) |
-| Maximum OTP verification attempts | 5 |
-
-> **Caution**
-> - OTP emails are sent through the notification API of the TAS server configured in `tas.url`. The TAS server must be running and its email sending must be configured. (See [5.5. application-tas.yml](#55-application-tasyml))
-> - Instead of this procedure, a ROOT admin can change another admin's password on the `Admin Management` screen.
 
 <br/>
 

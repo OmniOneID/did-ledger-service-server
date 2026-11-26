@@ -53,14 +53,6 @@ export const registerAdminPasswordPolicy = async (data: any) => {
     return postData(API_BASE_URL, 'admin-password-policy', data);
 }
 
-export const requestPasswordResetOtp = async (data: any) => {
-    return postData(API_BASE_URL, `password-reset/send-otp`, data);
-}
-
-export const verifyOtpAndResetPassword = async (data: any) => {
-    return postData(API_BASE_URL, `password-reset/verify-otp`, data);
-}
-
 export const requestChangeAdminIdAndPassword = async (data: any) => {
     return postData(API_BASE_URL, `admins/change-id-and-password`, data);
 }

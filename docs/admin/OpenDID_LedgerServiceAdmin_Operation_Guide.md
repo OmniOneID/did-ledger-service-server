@@ -97,7 +97,7 @@ The LSS Admin Console is a web-based tool for managing the Ledger Service server
 
 <img src="./images/sign-in.png" width="600"/>
 
-For the initial administrator account and first login, see [section 7.3 of the Installation and Operation Guide](../installation/OpenDID_LedgerService_InstallationAndOperation_Guide.md). For resetting a password with `Forgot your password?`, see section 7.4 of the same guide.
+For the initial administrator account and first login, see [section 7.3 of the Installation and Operation Guide](../installation/OpenDID_LedgerService_InstallationAndOperation_Guide.md).
 
 <br/>
 

@@ -8,7 +8,6 @@ import { tokenStore } from '../../utils/authTokens';
 import { emailRegex } from '../../utils/regex';
 import PasswordResetDialog from './PasswordResetDialog';
 import ChangeIdAndPasswordDialog from './ChangeIdAndPasswordDialog';
-import ForgotPasswordDialog from './ForgotPasswordDialog';
 
 // Types for password reset reasons
 type PasswordResetReason = 'FIRST_LOGIN' | 'EXPIRED' | 'ADMIN_FORCED';
@@ -50,7 +49,6 @@ export default function SignIn() {
     oldLoginId: string;
     hashedPassword: string;
   } | null>(null);
-  const [forgotPasswordOpen, setForgotPasswordOpen] = useState(false);
   const [rememberMe, setRememberMe] = useState<boolean>(() => {
     return localStorage.getItem('rememberMe') === 'true';
   });
@@ -260,25 +258,7 @@ export default function SignIn() {
         <SignInPage
             providers={[{ id: 'credentials', name: 'Credentials' }]}
             signIn={handleSignIn}
-            slots={{
-              title: Title,
-              subtitle: SubTitle,
-              forgotPasswordLink: () => (
-                  <div style={{ textAlign: 'center', marginTop: '16px' }}>
-              <span
-                  onClick={() => setForgotPasswordOpen(true)}
-                  style={{
-                    color: '#FF8400',
-                    fontSize: '14px',
-                    cursor: 'pointer',
-                    textDecoration: 'underline'
-                  }}
-              >
-                Forgot your password?
-              </span>
-                  </div>
-              )
-            }}
+            slots={{ title: Title, subtitle: SubTitle }}
             slotProps={{
               emailField: {
                 defaultValue: rememberMe ? localStorage.getItem('email') ?? '' : '',
@@ -336,13 +316,6 @@ export default function SignIn() {
             onClose={handleChangeIdAndPasswordDialogClose}
             onSubmit={handleChangeIdAndPassword}
             oldLoginId={changeIdAndPasswordData?.oldLoginId}
-        />
-        <ForgotPasswordDialog
-            open={forgotPasswordOpen}
-            onClose={() => setForgotPasswordOpen(false)}
-            onSuccess={() => {
-              setForgotPasswordOpen(false);
-            }}
         />
       </>
   );
