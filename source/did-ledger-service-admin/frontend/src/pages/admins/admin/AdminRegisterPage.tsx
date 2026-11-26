@@ -1,7 +1,8 @@
 import { useDialogs } from '@toolpad/core';
 import React, { useEffect, useMemo, useState } from 'react'
-import { useNavigate } from 'react-router';
+import { Navigate, useNavigate } from 'react-router';
 import FullscreenLoader from '../../../components/loading/FullscreenLoader';
+import { useSession } from '../../../context/SessionContext';
 import {
     Box,
     Button,
@@ -65,6 +66,7 @@ interface ErrorState {
 const AdminRegisterPage = (props: Props) => {
     const navigate = useNavigate();
     const dialogs = useDialogs();
+    const { session } = useSession();
 
     const [formData, setFormData] = useState<AdminFormData>({
         loginId: '',
@@ -395,6 +397,10 @@ const AdminRegisterPage = (props: Props) => {
     const StyledInputArea = useMemo(() => styled(Box)(({ theme }) => ({
         marginTop: theme.spacing(2),
     })), []);
+
+    if (session?.user?.role !== 'ROOT') {
+        return <Navigate to="/admins/admin-management" replace />;
+    }
 
     // Show loading if policy is being loaded
     if (isPolicyLoading) {
