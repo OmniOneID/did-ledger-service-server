@@ -185,6 +185,7 @@ const VcMetadataListPage = (props: Props) => {
                       field: 'vcId', 
                       headerName: "VC ID", 
                       width: 300,
+                      display: 'flex',
                       renderCell: (params) => (
                           <Tooltip title={params.value} arrow placement="top">
                               <Link 

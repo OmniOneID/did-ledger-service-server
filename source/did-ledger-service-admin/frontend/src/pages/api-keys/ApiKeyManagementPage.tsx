@@ -196,6 +196,7 @@ const ApiKeyManagementPage = (props: Props) => {
                       field: 'name', 
                       headerName: "Name", 
                       width: 150,
+                      display: 'flex',
                       renderCell: (params) => (
                           <Typography
                               variant="body2"
@@ -225,6 +226,7 @@ const ApiKeyManagementPage = (props: Props) => {
                       field: 'maskedApiKey', 
                       headerName: "API Key", 
                       width: 250,
+                      display: 'flex',
                       renderCell: (params) => (
                           <Typography
                               variant="body2"
@@ -241,12 +243,14 @@ const ApiKeyManagementPage = (props: Props) => {
                       field: 'isActive', 
                       headerName: "Status", 
                       width: 80,
+                      display: 'flex',
                       renderCell: (params) => getStatusChip(params.value)
                   },
                   { 
                       field: 'role', 
                       headerName: "Role", 
                       width: 100,
+                      display: 'flex',
                       renderCell: (params) => getRoleChip(params.value)
                   },
                   { field: 'expiresAt', headerName: "Expires At", width: 180},
