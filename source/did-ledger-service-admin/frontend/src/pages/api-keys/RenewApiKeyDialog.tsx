@@ -18,6 +18,7 @@ import {
 import { Close as CloseIcon } from '@mui/icons-material';
 import { renewApiKey } from '../../apis/apikey-api';
 import { formatErrorMessage } from '../../utils/error-handler';
+import { formatDateTime } from '../../utils/date-format';
 
 interface RenewApiKeyDialogProps {
     open: boolean;
@@ -155,20 +156,6 @@ const RenewApiKeyDialog: React.FC<RenewApiKeyDialogProps> = ({
             : parseInt(formData.customExtensionDays) || 0;
         newExpires.setDate(currentExpires.getDate() + extensionDays);
         return newExpires;
-    };
-
-    const formatDateTime = (date: Date | string): string => {
-        if (typeof date === 'string') {
-            return date;
-        }
-        return date.toLocaleString('ko-KR', {
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit',
-        });
     };
 
     const isYear9999 = (): boolean => {

@@ -21,6 +21,7 @@ import CustomConfirmDialog from '../../components/dialog/CustomConfirmDialog';
 import CustomDialog from '../../components/dialog/CustomDialog';
 import FullscreenLoader from '../../components/loading/FullscreenLoader';
 import RenewApiKeyDialog from './RenewApiKeyDialog';
+import { formatDateTime } from '../../utils/date-format';
 
 interface ApiKeyDetailDialogProps {
   open: boolean;
@@ -194,7 +195,7 @@ const ApiKeyDetailDialog: React.FC<ApiKeyDetailDialogProps> = ({
     // 성공 메시지 표시
     await dialogs.open(CustomDialog, { 
       title: 'Success',
-      message: `API key has been renewed successfully.\n\nPrevious expiration: ${result.previousExpiresAt}\nNew expiration: ${result.newExpiresAt}`,
+      message: `API key has been renewed successfully.\n\nPrevious expiration: ${formatDateTime(result.previousExpiresAt)}\nNew expiration: ${formatDateTime(result.newExpiresAt)}`,
       isModal: true 
     });
     

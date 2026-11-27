@@ -20,6 +20,7 @@ import {
 import { Close as CloseIcon, ContentCopy as CopyIcon } from '@mui/icons-material';
 import { createApiKey } from '../../apis/apikey-api';
 import { formatErrorMessage } from '../../utils/error-handler';
+import { formatDateTime } from '../../utils/date-format';
 
 interface CreateApiKeyDialogProps {
     open: boolean;
@@ -235,7 +236,7 @@ const CreateApiKeyDialog: React.FC<CreateApiKeyDialogProps> = ({
             setCreatedApiKey({
                 apiKey: response.data.apiKey,
                 name: formData.name.trim(),
-                expiresAt: new Date(response.data.expiresAt).toLocaleString(),
+                expiresAt: formatDateTime(response.data.expiresAt),
             });
         } catch (error) {
             console.error('Failed to create API key:', error);
