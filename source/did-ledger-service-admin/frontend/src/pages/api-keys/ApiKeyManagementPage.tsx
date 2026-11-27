@@ -254,8 +254,8 @@ const ApiKeyManagementPage = (props: Props) => {
                       renderCell: (params) => getRoleChip(params.value)
                   },
                   { field: 'expiresAt', headerName: "Expires At", width: 180},
-                  { field: 'updatedAt', headerName: "Updated At", width: 180},
-                  { field: 'lastUsedAt', headerName: "Last Used At", width: 180},
+                  { field: 'updatedAt', headerName: "Updated At", width: 180, renderCell: (params) => params.value || '-' },
+                  { field: 'lastUsedAt', headerName: "Last Used At", width: 180, renderCell: (params) => params.value || '-' },
               ]} 
               selectedRow={selectedRow} 
               setSelectedRow={setSelectedRow}

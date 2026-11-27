@@ -217,7 +217,7 @@ const AdminManagementPage = (props: Props) => {
                   },
                   { field: 'role', headerName: "Role", width: 150},
                   { field: 'createdAt', headerName: "Registered At", width: 150},
-                  { field: 'updatedAt', headerName: "Updated At", width: 150},
+                  { field: 'updatedAt', headerName: "Updated At", width: 150, renderCell: (params) => params.value || '-' },
               ]} 
               selectedRow={selectedRow} 
               setSelectedRow={setSelectedRow}

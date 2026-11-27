@@ -289,7 +289,8 @@ const VcMetadataListPage = (props: Props) => {
                       headerName: "Valid Until", 
                       width: 180,
                       align: 'center',
-                      headerAlign: 'center'
+                      headerAlign: 'center',
+                      renderCell: (params) => params.value || '-'
                   },
               ]} 
               selectedRow={selectedRow} 
